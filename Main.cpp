@@ -6,7 +6,7 @@ int Rand(int _min, int _max)
 	return rand() % (_max - _min) + _min;
 }
 
-int RandF(int _min, int _max)
+float RandF(int _min, int _max)
 {
 	return _min + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (_max - _min)));
 }
@@ -39,10 +39,8 @@ protected:
 
 struct InventorySlot
 {
-	InventorySlot() : item(Item("", 0)), count(0) {}
-
-	Item item;
-	int count;
+	Item item = Item("", 0);
+	int count = 0;
 };
 
 class Inventory
