@@ -30,6 +30,11 @@ public:
 		std::cout << "Item - Name : " << name << " , Weight :" << weight << std::endl;
 	}
 
+	std::string GetName(void)
+	{
+		return name;
+	}
+
 private:
 	std::string name = "";
 	float weight = 0;
@@ -58,22 +63,69 @@ public:
 
 	void AddItem(Item _newItem, int _count)
 	{
-		InventorySlot* tempSlots = new InventorySlot[capacity + 1];
-
-		if (slots != nullptr)
+		int itemIndex = ItemInInventory(_newItem.GetName());
+		if (itemIndex != -1)
 		{
-			for (int i = 0; i < capacity; i++)
-			{
-				tempSlots[i] = slots[i];
-			}
-
-			delete[] slots;
+			slots[itemIndex].count += _count;
 		}
-		capacity++;
+		else
+		{
 
-		tempSlots[capacity - 1].item = _newItem;
-		tempSlots[capacity - 1].count = _count;
-		slots = tempSlots;
+			InventorySlot* tempSlots = new InventorySlot[capacity + 1];
+
+			if (slots != nullptr)
+			{
+				for (int i = 0; i < capacity; i++)
+				{
+					tempSlots[i] = slots[i];
+				}
+
+				delete[] slots;
+			}
+			capacity++;
+
+			tempSlots[capacity - 1].item = _newItem;
+			tempSlots[capacity - 1].count = _count;
+			slots = tempSlots;
+		}
+	}
+
+	void RemoveItem(Item _removeItem, int _count)
+	{
+		int itemIndex = ItemInInventory(_removeItem.GetName());
+
+		if (itemIndex != -1)
+		{
+			slots[itemIndex].count -= _count;
+
+			if (slots[itemIndex].count <= 0)
+			{
+
+				if (capacity == 1)
+				{
+					delete[] slots;
+					slots = nullptr;
+					capacity = 0;
+					return;
+				}
+
+				InventorySlot* tempSlots = new InventorySlot[capacity - 1];
+				int j = 0;
+
+				for (int i = 0; i < capacity; i++)
+				{
+					if (i != itemIndex)
+					{
+					tempSlots[j] = slots[i];
+					j++;
+					}
+				}
+
+				delete[] slots;
+				slots = tempSlots;
+				capacity--;
+			}
+		}
 	}
 
 	void Show(void)
@@ -83,9 +135,49 @@ public:
 		{
 			std::cout << "Slot : " << i << std::endl;
 			slots[i].item.Display();
+			std::cout << "Nb of " << slots[i].item.GetName() << " : " << slots[i].count << std::endl;
 			currentCount += slots[i].count;
 		}
 		std::cout << "Total of Items in Inventory : " << currentCount << std::endl;
+	}
+
+	int ItemInInventory(std::string _name)
+	{
+		for (int i = 0; i < capacity; i++)
+		{
+			Item& itemToCompare = slots[i].item;
+
+			if (itemToCompare.GetName() == _name)
+			{
+				return i;
+			}
+		}
+		return -1;
+	}
+
+
+	Item GetItemFromInventory(int _index)
+	{
+		if (_index < 0 || _index > capacity)
+		{
+			return Item("", 0);
+		}
+
+		return slots[_index].item;
+	}
+
+	Item GetItemFromInventory(std::string _name)
+	{
+		for (int i = 0; i < capacity; i++)
+		{
+			Item& itemToCompare = slots[i].item;
+
+			if (itemToCompare.GetName() == _name)
+			{
+				return itemToCompare;
+			}
+		}
+		return Item("", 0);
 	}
 private:
 	InventorySlot* slots = nullptr;
@@ -120,7 +212,22 @@ int main(void)
 
 	inventory->Show();
 
+	std::cout << "\n\n\n" << std::endl;
+	for (int i = 0; i < totalItem; i++)
+	{
+		inventory->AddItem(Item(itemName[i], RandF(0.2f, 8.f)), Rand(1, 10));
+	}
+
+	inventory->Show();
+	std::cout << "\n\n\n" << std::endl;
+
+	inventory->RemoveItem(inventory->GetItemFromInventory("Shield"), 100);
+
+	inventory->Show();
+	std::cout << std::endl;
 	system("pause");
+
+	delete inventory;
 
 	return EXIT_SUCCESS;
 }
