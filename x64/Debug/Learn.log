@@ -1,0 +1,7 @@
+﻿  Main.cpp
+C:\Users\Scryl\Bureau\cour\abosio\Learn\Learn\Main.cpp(11,14): warning C4244: 'return' : conversion de 'float' en 'int', perte possible de données
+C:\Users\Scryl\Bureau\cour\abosio\Learn\Learn\Main.cpp(102,12): warning C4244: 'argument' : conversion de 'time_t' en 'unsigned int', perte possible de données
+C:\Users\Scryl\Bureau\cour\abosio\Learn\Learn\Main.cpp(120,52): warning C4244: 'argument' : conversion de 'float' en 'int', perte possible de données
+C:\Users\Scryl\Bureau\cour\abosio\Learn\Learn\Main.cpp(120,46): warning C4244: 'argument' : conversion de 'float' en 'int', perte possible de données
+C:\Users\Scryl\Bureau\cour\abosio\Learn\Learn\Main.cpp(120,45): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+  Learn.vcxproj -> C:\Users\Scryl\Bureau\cour\abosio\Learn\x64\Debug\Learn.exe
