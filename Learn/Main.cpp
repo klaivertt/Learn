@@ -30,11 +30,15 @@ public:
 		std::cout << "Item - Name : " << name << " , Weight :" << weight << std::endl;
 	}
 
-	std::string GetName(void)
+	std::string GetName (void) const
 	{
 		return name;
 	}
 
+	int GetWeight(void) const
+	{
+		return weight;
+	}
 private:
 	std::string name = "";
 	float weight = 0;
