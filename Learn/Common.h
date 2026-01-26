@@ -18,4 +18,7 @@
 #include <string>
 #include <windows.h>
 
+#define VIEW_GRID_X 100
+#define VIEW_GRID_Y 60
+
 #endif // !COMMON_H

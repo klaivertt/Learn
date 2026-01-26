@@ -1,237 +1,211 @@
 #include "Common.h"
+#include <vector>
 
 // Tools
 int Rand(int _min, int _max)
 {
-	return rand() % (_max - _min) + _min;
+	return rand() % (_max - _min + 1) + _min;
 }
 
-float RandF(int _min, int _max)
+float RandF(float _min, float _max)
 {
-	return _min + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (_max - _min)));
+	return _min + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (_max - _min)));
 }
+
+struct Vec2
+{
+	float x = 0;
+	float y = 0;
+};
 
 // Class
-class Item
+class Particle
 {
 public:
-	Item(std::string _name, float _weight)
+	Particle()
 	{
-		name = _name;
-		weight = _weight;
+		Reset();
 	}
-
-	~Item()
+	~Particle()
 	{
 	}
 
-	void Display(void)
+	void Load(void)
 	{
-		std::cout << "Item - Name : " << name << " , Weight :" << weight << std::endl;
+		pos = Vec2{VIEW_GRID_X / 2.0f, VIEW_GRID_Y - 2.0f};
+		
+		velocity.x = RandF(-3.0f, 3.0f);
+		velocity.y = RandF(-8.0f, -12.0f); 
+		
+		gravity = RandF(0.3f, 0.5f);
+		drag = RandF(0.96f, 0.99f);
+		lifetime = Rand(30, 60);
+		age = 0;
+		
+		// Apparence
+		char particles[] = {'*', '+', 'o', '.', '~', '^'};
+		symbol = particles[rand() % 6];
 	}
 
-	std::string GetName (void) const
+	void Update(void)
 	{
-		return name;
+		velocity.y += gravity;
+		velocity.x *= drag;
+		velocity.y *= drag;
+		
+		pos.x += velocity.x * 0.1f;
+		pos.y += velocity.y * 0.1f;
+		
+		if (pos.x < 0)
+		{
+			pos.x = 0;
+			velocity.x = -velocity.x * 0.5f;
+		}
+		if (pos.x >= VIEW_GRID_X)
+		{
+			pos.x = VIEW_GRID_X - 1;
+			velocity.x = -velocity.x * 0.5f;
+		}
+		
+		if (pos.y >= VIEW_GRID_Y - 1)
+		{
+			pos.y = VIEW_GRID_Y - 1;
+			velocity.y = -velocity.y * 0.4f;
+			
+			if (abs(velocity.y) < 0.5f)
+			{
+				age = lifetime;
+			}
+		}
+		
+		age++;
 	}
 
-	int GetWeight(void) const
+	bool IsDead(void)
 	{
-		return weight;
+		return age >= lifetime || pos.y < 0;
 	}
+
+	Vec2 GetPos(void)
+	{
+		return pos;
+	}
+	
+	char GetSymbol(void)
+	{
+		if (age > lifetime * 0.75f)
+		{
+			return '.';
+		}
+		return symbol;
+	}
+
+	void Reset()
+	{
+		Load();
+	}
+
 private:
-	std::string name = "";
-	float weight = 0;
-
-protected:
+	Vec2 pos = {};
+	Vec2 velocity = {};
+	float gravity = 0.4f;
+	float drag = 0.98f;
+	int lifetime = 50;
+	int age = 0;
+	char symbol = '*';
 };
 
-struct InventorySlot
-{
-	Item item = Item("", 0);
-	int count = 0;
-};
-
-class Inventory
+class ParticleEmitter
 {
 public:
-	Inventory()
+	ParticleEmitter(int _maxParticles) : maxParticles(_maxParticles)
 	{
-
-	}
-
-	~Inventory()
-	{
-		delete[] slots;
-	}
-
-	void AddItem(Item _newItem, int _count)
-	{
-		int itemIndex = ItemInInventory(_newItem.GetName());
-		if (itemIndex != -1)
+		particles.reserve(_maxParticles);
+		for (int i = 0; i < _maxParticles; i++)
 		{
-			slots[itemIndex].count += _count;
+			particles.push_back(Particle());
 		}
-		else
+	}
+	
+	void Update()
+	{
+		for (auto& p : particles)
 		{
-
-			InventorySlot* tempSlots = new InventorySlot[capacity + 1];
-
-			if (slots != nullptr)
+			p.Update();
+			if (p.IsDead())
 			{
-				for (int i = 0; i < capacity; i++)
+				p.Reset();
+			}
+		}
+	}
+	
+	void Draw(std::string& render)
+	{
+		for (auto& p : particles)
+		{
+			if (!p.IsDead())
+			{
+				Vec2 pos = p.GetPos();
+				int x = static_cast<int>(pos.x);
+				int y = static_cast<int>(pos.y);
+				
+				if (x >= 0 && x < VIEW_GRID_X && y >= 0 && y < VIEW_GRID_Y)
 				{
-					tempSlots[i] = slots[i];
+					render[x + y * (VIEW_GRID_X + 1)] = p.GetSymbol();
 				}
-
-				delete[] slots;
-			}
-			capacity++;
-
-			tempSlots[capacity - 1].item = _newItem;
-			tempSlots[capacity - 1].count = _count;
-			slots = tempSlots;
-		}
-	}
-
-	void RemoveItem(Item _removeItem, int _count)
-	{
-		int itemIndex = ItemInInventory(_removeItem.GetName());
-
-		if (itemIndex != -1)
-		{
-			slots[itemIndex].count -= _count;
-
-			if (slots[itemIndex].count <= 0)
-			{
-
-				if (capacity == 1)
-				{
-					delete[] slots;
-					slots = nullptr;
-					capacity = 0;
-					return;
-				}
-
-				InventorySlot* tempSlots = new InventorySlot[capacity - 1];
-				int j = 0;
-
-				for (int i = 0; i < capacity; i++)
-				{
-					if (i != itemIndex)
-					{
-					tempSlots[j] = slots[i];
-					j++;
-					}
-				}
-
-				delete[] slots;
-				slots = tempSlots;
-				capacity--;
 			}
 		}
 	}
 
-	void Show(void)
-	{
-		currentCount = 0;
-		for (int i = 0; i < capacity; i++)
-		{
-			std::cout << "Slot : " << i << std::endl;
-			slots[i].item.Display();
-			std::cout << "Nb of " << slots[i].item.GetName() << " : " << slots[i].count << std::endl;
-			currentCount += slots[i].count;
-		}
-		std::cout << "Total of Items in Inventory : " << currentCount << std::endl;
-	}
-
-	int ItemInInventory(std::string _name)
-	{
-		for (int i = 0; i < capacity; i++)
-		{
-			Item& itemToCompare = slots[i].item;
-
-			if (itemToCompare.GetName() == _name)
-			{
-				return i;
-			}
-		}
-		return -1;
-	}
-
-
-	Item GetItemFromInventory(int _index)
-	{
-		if (_index < 0 || _index > capacity)
-		{
-			return Item("", 0);
-		}
-
-		return slots[_index].item;
-	}
-
-	Item GetItemFromInventory(std::string _name)
-	{
-		for (int i = 0; i < capacity; i++)
-		{
-			Item& itemToCompare = slots[i].item;
-
-			if (itemToCompare.GetName() == _name)
-			{
-				return itemToCompare;
-			}
-		}
-		return Item("", 0);
-	}
 private:
-	InventorySlot* slots = nullptr;
-	int capacity = 0;
-	int currentCount = 0;
-protected:
+	std::vector<Particle> particles;
+	int maxParticles;
 };
 
 // main
 int main(void)
 {
-	srand(time(NULL));
+	srand(static_cast<unsigned int>(time(NULL)));
 
-	Inventory* inventory = new Inventory();
-
-	std::string itemName[] =
+	ParticleEmitter fountain(50);
+	
+	std::string render((VIEW_GRID_X + 1) * VIEW_GRID_Y, ' ');
+	
+	std::string ground(VIEW_GRID_X, '=');
+	
+	int frameCount = 0;
+	
+	while (true)
 	{
-		"Saucisse",
-		"Sword",
-		"Shield",
-		"Boots",
-		"Arrow",
-		"Bow",
-	};
+		frameCount++;
+		
+		fountain.Update();
 
-	int totalItem = static_cast<int>(sizeof(itemName) / sizeof(std::string));
+		for (int i = 0; i < VIEW_GRID_Y; i++)
+		{
+			int indexY = i * (VIEW_GRID_X + 1);
+			for (int j = 0; j < VIEW_GRID_X; j++)
+			{
+				render[indexY + j] = ' ';
+			}
+			render[indexY + VIEW_GRID_X] = '\n';
+		}
+		
+		int groundY = (VIEW_GRID_Y - 1) * (VIEW_GRID_X + 1);
+		for (int j = 0; j < VIEW_GRID_X; j++)
+		{
+			render[groundY + j] = '=';
+		}
 
-	for (int i = 0; i < totalItem; i++)
-	{
-		inventory->AddItem(Item(itemName[i], RandF(0.2f, 8.f)), Rand(1, 10));
+		fountain.Draw(render);
+
+		std::cout << render;
+		std::cout << "\n Particles: 50 | Frame: " << frameCount;
+		std::cout << "\n [ESC] to quit" << std::endl;
+
+		Sleep(16);
+		system("cls");
 	}
-
-	inventory->Show();
-
-	std::cout << "\n\n\n" << std::endl;
-	for (int i = 0; i < totalItem; i++)
-	{
-		inventory->AddItem(Item(itemName[i], RandF(0.2f, 8.f)), Rand(1, 10));
-	}
-
-	inventory->Show();
-	std::cout << "\n\n\n" << std::endl;
-
-	inventory->RemoveItem(inventory->GetItemFromInventory("Shield"), 100);
-
-	inventory->Show();
-	std::cout << std::endl;
-	system("pause");
-
-	delete inventory;
 
 	return EXIT_SUCCESS;
 }
