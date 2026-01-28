@@ -38,8 +38,18 @@ void Game::Load()
 
 void Game::Update(float _dt, sf::RenderWindow& _window)
 {
-
 	MoveCamera(_dt);
+
+	for (int i = rabits.size() - 1; i >= 0; i--)
+	{
+		rabits[i]->Update(_dt);
+		CheckRabbitColideWithMap(*rabits[i]);
+		if (rabits[i]->IsDead())
+		{
+			delete rabits[i];
+			rabits.erase(rabits.begin() + i);
+		}
+	}
 
 	//data->logger->Log(LogLevel::WARNING, data->logger->Vec2(playerWorldPos, "player pos"), false);
 }
@@ -81,6 +91,11 @@ void Game::Draw(sf::RenderWindow& _window)
 	//Draw Ground
 	_window.draw(background);
 
+	for (int i = 0; i < rabits.size(); i++)
+	{
+		rabits[i]->Draw(_window);
+	}
+
 
 	data->debugViewer->Draw(_window);
 }
@@ -93,9 +108,27 @@ void Game::MoveCamera(float _dt)
 	data->cam.y += (0 - data->cam.y);
 }
 
+void Game::CheckRabbitColideWithMap(Rabbit& _rabbit)
+{
+	sf::Vector2f pos = _rabbit.GetPos();
+	
+	if (pos.x < 0 || pos.x > data->screen.width)
+	{
+		sf::Vector2f velocity = _rabbit.GetVelocity();
+		_rabbit.SetVelocity({ velocity.x * -1,velocity.y });
+	}
+	if (pos.y < 0 || pos.y > data->screen.height)
+	{
+		sf::Vector2f velocity = _rabbit.GetVelocity();
+		_rabbit.SetVelocity({ velocity.x,velocity.y * -1 });
+	}
+}
+
+#pragma region Rabbit
+
 Rabbit::Rabbit(sf::Vector2f startPos)
 {
-	shape.setRadius(10.f);
+	shape.setRadius(25.f);
 	shape.setFillColor(sf::Color::White);
 	shape.setPosition(startPos);
 	energy = 100.f;
@@ -109,7 +142,7 @@ Rabbit::~Rabbit()
 void Rabbit::Update(float _dt)
 {
 	shape.move(velocity);
-	energy = -ENERGY_REMOVE * _dt;
+	energy -= ENERGY_REMOVE * _dt;
 
 	if (energy < 30)
 	{
@@ -126,3 +159,20 @@ bool Rabbit::IsDead(void)
 {
 	return energy <= 0;
 }
+
+void Rabbit::SetVelocity(sf::Vector2f _velocity)
+{
+	velocity = _velocity;
+}
+
+sf::Vector2f Rabbit::GetVelocity(void)
+{
+	return velocity;
+}
+
+sf::Vector2f Rabbit::GetPos(void)
+{
+	return shape.getPosition();
+}
+
+#pragma endregion

@@ -47,7 +47,18 @@ public:
 	void Draw(sf::RenderWindow& _render);
 
 	bool IsDead(void);
+
+	void SetVelocity(sf::Vector2f _velocity);
+
+	sf::Vector2f GetVelocity(void);
+	sf::Vector2f GetPos(void);
 protected:
+};
+
+class Food
+{
+private:
+	sf::CircleShape shape;
 };
 
 // Game Scene
@@ -75,6 +86,7 @@ private:
 
 	// Camera functions
 	void MoveCamera(float _dt);
+	void CheckRabbitColideWithMap(Rabbit& _rabbit);
 };
 
 #endif // !GAME_H
