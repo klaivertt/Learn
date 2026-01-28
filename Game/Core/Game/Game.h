@@ -39,7 +39,7 @@ private:
 	sf::Vector2f velocity;
 
 public:
-	Rabbit(sf::Vector2f startPos);
+	Rabbit(sf::Vector2f _startPos);
 	~Rabbit();
 
 	void Update(float _dt);
@@ -52,6 +52,7 @@ public:
 
 	sf::Vector2f GetVelocity(void);
 	sf::Vector2f GetPos(void);
+	sf::FloatRect GetIntersect(void);
 protected:
 };
 
@@ -59,6 +60,18 @@ class Food
 {
 private:
 	sf::CircleShape shape;
+	float nutrition = 0.f;
+	bool eated = false;
+public:
+	Food(sf::Vector2f _pos);
+	~Food();
+
+	void Draw(sf::RenderWindow& _render);
+
+	sf::Vector2f GetPos();
+	sf::FloatRect GetIntersect(void);
+
+	float GetNutritionValue(void);
 };
 
 // Game Scene
@@ -83,6 +96,7 @@ private:
 	bool isGameOver = false;
 
 	std::vector<Rabbit*> rabits;
+	std::vector<Food*> foods;
 
 	// Camera functions
 	void MoveCamera(float _dt);

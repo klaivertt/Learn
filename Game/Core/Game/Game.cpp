@@ -126,7 +126,7 @@ void Game::CheckRabbitColideWithMap(Rabbit& _rabbit)
 
 #pragma region Rabbit
 
-Rabbit::Rabbit(sf::Vector2f startPos)
+Rabbit::Rabbit(sf::Vector2f _startPos)
 {
 	shape.setRadius(25.f);
 	shape.setFillColor(sf::Color::White);
@@ -175,4 +175,46 @@ sf::Vector2f Rabbit::GetPos(void)
 	return shape.getPosition();
 }
 
+sf::FloatRect Rabbit::GetIntersect(void)
+{
+	return shape.getGlobalBounds();
+}
+
+#pragma endregion
+
+#pragma region Food
+Food::Food(sf::Vector2f _pos)
+{
+	shape.setRadius(25.f);
+	shape.setFillColor(sf::Color::White);
+	shape.setPosition(_pos);
+}
+
+Food::~Food()
+{
+}
+
+void Food::Draw(sf::RenderWindow& _render)
+{
+	_render.draw(shape);
+}
+
+sf::Vector2f Food::GetPos(void)
+{
+	return shape.getPosition();
+}
+
+sf::FloatRect Food::GetIntersect(void)
+{
+	return shape.getGlobalBounds();
+}
+float Food::GetNutritionValue(void)
+{
+	if (!eated)
+	{
+		eated = true;
+		return nutrition;
+	}
+	return 0.0f;
+}
 #pragma endregion
