@@ -39,40 +39,14 @@ private:
 	sf::Vector2f velocity;
 
 public:
-	Rabbit(sf::Vector2f startPos)
-	{
-		shape.setRadius(10.f);
-		shape.setFillColor(sf::Color::White);
-		shape.setPosition(startPos);
-		energy = 100.f;
-		velocity = sf::Vector2f(RandF(-1, 1), RandF(-1, 1));
-	}
+	Rabbit(sf::Vector2f startPos);
+	~Rabbit();
 
-	~Rabbit()
-	{
-	}
+	void Update(float _dt);
 
-	void Update(float _dt)
-	{
-		shape.move(velocity);
-		energy = -ENERGY_REMOVE * _dt;
+	void Draw(sf::RenderWindow& _render);
 
-		if (energy < 30)
-		{
-			shape.setFillColor(sf::Color::Red);
-		}
-	}
-
-	void Draw(sf::RenderWindow & _render)
-	{
-		_render.draw(shape);
-	}
-
-	bool IsDead(void)
-	{
-		return energy <= 0;
-	}
-
+	bool IsDead(void);
 protected:
 };
 
@@ -83,14 +57,14 @@ public:
 	Game();
 	~Game();
 	void Load() override;
-	void Update(float _dt, sf::RenderWindow &_window) override;
-	void KeyPressed(sf::Event::KeyEvent _key, sf::RenderWindow &_window) override;
-	void MousePressed(sf::Event::MouseButtonEvent _mouse, sf::RenderWindow &_window) override;
-	void MouseMoved(sf::Event::MouseMoveEvent _mouse, sf::RenderWindow &_window) override;
-	void Draw(sf::RenderWindow &_window) override;
+	void Update(float _dt, sf::RenderWindow& _window) override;
+	void KeyPressed(sf::Event::KeyEvent _key, sf::RenderWindow& _window) override;
+	void MousePressed(sf::Event::MouseButtonEvent _mouse, sf::RenderWindow& _window) override;
+	void MouseMoved(sf::Event::MouseMoveEvent _mouse, sf::RenderWindow& _window) override;
+	void Draw(sf::RenderWindow& _window) override;
 
 private:
-	GameData *data = nullptr;
+	GameData* data = nullptr;
 
 	sf::Sprite background;
 
@@ -98,8 +72,6 @@ private:
 	bool isGameOver = false;
 
 	std::vector<Rabbit*> rabits;
-	// Functions
-	void ContactEvent(void);
 
 	// Camera functions
 	void MoveCamera(float _dt);
