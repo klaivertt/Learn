@@ -29,7 +29,8 @@
 #define DEAD_TIMER 2.5f
 #define DEAD_Y -10
 
-#define ENERGY_REMOVE 1.f
+#define ENERGY_REMOVE 2.5f
+#define MAX_ENERGY 100.f
 
 class Rabbit
 {
@@ -38,6 +39,11 @@ private:
 	float energy = 0.f;
 	sf::Vector2f velocity;
 
+	//rabbit Gui
+	sf::RectangleShape backDisplayBar;
+	sf::RectangleShape displayBar;
+
+	void UpdateDisplayBar();
 public:
 	Rabbit(sf::Vector2f _startPos);
 	~Rabbit();
@@ -50,9 +56,11 @@ public:
 
 	void SetVelocity(sf::Vector2f _velocity);
 
+	void SetEnergie(float _amount);
+
 	sf::Vector2f GetVelocity(void);
 	sf::Vector2f GetPos(void);
-	sf::FloatRect GetIntersect(void);
+	sf::FloatRect GetBound(void);
 protected:
 };
 
@@ -69,9 +77,11 @@ public:
 	void Draw(sf::RenderWindow& _render);
 
 	sf::Vector2f GetPos();
-	sf::FloatRect GetIntersect(void);
+	sf::FloatRect GetBound(void);
 
 	float GetNutritionValue(void);
+
+	bool GetEated(void);
 };
 
 // Game Scene
@@ -101,6 +111,7 @@ private:
 	// Camera functions
 	void MoveCamera(float _dt);
 	void CheckRabbitColideWithMap(Rabbit& _rabbit);
+	void CheckRabbitColideWithFood(Rabbit& _rabbit, Food& _food);
 };
 
 #endif // !GAME_H
