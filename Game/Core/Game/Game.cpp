@@ -27,16 +27,16 @@ void Game::Load()
 	//Sprites
 	background = LoadSprite("Assets/background.png", { 0.0f, 0.0f });
 
-	for (int i = 0; i < 15; i++)
+	for (int i = 0; i < NB_OF_RABBITS; i++)
 	{
 		sf::Vector2f randPos = sf::Vector2f(RandF(0, data->screen.width), RandF(0, data->screen.height));
-		foods.push_back(new Food(randPos));
-	}
-
-	for (int i = 0; i < 15; i++)
-	{
-		sf::Vector2f randPos = sf::Vector2f(RandF(0, data->screen.width), RandF(0, data->screen.height));
-		rabits.push_back(new Rabbit(randPos));
+		rabits.push_back(new Rabbit(randPos)); 
+		
+		for (int i = 0; i < NB_FOOD_BY_RABBITS; i++)
+		{
+			sf::Vector2f randPos = sf::Vector2f(RandF(0, data->screen.width), RandF(0, data->screen.height));
+			foods.push_back(new Food(randPos, RandF(FOOD_MIN_NUTRITION, FOOD_MAX_NUTRITION)));
+		}
 	}
 
 	data->logger->Success("Game Scene Loaded.", true);
@@ -51,26 +51,21 @@ void Game::Update(float _dt, sf::RenderWindow& _window)
 		rabits[i]->Update(_dt);
 		CheckRabbitColideWithMap(*rabits[i]);
 
+		for (int j = foods.size() - 1; j >= 0; j--)
+		{
+			CheckRabbitColideWithFood(*rabits[i], *foods[j]);
+
+			if (foods[j]->GetEated())
+			{
+				delete foods[j];
+				foods.erase(foods.begin() + j);
+			}
+		}
+
 		if (rabits[i]->IsDead())
 		{
 			delete rabits[i];
 			rabits.erase(rabits.begin() + i);
-		}
-		else
-		{
-			for (int j = foods.size() - 1; j >= 0; j--)
-			{
-				// Vérifier que l'indice est toujours valide
-				if (j < foods.size())
-				{
-					CheckRabbitColideWithFood(*rabits[i], *foods[j]);
-					if (foods[j]->GetEated())
-					{
-						delete foods[j];
-						foods.erase(foods.begin() + j);
-					}
-				}
-			}
 		}
 	}
 
@@ -114,7 +109,7 @@ void Game::Draw(sf::RenderWindow& _window)
 	//Draw Ground
 	_window.draw(background);
 
-	for (int i = 0; i < rabits.size(); i++)
+	for (int i = 0; i < foods.size(); i++)
 	{
 		foods[i]->Draw(_window);
 	}
@@ -261,11 +256,12 @@ sf::FloatRect Rabbit::GetBound(void)
 #pragma endregion
 
 #pragma region Food
-Food::Food(sf::Vector2f _pos)
+Food::Food(sf::Vector2f _pos, float _nutrition)
 {
-	shape.setRadius(25.f);
+	shape.setRadius(10.f);
 	shape.setFillColor(sf::Color(75, 120, 75));
 	shape.setPosition(_pos);
+	nutrition = _nutrition;
 }
 
 Food::~Food()

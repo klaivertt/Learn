@@ -32,6 +32,10 @@
 #define ENERGY_REMOVE 2.5f
 #define MAX_ENERGY 100.f
 
+#define NB_OF_RABBITS 10
+#define NB_FOOD_BY_RABBITS 3
+#define FOOD_MIN_NUTRITION 2.f
+#define FOOD_MAX_NUTRITION 6.f
 class Rabbit
 {
 private:
@@ -71,7 +75,7 @@ private:
 	float nutrition = 0.f;
 	bool eated = false;
 public:
-	Food(sf::Vector2f _pos);
+	Food(sf::Vector2f _pos, float _nutrition);
 	~Food();
 
 	void Draw(sf::RenderWindow& _render);
