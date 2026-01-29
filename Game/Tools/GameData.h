@@ -36,6 +36,8 @@ public:
 	// Common Font
 	sf::Font font;
 
+	float timeElapsed = 0.f;
+
 	AssetManager* assetManager = nullptr;
 
 	Scene* currentScene = nullptr;

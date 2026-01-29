@@ -130,7 +130,7 @@ Rabbit::Rabbit(sf::Vector2f _startPos)
 {
 	shape.setRadius(25.f);
 	shape.setFillColor(sf::Color::White);
-	shape.setPosition(startPos);
+	shape.setPosition(_startPos);
 	energy = 100.f;
 	velocity = sf::Vector2f(RandF(-1, 1), RandF(-1, 1));
 }
