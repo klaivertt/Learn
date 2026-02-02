@@ -29,14 +29,14 @@ void Game::Load()
 
 	for (int i = 0; i < NB_OF_RABBITS; i++)
 	{
-		sf::Vector2f randPos = sf::Vector2f(RandF(0, data->screen.width), RandF(0, data->screen.height));
-		rabits.push_back(new Rabbit(randPos)); 
-		
+
 		for (int i = 0; i < NB_FOOD_BY_RABBITS; i++)
 		{
 			sf::Vector2f randPos = sf::Vector2f(RandF(0, data->screen.width), RandF(0, data->screen.height));
 			foods.push_back(new Food(randPos, RandF(FOOD_MIN_NUTRITION, FOOD_MAX_NUTRITION)));
 		}
+		sf::Vector2f randPos = sf::Vector2f(RandF(0, data->screen.width), RandF(0, data->screen.height));
+		rabits.push_back(new Rabbit(randPos, &foods));
 	}
 
 	data->logger->Success("Game Scene Loaded.", true);
@@ -149,12 +149,16 @@ void Game::CheckRabbitColideWithMap(Rabbit& _rabbit)
 
 void Game::CheckRabbitColideWithFood(Rabbit& _rabbit, Food& _food)
 {
-	sf::FloatRect rabbitBound = _rabbit.GetBound();
-	sf::FloatRect foodBound = _food.GetBound();
-
-	if (rabbitBound.intersects(foodBound))
+	if (_rabbit.GetHungry())
 	{
-		_rabbit.SetEnergie(_food.GetNutritionValue());
+		sf::FloatRect rabbitBound = _rabbit.GetBound();
+		sf::FloatRect foodBound = _food.GetBound();
+
+
+		if (rabbitBound.intersects(foodBound))
+		{
+			_rabbit.SetEnergie(_food.GetNutritionValue());
+		}
 	}
 }
 
@@ -174,7 +178,44 @@ void Rabbit::UpdateDisplayBar()
 	displayBar.setSize({ width, backDisplayBar.getLocalBounds().height });
 }
 
-Rabbit::Rabbit(sf::Vector2f _startPos)
+void Rabbit::FindClosestFood(void)
+{
+	sf::Vector2f nearestPos = sf::Vector2f(99999.f, 99999.f);
+	for (size_t i = 0; i < food->size(); i++)
+	{
+		sf::Vector2f grassPos = (*food)[i]->GetPos();
+		sf::Vector2f rabbitPos = this->shape.getPosition();
+		float distNearestGrass = (std::pow((grassPos.x - rabbitPos.x), 2) + std::pow((grassPos.y - rabbitPos.y), 2));
+		float distLastGrass = (std::pow((nearestPos.x - rabbitPos.x), 2) + std::pow((nearestPos.y - rabbitPos.y), 2));
+		if (distNearestGrass < distLastGrass)
+		{
+			nearestPos = grassPos;
+		}
+
+	}
+
+	foodPos = nearestPos;
+	foodFinded = true;
+	if (food->size() <= 0)
+	{
+		foodFinded = false;
+	}
+}
+
+void Rabbit::FoodDirection(void)
+{
+	velocity = Normalize(foodPos - shape.getPosition());
+}
+
+void Rabbit::NewWanderingDirection(void)
+{
+	velocity = sf::Vector2f(RandF(-1, 1), RandF(-1, 1));
+	speed = RandF(50.f, 100.f);
+	wanderTime = RandF(1.f, 10.f);
+}
+
+Rabbit::Rabbit(sf::Vector2f _startPos, std::vector<Food*>* _food)
+	: food(_food)
 {
 	shape.setRadius(20.f);
 	shape.setFillColor(sf::Color::White);
@@ -182,6 +223,7 @@ Rabbit::Rabbit(sf::Vector2f _startPos)
 	shape.setOrigin({ 20,20 });
 	energy = 100.f;
 	velocity = sf::Vector2f(RandF(-1, 1), RandF(-1, 1));
+	speed = RandF(50.f, 100.f);
 
 
 	sf::Vector2f size = sf::Vector2f(50, 10);
@@ -200,10 +242,27 @@ Rabbit::~Rabbit()
 
 void Rabbit::Update(float _dt)
 {
-	shape.move(velocity);
+	sf::Vector2f move = velocity * speed * _dt;
+	shape.move(move);
 	energy -= ENERGY_REMOVE * _dt;
 
 	UpdateState();
+
+	if (state == HUNGRY)
+	{
+		FindClosestFood();
+		FoodDirection();
+		hungry = true;
+	}
+	if (state == WANDER)
+	{
+		wanderTime -= _dt;
+		if (wanderTime < 0.f)
+		{
+			NewWanderingDirection();
+		}
+		hungry = false;
+	}
 
 	if (energy < 30)
 	{
@@ -242,7 +301,7 @@ void Rabbit::SetEnergie(float _amount)
 
 void Rabbit::UpdateState(void)
 {
-	if (energy > MAX_ENERGY/2)
+	if (energy > MAX_ENERGY / 2)
 	{
 		state = WANDER;
 	}
@@ -265,6 +324,11 @@ sf::Vector2f Rabbit::GetPos(void)
 sf::FloatRect Rabbit::GetBound(void)
 {
 	return shape.getGlobalBounds();
+}
+
+bool Rabbit::GetHungry(void)
+{
+	return hungry;
 }
 
 #pragma endregion

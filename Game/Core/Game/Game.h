@@ -17,48 +17,6 @@
 #define FOOD_MIN_NUTRITION 2.f
 #define FOOD_MAX_NUTRITION 6.f
 
-class Rabbit
-{
-public:
-	enum State
-	{
-		WANDER,
-		HUNGRY,
-	};
-
-
-private:
-	sf::CircleShape shape;
-	float energy = 0.f;
-	sf::Vector2f velocity;
-	State state = WANDER;
-	//rabbit Gui
-	sf::RectangleShape backDisplayBar;
-	sf::RectangleShape displayBar;
-
-	void UpdateDisplayBar();
-public:
-	Rabbit(sf::Vector2f _startPos);
-	~Rabbit();
-
-	void Update(float _dt);
-
-	void Draw(sf::RenderWindow& _render);
-
-	bool IsDead(void);
-
-	void SetVelocity(sf::Vector2f _velocity);
-
-	void SetEnergie(float _amount);
-
-	void UpdateState(void);
-
-	sf::Vector2f GetVelocity(void);
-	sf::Vector2f GetPos(void);
-	sf::FloatRect GetBound(void);
-protected:
-};
-
 class Food
 {
 private:
@@ -77,6 +35,58 @@ public:
 	float GetNutritionValue(void);
 
 	bool GetEated(void);
+};
+
+class Rabbit
+{
+public:
+	enum State
+	{
+		WANDER,
+		HUNGRY,
+	};
+
+
+private:
+	sf::CircleShape shape;
+	float energy = 0.f;
+	sf::Vector2f velocity;
+	float speed = 0.f;
+	float wanderTime = 0.f;
+	bool hungry = false;
+	State state = WANDER;
+	//rabbit Gui
+	sf::RectangleShape backDisplayBar;
+	sf::RectangleShape displayBar;
+	bool foodFinded = false;
+	//Copy of food vector
+	std::vector<Food*>* food = nullptr;
+	sf::Vector2f foodPos;
+	void UpdateDisplayBar();
+	void FindClosestFood(void);
+	void FoodDirection(void);
+	void NewWanderingDirection(void);
+public:
+	Rabbit(sf::Vector2f _startPos, std::vector<Food*>* _food);
+	~Rabbit();
+
+	void Update(float _dt);
+
+	void Draw(sf::RenderWindow& _render);
+
+	bool IsDead(void);
+
+	void SetVelocity(sf::Vector2f _velocity);
+
+	void SetEnergie(float _amount);
+
+	void UpdateState(void);
+
+	sf::Vector2f GetVelocity(void);
+	sf::Vector2f GetPos(void);
+	sf::FloatRect GetBound(void);
+	bool GetHungry(void);
+protected:
 };
 
 // Game Scene
