@@ -5,26 +5,6 @@
 #include "../../Tools/Scene.h"
 #define PHYSISCS_PRECSION 8
 
-// defines Motorbike
-#define TYPE_OF_BIKER 2
-#define MOTO_STARTX 3
-#define MOTO_STARTY 5
-#define MOTO_MAXSPEED 55.f
-#define FRAME_RADIUS 0.264f
-
-// defines Bridge
-#define BRIDGE_PLANK_COUNT 28
-#define PLANK_HALF_WIDTH 0.5f
-#define PLANK_HALF_HEIGHT 0.1f
-#define PLANK_SPACING 1.f
-
-#define FIRST_BRIDGE_START_X 190.f
-#define FIRST_BRIDGE_END_X 192.f
-#define FIRST_BRIDGE_Y 0.06f
-
-// defines Ground
-#define SEGMENT_COUNT 6
-
 // defines Game
 #define DEAD_TIMER 2.5f
 #define DEAD_Y -10
@@ -36,13 +16,22 @@
 #define NB_FOOD_BY_RABBITS 3
 #define FOOD_MIN_NUTRITION 2.f
 #define FOOD_MAX_NUTRITION 6.f
+
 class Rabbit
 {
+public:
+	enum State
+	{
+		WANDER,
+		HUNGRY,
+	};
+
+
 private:
 	sf::CircleShape shape;
 	float energy = 0.f;
 	sf::Vector2f velocity;
-
+	State state = WANDER;
 	//rabbit Gui
 	sf::RectangleShape backDisplayBar;
 	sf::RectangleShape displayBar;
@@ -61,6 +50,8 @@ public:
 	void SetVelocity(sf::Vector2f _velocity);
 
 	void SetEnergie(float _amount);
+
+	void UpdateState(void);
 
 	sf::Vector2f GetVelocity(void);
 	sf::Vector2f GetPos(void);

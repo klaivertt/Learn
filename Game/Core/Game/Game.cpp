@@ -203,6 +203,8 @@ void Rabbit::Update(float _dt)
 	shape.move(velocity);
 	energy -= ENERGY_REMOVE * _dt;
 
+	UpdateState();
+
 	if (energy < 30)
 	{
 		shape.setFillColor(sf::Color::Red);
@@ -235,6 +237,18 @@ void Rabbit::SetEnergie(float _amount)
 	if (energy >= MAX_ENERGY)
 	{
 		energy = MAX_ENERGY;
+	}
+}
+
+void Rabbit::UpdateState(void)
+{
+	if (energy > MAX_ENERGY/2)
+	{
+		state = WANDER;
+	}
+	else
+	{
+		state = HUNGRY;
 	}
 }
 
