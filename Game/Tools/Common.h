@@ -110,7 +110,7 @@ sf::Sprite LoadSprite(const std::string _path, sf::Vector2f _pos, sf::Vector2f _
 // @param _anchor: Anchor position for text alignment
 // @param _decal: Positional decal to adjust text position
 // @return Configured sf::Text object
-sf::Text CreateText(const std::string& _str, sf::Font& _font, int _size, Anchor _anchor, sf::Vector2f _decal);
+sf::Text CreateText(const std::string& _str, sf::Font& _font, int _size, Anchor _anchor, sf::Vector2f _decal = sf::Vector2f(0, 0));
 
 // Set text properties like string, font, position, and origin division
 // @param str: The string to display

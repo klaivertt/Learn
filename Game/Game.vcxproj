@@ -172,7 +172,10 @@
     <Copy SourceFiles="@(ReleaseDllFiles)" DestinationFolder="$(SolutionDir)x64\Release\" Condition="'$(Configuration)' == 'Release'" />
   </Target>
   <ItemGroup>
+    <ClCompile Include="Core\Game\DayNightCycle.cpp" />
+    <ClCompile Include="Core\Game\Food.cpp" />
     <ClCompile Include="Core\Game\Game.cpp" />
+    <ClCompile Include="Core\Game\Rabbit.cpp" />
     <ClCompile Include="Core\Menu\Menu.cpp" />
     <ClCompile Include="Core\PollEvent.cpp" />
     <ClCompile Include="Tools\Animation.cpp" />
@@ -188,7 +191,10 @@
     <ClCompile Include="Tools\Particle.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Core\Game\DayNightCycle.h" />
     <ClInclude Include="Core\Game\Game.h" />
+    <ClInclude Include="Core\Game\Food.h" />
+    <ClInclude Include="Core\Game\Rabbit.h" />
     <ClInclude Include="Core\Menu\Menu.h" />
     <ClInclude Include="Core\PollEvent.h" />
     <ClInclude Include="Tools\Animation.h" />

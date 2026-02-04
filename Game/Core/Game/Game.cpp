@@ -4,6 +4,9 @@
 #include "../../Tools/Debug/Logger.h"
 #include "../../Tools/Debug/SFMLDebugDraw.h"
 #include "../../Core/Menu/Menu.h"
+#include "Food.h"
+#include "Rabbit.h"
+#include "DayNightCycle.h"
 
 
 Game::Game()
@@ -15,7 +18,6 @@ Game::~Game()
 {
 	// cleanup
 	background.getTexture()->~Texture();
-
 	data->logger->Info("Game Scene Unloaded.", false);
 }
 
@@ -36,8 +38,11 @@ void Game::Load()
 			foods.push_back(new Food(randPos, RandF(FOOD_MIN_NUTRITION, FOOD_MAX_NUTRITION)));
 		}
 		sf::Vector2f randPos = sf::Vector2f(RandF(0, data->screen.width), RandF(0, data->screen.height));
-		rabits.push_back(new Rabbit(randPos, &foods));
+		rabits.push_back(new Rabbit(randPos, &foods, &rabits));
 	}
+
+	dayCycle = new DayNightCycle(data->screen.width, data->screen.height);
+	dayCount = CreateText("Day : 0", data->font, 20, Anchor::TOP_RIGHT);
 
 	data->logger->Success("Game Scene Loaded.", true);
 }
@@ -45,6 +50,14 @@ void Game::Load()
 void Game::Update(float _dt, sf::RenderWindow& _window)
 {
 	MoveCamera(_dt);
+
+	dayCycle->Update(_dt);
+	if (dayCycle->GetIsNewDay())
+	{
+		SpawnFood();
+		ResetRabbitBread();
+		SetText(dayCount, "Day : " + std::to_string(dayCycle->GetDayCount()));
+	}
 
 	for (int i = rabits.size() - 1; i >= 0; i--)
 	{
@@ -119,6 +132,10 @@ void Game::Draw(sf::RenderWindow& _window)
 		rabits[i]->Draw(_window);
 	}
 
+	dayCycle->Draw(_window);
+
+	_window.draw(dayCount);
+
 
 	data->debugViewer->Draw(_window);
 }
@@ -129,6 +146,14 @@ void Game::MoveCamera(float _dt)
 
 	data->cam.x += (0 - data->cam.x);
 	data->cam.y += (0 - data->cam.y);
+}
+
+void Game::ResetRabbitBread(void)
+{
+	for (int i = 0; i < rabits.size(); i++)
+	{
+		rabits[i]->SetBreadable(true);
+	}
 }
 
 void Game::CheckRabbitColideWithMap(Rabbit& _rabbit)
@@ -162,215 +187,17 @@ void Game::CheckRabbitColideWithFood(Rabbit& _rabbit, Food& _food)
 	}
 }
 
-#pragma region Rabbit
-
-void Rabbit::UpdateDisplayBar()
+void Game::SpawnFood(void)
 {
-	sf::Vector2f pos = shape.getPosition();
-
-	pos.y -= 35.f;
-
-	backDisplayBar.setPosition(pos);
-	displayBar.setPosition(pos);
-
-	float width = backDisplayBar.getLocalBounds().width * (energy / MAX_ENERGY);
-
-	displayBar.setSize({ width, backDisplayBar.getLocalBounds().height });
-}
-
-void Rabbit::FindClosestFood(void)
-{
-	sf::Vector2f nearestPos = sf::Vector2f(99999.f, 99999.f);
-	for (size_t i = 0; i < food->size(); i++)
+	int nbFood = RandI(rabits.size() * MIN_FOOD_DAY, rabits.size() * MAX_FOOD_DAY);
+	for (int i = 0; i < nbFood; i++)
 	{
-		sf::Vector2f grassPos = (*food)[i]->GetPos();
-		sf::Vector2f rabbitPos = this->shape.getPosition();
-		float distNearestGrass = (std::pow((grassPos.x - rabbitPos.x), 2) + std::pow((grassPos.y - rabbitPos.y), 2));
-		float distLastGrass = (std::pow((nearestPos.x - rabbitPos.x), 2) + std::pow((nearestPos.y - rabbitPos.y), 2));
-		if (distNearestGrass < distLastGrass)
+		sf::Vector2f randPos = sf::Vector2f(RandF(0, data->screen.width), RandF(0, data->screen.height));
+		foods.push_back(new Food(randPos, RandF(FOOD_MIN_NUTRITION, FOOD_MAX_NUTRITION)));
+
+		if (foods.size() > (rabits.size() * 0.75f) * MAX_FOOD_DAY * 2)
 		{
-			nearestPos = grassPos;
+			return;
 		}
-
-	}
-
-	foodPos = nearestPos;
-	foodFinded = true;
-	if (food->size() <= 0)
-	{
-		foodFinded = false;
 	}
 }
-
-void Rabbit::FoodDirection(void)
-{
-	velocity = Normalize(foodPos - shape.getPosition());
-}
-
-void Rabbit::NewWanderingDirection(void)
-{
-	velocity = sf::Vector2f(RandF(-1, 1), RandF(-1, 1));
-	speed = RandF(50.f, 100.f);
-	wanderTime = RandF(1.f, 10.f);
-}
-
-Rabbit::Rabbit(sf::Vector2f _startPos, std::vector<Food*>* _food)
-	: food(_food)
-{
-	shape.setRadius(20.f);
-	shape.setFillColor(sf::Color::White);
-	shape.setPosition(_startPos);
-	shape.setOrigin({ 20,20 });
-	energy = 100.f;
-	velocity = sf::Vector2f(RandF(-1, 1), RandF(-1, 1));
-	speed = RandF(50.f, 100.f);
-
-
-	sf::Vector2f size = sf::Vector2f(50, 10);
-	backDisplayBar.setSize(size);
-	backDisplayBar.setOrigin({ size.x / 2, size.y / 2 });
-	backDisplayBar.setFillColor(sf::Color(50, 50, 50));
-
-	displayBar.setSize(size);
-	displayBar.setOrigin({ size.x / 2, size.y / 2 });
-	displayBar.setFillColor(sf::Color(170, 200, 50));
-}
-
-Rabbit::~Rabbit()
-{
-}
-
-void Rabbit::Update(float _dt)
-{
-	sf::Vector2f move = velocity * speed * _dt;
-	shape.move(move);
-	energy -= ENERGY_REMOVE * _dt;
-
-	UpdateState();
-
-	if (state == HUNGRY)
-	{
-		FindClosestFood();
-		FoodDirection();
-		hungry = true;
-	}
-	if (state == WANDER)
-	{
-		wanderTime -= _dt;
-		if (wanderTime < 0.f)
-		{
-			NewWanderingDirection();
-		}
-		hungry = false;
-	}
-
-	if (energy < 30)
-	{
-		shape.setFillColor(sf::Color::Red);
-	}
-
-	UpdateDisplayBar();
-}
-
-void Rabbit::Draw(sf::RenderWindow& _render)
-{
-	_render.draw(shape);
-
-	_render.draw(backDisplayBar);
-	_render.draw(displayBar);
-}
-
-bool Rabbit::IsDead(void)
-{
-	return energy <= 0;
-}
-
-void Rabbit::SetVelocity(sf::Vector2f _velocity)
-{
-	velocity = _velocity;
-}
-
-void Rabbit::SetEnergie(float _amount)
-{
-	energy += _amount;
-	if (energy >= MAX_ENERGY)
-	{
-		energy = MAX_ENERGY;
-	}
-}
-
-void Rabbit::UpdateState(void)
-{
-	if (energy > MAX_ENERGY / 2)
-	{
-		state = WANDER;
-	}
-	else
-	{
-		state = HUNGRY;
-	}
-}
-
-sf::Vector2f Rabbit::GetVelocity(void)
-{
-	return velocity;
-}
-
-sf::Vector2f Rabbit::GetPos(void)
-{
-	return shape.getPosition();
-}
-
-sf::FloatRect Rabbit::GetBound(void)
-{
-	return shape.getGlobalBounds();
-}
-
-bool Rabbit::GetHungry(void)
-{
-	return hungry;
-}
-
-#pragma endregion
-
-#pragma region Food
-Food::Food(sf::Vector2f _pos, float _nutrition)
-{
-	shape.setRadius(10.f);
-	shape.setFillColor(sf::Color(75, 120, 75));
-	shape.setPosition(_pos);
-	nutrition = _nutrition;
-}
-
-Food::~Food()
-{
-}
-
-void Food::Draw(sf::RenderWindow& _render)
-{
-	_render.draw(shape);
-}
-
-sf::Vector2f Food::GetPos(void)
-{
-	return shape.getPosition();
-}
-
-sf::FloatRect Food::GetBound(void)
-{
-	return shape.getGlobalBounds();
-}
-float Food::GetNutritionValue(void)
-{
-	if (!eated)
-	{
-		eated = true;
-		return nutrition;
-	}
-	return 0.0f;
-}
-bool Food::GetEated(void)
-{
-	return eated;
-}
-#pragma endregion

@@ -5,89 +5,11 @@
 #include "../../Tools/Scene.h"
 #define PHYSISCS_PRECSION 8
 
-// defines Game
-#define DEAD_TIMER 2.5f
-#define DEAD_Y -10
-
-#define ENERGY_REMOVE 2.5f
-#define MAX_ENERGY 100.f
-
 #define NB_OF_RABBITS 10
-#define NB_FOOD_BY_RABBITS 3
-#define FOOD_MIN_NUTRITION 2.f
-#define FOOD_MAX_NUTRITION 6.f
 
-class Food
-{
-private:
-	sf::CircleShape shape;
-	float nutrition = 0.f;
-	bool eated = false;
-public:
-	Food(sf::Vector2f _pos, float _nutrition);
-	~Food();
-
-	void Draw(sf::RenderWindow& _render);
-
-	sf::Vector2f GetPos();
-	sf::FloatRect GetBound(void);
-
-	float GetNutritionValue(void);
-
-	bool GetEated(void);
-};
-
-class Rabbit
-{
-public:
-	enum State
-	{
-		WANDER,
-		HUNGRY,
-	};
-
-
-private:
-	sf::CircleShape shape;
-	float energy = 0.f;
-	sf::Vector2f velocity;
-	float speed = 0.f;
-	float wanderTime = 0.f;
-	bool hungry = false;
-	State state = WANDER;
-	//rabbit Gui
-	sf::RectangleShape backDisplayBar;
-	sf::RectangleShape displayBar;
-	bool foodFinded = false;
-	//Copy of food vector
-	std::vector<Food*>* food = nullptr;
-	sf::Vector2f foodPos;
-	void UpdateDisplayBar();
-	void FindClosestFood(void);
-	void FoodDirection(void);
-	void NewWanderingDirection(void);
-public:
-	Rabbit(sf::Vector2f _startPos, std::vector<Food*>* _food);
-	~Rabbit();
-
-	void Update(float _dt);
-
-	void Draw(sf::RenderWindow& _render);
-
-	bool IsDead(void);
-
-	void SetVelocity(sf::Vector2f _velocity);
-
-	void SetEnergie(float _amount);
-
-	void UpdateState(void);
-
-	sf::Vector2f GetVelocity(void);
-	sf::Vector2f GetPos(void);
-	sf::FloatRect GetBound(void);
-	bool GetHungry(void);
-protected:
-};
+class Food;
+class Rabbit;
+class DayNightCycle;
 
 // Game Scene
 class Game : public Scene
@@ -101,7 +23,6 @@ public:
 	void MousePressed(sf::Event::MouseButtonEvent _mouse, sf::RenderWindow& _window) override;
 	void MouseMoved(sf::Event::MouseMoveEvent _mouse, sf::RenderWindow& _window) override;
 	void Draw(sf::RenderWindow& _window) override;
-
 private:
 	GameData* data = nullptr;
 
@@ -113,10 +34,15 @@ private:
 	std::vector<Rabbit*> rabits;
 	std::vector<Food*> foods;
 
+	DayNightCycle* dayCycle = nullptr;
+	sf::Text dayCount;
+
 	// Camera functions
 	void MoveCamera(float _dt);
+	void ResetRabbitBread(void);
 	void CheckRabbitColideWithMap(Rabbit& _rabbit);
 	void CheckRabbitColideWithFood(Rabbit& _rabbit, Food& _food);
+	void SpawnFood(void);
 };
 
 #endif // !GAME_H
