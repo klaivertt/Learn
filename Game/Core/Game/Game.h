@@ -36,10 +36,12 @@ private:
 
 	DayNightCycle* dayCycle = nullptr;
 	sf::Text dayCount;
+	sf::Text rabbitCount;
 
 	// Camera functions
 	void MoveCamera(float _dt);
 	void ResetRabbitBread(void);
+	void GrawAllRabbit(void);
 	void CheckRabbitColideWithMap(Rabbit& _rabbit);
 	void CheckRabbitColideWithFood(Rabbit& _rabbit, Food& _food);
 	void SpawnFood(void);

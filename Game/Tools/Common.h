@@ -16,7 +16,7 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 #include <cmath>
-#include "json/json.h"
+#include <json/json.h>
 #include <map>
 
 #include "SFML/Window.hpp"

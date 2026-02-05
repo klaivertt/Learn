@@ -5,7 +5,7 @@ void Rabbit::UpdateDisplayBar()
 {
 	sf::Vector2f pos = shape.getPosition();
 
-	pos.y -= 35.f;
+	pos.y -= 38.5f;
 
 	backDisplayBar.setPosition(pos);
 	displayBar.setPosition(pos);
@@ -71,9 +71,9 @@ void Rabbit::TryReproduce(void)
 				{
 					breedable = false;
 					potentialPartner->SetBreadable(false);
-					SetEnergie(-BREADABLE_COST);
+					this->SetEnergie(-BREADABLE_COST);
 					potentialPartner->SetEnergie(-BREADABLE_COST);
-					rabits->push_back(new Rabbit(shape.getPosition(), food, rabits, MAX_ENERGY * 0.8f));
+					rabits->push_back(new Rabbit(shape.getPosition(), food, rabits, MAX_ENERGY * 0.75f));
 				}
 			}
 		}
@@ -90,24 +90,30 @@ void Rabbit::FindClosestBreadableRabbit(void)
 
 		if (potentialPartner != this)
 		{
-			sf::Vector2f rabbitsBreadPos = potentialPartner->GetPos();
-			sf::Vector2f rabbitPos = this->shape.getPosition();
-			float distNearestRabbit = (std::pow((rabbitsBreadPos.x - rabbitPos.x), 2) + std::pow((rabbitsBreadPos.y - rabbitPos.y), 2));
-			float distLastRabbit = (std::pow((nearestPos.x - rabbitPos.x), 2) + std::pow((nearestPos.y - rabbitPos.y), 2));
-			if (distNearestRabbit < distLastRabbit && potentialPartner->GetIsBreadable())
+			if (potentialPartner->GetIsBreadable())
 			{
-				nearestPos = rabbitsBreadPos;
-				rabbitFind = true;
+				sf::Vector2f rabbitsBreadPos = potentialPartner->GetPos();
+				sf::Vector2f rabbitPos = this->shape.getPosition();
+				float distNearestRabbit = (std::pow((rabbitsBreadPos.x - rabbitPos.x), 2) + std::pow((rabbitsBreadPos.y - rabbitPos.y), 2));
+				float distLastRabbit = (std::pow((nearestPos.x - rabbitPos.x), 2) + std::pow((nearestPos.y - rabbitPos.y), 2));
+				if (distNearestRabbit < distLastRabbit)
+				{
+					nearestPos = rabbitsBreadPos;
+					rabbitFind = true;
+				}
 			}
 		}
 	}
 
 	if (rabits->size() <= 0)
 	{
-		nearestPos =  sf::Vector2f(0, 0);
 		rabbitFind = false;
 	}
-	rabbitPos = nearestPos;
+
+	if (rabbitFind)
+	{
+		rabbitPos = nearestPos;
+	}
 }
 
 void Rabbit::RabbitDirection(void)
@@ -115,16 +121,36 @@ void Rabbit::RabbitDirection(void)
 	velocity = Normalize(rabbitPos - shape.getPosition());
 }
 
-Rabbit::Rabbit(sf::Vector2f _startPos, std::vector<Food*>* _food, std::vector<Rabbit*>* _rabits, float _energy)
-	: food(_food), rabits(_rabits)
+void Rabbit::GrowthChangeState(void)
 {
-	shape.setRadius(20.f);
+	if (growthState != ADULT)
+	{
+		int state = static_cast<int>(growthState);
+		state++;
+		shape.setRadius(RADIUS_AGE * (state + 1));
+		shape.setOrigin({ RADIUS_AGE * (state + 1),RADIUS_AGE * (state + 1) });
+		growthState = static_cast<Growth>(state);
+		this->SetEnergie(-GROW_COST);
+	}
+}
+
+Rabbit::Rabbit(sf::Vector2f _startPos, std::vector<Food*>* _food, std::vector<Rabbit*>* _rabits, float _energy, Growth _growth)
+	: food(_food), rabits(_rabits), growthState(_growth)
+{
+	shape.setRadius(RADIUS_AGE);
 	shape.setFillColor(sf::Color::White);
 	shape.setPosition(_startPos);
-	shape.setOrigin({ 20,20 });
+	shape.setOrigin({ RADIUS_AGE,RADIUS_AGE });
 	energy = 100.f;
 	velocity = sf::Vector2f(RandF(-1, 1), RandF(-1, 1));
-	speed = RandF(MAX_SPEED / 2, MAX_SPEED);
+	speed = MAX_SPEED;
+
+	if (growthState == ADULT)
+	{
+		int state = static_cast<int>(Growth::ADULT);
+		shape.setRadius(RADIUS_AGE * (state + 1));
+		shape.setOrigin({ RADIUS_AGE * (state + 1),RADIUS_AGE * (state + 1) });
+	}
 
 
 	sf::Vector2f size = sf::Vector2f(50, 10);
@@ -146,11 +172,6 @@ Rabbit::~Rabbit()
 void Rabbit::Update(float _dt)
 {
 	UpdateState();
-
-	if (energy < MAX_ENERGY/2)
-	{
-		breedable = false;
-	}
 
 	if (state == HUNGRY)
 	{
@@ -186,7 +207,7 @@ void Rabbit::Update(float _dt)
 
 	if (energy < 30.f)
 	{
-		speed = MAX_SPEED * 0.7f;
+		speed = MAX_SPEED * 0.9f;
 	}
 	else
 	{
@@ -234,28 +255,40 @@ void Rabbit::SetEnergie(float _amount)
 
 void Rabbit::UpdateState(void)
 {
-	if (energy > MAX_ENERGY *0.6f && breedable)
+	if (energy > MAX_ENERGY * 0.5f && breedable)
 	{
 		state = BREEDABLE;
 	}
-	else if (!breedable && energy > MAX_ENERGY * 0.8f)
+	else if (energy < MAX_ENERGY * 0.4f)
 	{
-		state = WANDER;
+		state = HUNGRY;
 	}
 	else
 	{
-		state = HUNGRY;
+		state = WANDER;
 	}
 }
 
 void Rabbit::ResetBreadable(void)
 {
-	breedable = true;
+	if (energy < MAX_ENERGY * 0.6f && isAdult)
+	{
+		breedable = false;
+	}
+	else
+	{
+		breedable = true;
+	}
 }
 
 bool Rabbit::GetIsBreadable(void)
 {
 	return breedable;
+}
+
+bool Rabbit::GetIsAdulte(void)
+{
+	return isAdult;
 }
 
 void Rabbit::SetBreadable(bool _bool)

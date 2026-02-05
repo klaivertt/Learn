@@ -38,11 +38,14 @@ void Game::Load()
 			foods.push_back(new Food(randPos, RandF(FOOD_MIN_NUTRITION, FOOD_MAX_NUTRITION)));
 		}
 		sf::Vector2f randPos = sf::Vector2f(RandF(0, data->screen.width), RandF(0, data->screen.height));
-		rabits.push_back(new Rabbit(randPos, &foods, &rabits));
+		rabits.push_back(new Rabbit(randPos, &foods, &rabits,MAX_ENERGY, Rabbit::ADULT));
 	}
 
 	dayCycle = new DayNightCycle(data->screen.width, data->screen.height);
+
+	// Display text
 	dayCount = CreateText("Day : 0", data->font, 20, Anchor::TOP_RIGHT);
+	rabbitCount = CreateText("Rabbit : 0", data->font, 20, Anchor::TOP_RIGHT, sf::Vector2f(0, 30.f));
 
 	data->logger->Success("Game Scene Loaded.", true);
 }
@@ -55,6 +58,7 @@ void Game::Update(float _dt, sf::RenderWindow& _window)
 	if (dayCycle->GetIsNewDay())
 	{
 		SpawnFood();
+		GrawAllRabbit();
 		ResetRabbitBread();
 		SetText(dayCount, "Day : " + std::to_string(dayCycle->GetDayCount()));
 	}
@@ -83,6 +87,7 @@ void Game::Update(float _dt, sf::RenderWindow& _window)
 	}
 
 	//data->logger->Log(LogLevel::WARNING, data->logger->Vec2(playerWorldPos, "player pos"), false);
+	SetText(rabbitCount, "Rabbit : " + std::to_string(rabits.size()));
 }
 
 void Game::KeyPressed(sf::Event::KeyEvent _key, sf::RenderWindow& _window)
@@ -135,6 +140,7 @@ void Game::Draw(sf::RenderWindow& _window)
 	dayCycle->Draw(_window);
 
 	_window.draw(dayCount);
+	_window.draw(rabbitCount);
 
 
 	data->debugViewer->Draw(_window);
@@ -153,6 +159,14 @@ void Game::ResetRabbitBread(void)
 	for (int i = 0; i < rabits.size(); i++)
 	{
 		rabits[i]->SetBreadable(true);
+	}
+}
+
+void Game::GrawAllRabbit(void)
+{
+	for (int i = 0; i < rabits.size(); i++)
+	{
+		rabits[i]->GrowthChangeState();
 	}
 }
 

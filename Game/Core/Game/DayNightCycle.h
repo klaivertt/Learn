@@ -2,7 +2,7 @@
 
 #include "../../Tools/Common.h"
 
-#define DAY_DURATION 20.f
+#define DAY_DURATION 24.f
 
 class DayNightCycle
 {

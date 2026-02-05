@@ -3,10 +3,12 @@
 #include "../../Tools/Common.h"
 
 
-#define ENERGY_REMOVE 4.f
+#define ENERGY_REMOVE 3.1f
 #define MAX_ENERGY 100.f
 #define MAX_SPEED 150.f
-#define BREADABLE_COST 35.f
+#define BREADABLE_COST 40.f
+#define GROW_COST 10.f
+#define RADIUS_AGE 6.5f
 
 class Food;
 
@@ -18,6 +20,14 @@ public:
 		WANDER,
 		HUNGRY,
 		BREEDABLE
+	};
+
+	enum Growth
+	{
+		NEW_BORN,
+		KIT,
+		JUVENILE,
+		ADULT
 	};
 
 
@@ -38,6 +48,8 @@ private:
 	std::vector<Food*>* food = nullptr;
 	std::vector<Rabbit*>* rabits = nullptr;
 	bool rabbitFind = false;
+	bool isAdult = false;
+	Growth growthState = NEW_BORN;
 
 	sf::Vector2f foodPos;
 	sf::Vector2f rabbitPos;
@@ -49,7 +61,7 @@ private:
 	void FindClosestBreadableRabbit(void);
 	void RabbitDirection(void);
 public:
-	Rabbit(sf::Vector2f _startPos, std::vector<Food*>* _food, std::vector<Rabbit*>* _rabits, float _energy = MAX_ENERGY);
+	Rabbit(sf::Vector2f _startPos, std::vector<Food*>* _food, std::vector<Rabbit*>* _rabits, float _energy = MAX_ENERGY, Growth _growth = NEW_BORN);
 	~Rabbit();
 
 	void Update(float _dt);
@@ -67,7 +79,9 @@ public:
 	void ResetBreadable(void);
 
 	bool GetIsBreadable(void);
+	bool GetIsAdulte(void);
 	void SetBreadable(bool _bool);
+	void GrowthChangeState(void);
 
 	sf::Vector2f GetVelocity(void);
 	sf::Vector2f GetPos(void);

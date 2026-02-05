@@ -2,11 +2,11 @@
 
 #include "../../Tools/Common.h"
 
-#define NB_FOOD_BY_RABBITS 5
-#define MIN_FOOD_DAY 5
-#define MAX_FOOD_DAY 8
-#define FOOD_MIN_NUTRITION 8.f
-#define FOOD_MAX_NUTRITION 20.f
+#define NB_FOOD_BY_RABBITS 3
+#define MIN_FOOD_DAY 2
+#define MAX_FOOD_DAY 4
+#define FOOD_MIN_NUTRITION 19.f
+#define FOOD_MAX_NUTRITION 38.f
 
 class Food
 {
