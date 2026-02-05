@@ -4,7 +4,7 @@
 Food::Food(sf::Vector2f _pos, float _nutrition)
 {
 	shape.setRadius(10.f);
-	shape.setFillColor(sf::Color(75, 120, 75));
+	shape.setFillColor(sf::Color(20, 150, 20));
 	shape.setPosition(_pos);
 	nutrition = _nutrition;
 }
