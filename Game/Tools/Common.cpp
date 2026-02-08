@@ -256,6 +256,11 @@ sf::Vector2i NormalizeI(float _x, float _y)
 	return sf::Vector2i(static_cast<int>(_x / length), static_cast<int>(_y / length));
 }
 
+float GestDist(sf::Vector2f _a, sf::Vector2f _b)
+{
+	return ((_b.x - _a.x)*(_b.x - _a.x))+ ((_b.y - _a.y) * (_b.y - _a.y));
+}
+
 void BlitSprite(sf::Sprite _sprite, sf::Vector2f _pos, float _scale, float _angle, sf::RenderWindow& _render)
 {
 	_sprite.setRotation(_angle);

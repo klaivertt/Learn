@@ -31,14 +31,10 @@ void Rabbit::FindClosestFood(void)
 		{
 			sf::Vector2f grassPos = (*food)[i]->GetPos();
 			sf::Vector2f rabbitPos = this->shape.getPosition();
-			float distNearestGrass = (
-				(grassPos.x - rabbitPos.x) * (grassPos.x - rabbitPos.x)) +
-				((grassPos.y - rabbitPos.y) * (grassPos.y - rabbitPos.y));
+			float distNearestGrass = GestDist(rabbitPos, grassPos);
 			if (distNearestGrass < (smellRange * smellRange))
 			{
-				float distLastGrass = (
-					(nearestPos.x - rabbitPos.x)* (nearestPos.x - rabbitPos.x)) +
-					((nearestPos.y - rabbitPos.y)* (nearestPos.y - rabbitPos.y));
+				float distLastGrass = GestDist(rabbitPos, nearestPos);
 				if (distNearestGrass < distLastGrass)
 				{
 					nearestPos = grassPos;
@@ -101,8 +97,8 @@ void Rabbit::FindClosestBreadableRabbit(void)
 			{
 				sf::Vector2f rabbitsBreadPos = potentialPartner->GetPos();
 				sf::Vector2f rabbitPos = this->shape.getPosition();
-				float distNearestRabbit = (std::pow((rabbitsBreadPos.x - rabbitPos.x), 2) + std::pow((rabbitsBreadPos.y - rabbitPos.y), 2));
-				float distLastRabbit = (std::pow((nearestPos.x - rabbitPos.x), 2) + std::pow((nearestPos.y - rabbitPos.y), 2));
+				float distNearestRabbit = GestDist(rabbitPos, rabbitsBreadPos);
+				float distLastRabbit = GestDist(rabbitPos, nearestPos);
 				if (distNearestRabbit < distLastRabbit)
 				{
 					nearestPos = rabbitsBreadPos;
@@ -219,8 +215,8 @@ void Rabbit::Update(float _dt)
 			if (foodFinded)
 			{
 				sf::Vector2f pos = shape.getPosition();
-				float distance = ((foodPos.x - pos.x) * (foodPos.x - pos.x)) + ((foodPos.y - pos.y)* foodPos.y - pos.y);
-				if (distance < viewRange && distance < OPORTUNISME_RANGE)
+				float distance = GestDist(pos,foodPos);
+				if (distance < (viewRange * viewRange) && distance < (OPORTUNISME_RANGE*OPORTUNISME_RANGE))
 				{
 					FoodDirection();
 					state = HUNGRY;

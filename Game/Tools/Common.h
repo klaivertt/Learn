@@ -188,6 +188,8 @@ sf::Vector2f Normalize(sf::Vector2f _vec);
 // @param _y: Y component
 sf::Vector2i NormalizeI(float _x, float _y);
 
+float GestDist(sf::Vector2f _a, sf::Vector2f _b);
+
 void BlitSprite(sf::Sprite _sprite, sf::Vector2f _pos, float _scale, float _angle, sf::RenderWindow& _render);
 void BlitText(sf::Text _text, sf::Vector2f _pos, float _angle, sf::RenderWindow& _render);
 
