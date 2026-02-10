@@ -99,7 +99,7 @@ void Rabbit::FindClosestBreadableRabbit(void)
 				sf::Vector2f rabbitPos = this->shape.getPosition();
 				float distNearestRabbit = GestDist(rabbitPos, rabbitsBreadPos);
 				float distLastRabbit = GestDist(rabbitPos, nearestPos);
-				if (distNearestRabbit < distLastRabbit)
+				if (distNearestRabbit < distLastRabbit && distNearestRabbit < (viewRange * viewRange))
 				{
 					nearestPos = rabbitsBreadPos;
 					rabbitFind = true;

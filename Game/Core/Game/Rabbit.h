@@ -62,8 +62,8 @@ private:
 	bool isAdult = false;
 
 	// Copy of Game vector food and rabbits
-	std::vector<Food *> *food = nullptr;
-	std::vector<Rabbit *> *rabits = nullptr;
+	std::vector<Food*>* food = nullptr;
+	std::vector<Rabbit*>* rabits = nullptr;
 
 	void UpdateDisplay();
 	// Food part
@@ -80,12 +80,12 @@ private:
 	void UpdateState(void);
 
 public:
-	Rabbit(sf::Vector2f _startPos, std::vector<Food *> *_food, std::vector<Rabbit *> *_rabits, float _energy = MAX_ENERGY, Growth _growth = NEW_BORN);
+	Rabbit(sf::Vector2f _startPos, std::vector<Food*>* _food, std::vector<Rabbit*>* _rabits, float _energy = MAX_ENERGY, Growth _growth = NEW_BORN);
 	~Rabbit();
 
 	// basic Global function
 	void Update(float _dt);
-	void Draw(sf::RenderWindow &_render);
+	void Draw(sf::RenderWindow& _render);
 
 	void GrowthChangeState(void);
 	void ResetBreadable(void);
