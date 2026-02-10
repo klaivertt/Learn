@@ -134,7 +134,14 @@ void Rabbit::GrowthChangeState(void)
 		shape.setOrigin({ RADIUS_AGE * (state + 1), RADIUS_AGE * (state + 1) });
 		growthState = static_cast<Growth>(state);
 		this->SetEnergie(-GROW_COST);
-		isAdult = false;
+		if (growthState == ADULT)
+		{
+			isAdult = true;
+		}
+		else
+		{
+			isAdult = false;
+		}
 	}
 	else
 	{
@@ -215,8 +222,8 @@ void Rabbit::Update(float _dt)
 			if (foodFinded)
 			{
 				sf::Vector2f pos = shape.getPosition();
-				float distance = GestDist(pos,foodPos);
-				if (distance < (viewRange * viewRange) && distance < (OPORTUNISME_RANGE*OPORTUNISME_RANGE))
+				float distance = GestDist(pos, foodPos);
+				if (distance < (viewRange * viewRange) && distance < (OPORTUNISME_RANGE * OPORTUNISME_RANGE))
 				{
 					FoodDirection();
 					state = HUNGRY;
