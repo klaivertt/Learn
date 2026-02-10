@@ -8,6 +8,7 @@
 #define BREADABLE_COST 40.f
 #define GROW_COST 10.f
 #define RADIUS_AGE 6.5f
+#define STATE_CHANGE_DELAY 1.5f
 #define OPORTUNISME_RANGE 100.f
 
 class Food;
@@ -60,6 +61,8 @@ private:
 	bool foodFinded = false;
 	bool rabbitFind = false;
 	bool isAdult = false;
+
+	float stateChangeCooldown = 0.f;
 
 	// Copy of Game vector food and rabbits
 	std::vector<Food*>* food = nullptr;

@@ -1,4 +1,4 @@
-#include "Rabbit.h"
+﻿#include "Rabbit.h"
 #include "Food.h"
 
 void Rabbit::UpdateDisplay()
@@ -8,39 +8,50 @@ void Rabbit::UpdateDisplay()
 	backDisplayBar.setPosition(pos + sf::Vector2f(0, -38.5f));
 	displayBar.setPosition(pos + sf::Vector2f(0, -38.5f));
 
-
 	vision.setPosition(pos);
 	smellZone.setPosition(pos);
 
 	float width = backDisplayBar.getLocalBounds().width * (energy / MAX_ENERGY);
-
 	displayBar.setSize({ width, backDisplayBar.getLocalBounds().height });
 }
 
 void Rabbit::FindClosestFood(void)
 {
 	foodFinded = true;
+
 	if (food->size() <= 0)
+	{
+		foodFinded = false;
+		return;
+	}
+
+	sf::Vector2f nearestPos = sf::Vector2f(99999.f, 99999.f);
+	bool foundAny = false;
+
+	for (size_t i = 0; i < food->size(); i++)
+	{
+		sf::Vector2f grassPos = (*food)[i]->GetPos();
+		sf::Vector2f rabbitPos = this->shape.getPosition();
+		float distNearestGrass = GestDist(rabbitPos, grassPos);
+
+		if (distNearestGrass < (smellRange * smellRange))
+		{
+			float distLastGrass = GestDist(rabbitPos, nearestPos);
+
+			if (distNearestGrass < distLastGrass)
+			{
+				nearestPos = grassPos;
+				foundAny = true;
+			}
+		}
+	}
+
+	if (!foundAny)
 	{
 		foodFinded = false;
 	}
 	else
 	{
-		sf::Vector2f nearestPos = sf::Vector2f(99999.f, 99999.f);
-		for (size_t i = 0; i < food->size(); i++)
-		{
-			sf::Vector2f grassPos = (*food)[i]->GetPos();
-			sf::Vector2f rabbitPos = this->shape.getPosition();
-			float distNearestGrass = GestDist(rabbitPos, grassPos);
-			if (distNearestGrass < (smellRange * smellRange))
-			{
-				float distLastGrass = GestDist(rabbitPos, nearestPos);
-				if (distNearestGrass < distLastGrass)
-				{
-					nearestPos = grassPos;
-				}
-			}
-		}
 		foodPos = nearestPos;
 	}
 }
@@ -53,6 +64,18 @@ void Rabbit::FoodDirection(void)
 void Rabbit::NewWanderingDirection(void)
 {
 	velocity = sf::Vector2f(RandF(-1, 1), RandF(-1, 1));
+
+	float magnitude = std::sqrt(velocity.x * velocity.x + velocity.y * velocity.y);
+
+	if (magnitude > 0.001f)
+	{
+		velocity /= magnitude;
+	}
+	else
+	{
+		velocity = sf::Vector2f(1.f, 0.f);
+	}
+
 	speed = RandF(50.f, 100.f);
 	wanderTime = RandF(1.f, 10.f);
 }
@@ -70,12 +93,14 @@ void Rabbit::TryReproduce(void)
 
 			if (rabbitBound.intersects(rabbit2Bound))
 			{
-				if (breedable && (*rabits)[i]->GetIsBreadable())
+				if (breedable && potentialPartner->GetIsBreadable())
 				{
 					breedable = false;
 					potentialPartner->SetBreadable(false);
+
 					this->SetEnergie(-BREADABLE_COST);
 					potentialPartner->SetEnergie(-BREADABLE_COST);
+
 					rabits->push_back(new Rabbit(shape.getPosition(), food, rabits, MAX_ENERGY * 0.75f));
 				}
 			}
@@ -87,18 +112,22 @@ void Rabbit::FindClosestBreadableRabbit(void)
 {
 	rabbitFind = false;
 	sf::Vector2f nearestPos = sf::Vector2f(99999.f, 99999.f);
+
 	for (size_t i = 0; i < rabits->size(); i++)
 	{
 		Rabbit* potentialPartner = (*rabits)[i];
 
+
 		if (potentialPartner != this)
 		{
+
 			if (potentialPartner->GetIsBreadable())
 			{
 				sf::Vector2f rabbitsBreadPos = potentialPartner->GetPos();
 				sf::Vector2f rabbitPos = this->shape.getPosition();
 				float distNearestRabbit = GestDist(rabbitPos, rabbitsBreadPos);
 				float distLastRabbit = GestDist(rabbitPos, nearestPos);
+
 				if (distNearestRabbit < distLastRabbit && distNearestRabbit < (viewRange * viewRange))
 				{
 					nearestPos = rabbitsBreadPos;
@@ -130,10 +159,13 @@ void Rabbit::GrowthChangeState(void)
 	{
 		int state = static_cast<int>(growthState);
 		state++;
+
 		shape.setRadius(RADIUS_AGE * (state + 1));
 		shape.setOrigin({ RADIUS_AGE * (state + 1), RADIUS_AGE * (state + 1) });
+
 		growthState = static_cast<Growth>(state);
 		this->SetEnergie(-GROW_COST);
+
 		if (growthState == ADULT)
 		{
 			isAdult = true;
@@ -156,15 +188,18 @@ Rabbit::Rabbit(sf::Vector2f _startPos, std::vector<Food*>* _food, std::vector<Ra
 	shape.setFillColor(sf::Color::White);
 	shape.setPosition(_startPos);
 	shape.setOrigin({ RADIUS_AGE, RADIUS_AGE });
-	energy = 100.f;
-	velocity = sf::Vector2f(RandF(-1, 1), RandF(-1, 1));
-	speed = MAX_SPEED;
+
+	energy = _energy;
+
+	NewWanderingDirection();
+
 
 	if (growthState == ADULT)
 	{
 		int state = static_cast<int>(Growth::ADULT);
 		shape.setRadius(RADIUS_AGE * (state + 1));
 		shape.setOrigin({ RADIUS_AGE * (state + 1), RADIUS_AGE * (state + 1) });
+		isAdult = true;
 	}
 
 	sf::Vector2f size = sf::Vector2f(50, 10);
@@ -175,8 +210,6 @@ Rabbit::Rabbit(sf::Vector2f _startPos, std::vector<Food*>* _food, std::vector<Ra
 	displayBar.setSize(size);
 	displayBar.setOrigin({ size.x / 2, size.y / 2 });
 	displayBar.setFillColor(sf::Color(170, 200, 50));
-
-	energy = _energy;
 
 	vision.setRadius(viewRange);
 	vision.setFillColor(sf::Color(0, 191, 255, 30));
@@ -199,52 +232,82 @@ Rabbit::~Rabbit()
 
 void Rabbit::Update(float _dt)
 {
+	if (stateChangeCooldown > 0.f)
+	{
+		stateChangeCooldown -= _dt;
+	}
+
 	UpdateState();
 
-	if (state == HUNGRY)
+	switch (state)
+	{
+	case HUNGRY:
 	{
 		FindClosestFood();
+
 		if (foodFinded)
 		{
 			FoodDirection();
+			hungry = true;
 		}
 		else
 		{
-			state = WANDER;
+			wanderTime -= _dt;
+			if (wanderTime < 0.f)
+			{
+				NewWanderingDirection();
+			}
+			hungry = false;
 		}
-		hungry = true;
+		break;
 	}
-	else if (state == WANDER)
+
+	case WANDER:
 	{
 		if (energy < MAX_ENERGY * 0.8f)
 		{
 			FindClosestFood();
+
 			if (foodFinded)
 			{
-				sf::Vector2f pos = shape.getPosition();
-				float distance = GestDist(pos, foodPos);
-				if (distance < (viewRange * viewRange) && distance < (OPORTUNISME_RANGE * OPORTUNISME_RANGE))
+				float distanceSq = GestDist(shape.getPosition(), foodPos);
+
+				if (distanceSq < (viewRange * viewRange))
 				{
 					FoodDirection();
-					state = HUNGRY;
 				}
 			}
 		}
+
 		wanderTime -= _dt;
 		if (wanderTime < 0.f)
 		{
 			NewWanderingDirection();
 		}
+
 		hungry = false;
+		break;
 	}
-	else if (state == BREEDABLE)
+
+	case BREEDABLE:
 	{
 		FindClosestBreadableRabbit();
+
 		if (rabbitFind)
 		{
 			RabbitDirection();
 			TryReproduce();
 		}
+		else
+		{
+			wanderTime -= _dt;
+			if (wanderTime < 0.f)
+			{
+				NewWanderingDirection();
+			}
+		}
+		break;
+	}
 	}
 
 	if (energy < 30.f)
@@ -258,6 +321,7 @@ void Rabbit::Update(float _dt)
 
 	sf::Vector2f move = velocity * speed * _dt;
 	shape.move(move);
+
 	energy -= ENERGY_REMOVE * _dt;
 
 	UpdateDisplay();
@@ -268,7 +332,6 @@ void Rabbit::Draw(sf::RenderWindow& _render)
 	_render.draw(shape);
 	_render.draw(vision);
 	_render.draw(smellZone);
-
 	_render.draw(backDisplayBar);
 	_render.draw(displayBar);
 }
@@ -286,6 +349,7 @@ void Rabbit::SetVelocity(sf::Vector2f _velocity)
 void Rabbit::SetEnergie(float _amount)
 {
 	energy += _amount;
+
 	if (energy >= MAX_ENERGY)
 	{
 		energy = MAX_ENERGY;
@@ -299,9 +363,28 @@ void Rabbit::SetEnergie(float _amount)
 
 void Rabbit::UpdateState(void)
 {
-	if (energy < MAX_ENERGY * 0.4f)
+	State oldState = state;
+	float energyPercent = energy / MAX_ENERGY;
+
+	if (stateChangeCooldown > 0.f)
+	{
+		return;
+	}
+
+	if (energyPercent < 0.15f)
 	{
 		state = HUNGRY;
+	}
+	else if (energyPercent < 0.40f)
+	{
+		if (breedable)
+		{
+			state = BREEDABLE;
+		}
+		else
+		{
+			state = HUNGRY;
+		}
 	}
 	else if (breedable)
 	{
@@ -311,10 +394,18 @@ void Rabbit::UpdateState(void)
 	{
 		state = WANDER;
 	}
+
+	stateChangeCooldown = STATE_CHANGE_DELAY;
+
+	if (state == WANDER)
+	{
+		NewWanderingDirection();
+	}
 }
 
 void Rabbit::ResetBreadable(void)
 {
+
 	if (energy < MAX_ENERGY * 0.6f && !isAdult)
 	{
 		breedable = false;
