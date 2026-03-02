@@ -15,6 +15,6 @@ int main()
 	game->DisplayEndGame();
 
 	system("pause");
-
+	delete game;
 	return EXIT_SUCCESS;
 }

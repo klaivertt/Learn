@@ -45,7 +45,7 @@ void Game::Update(void)
 		isFinished = true;
 		isFound = true;
 	}
-	else if (nbToFind > tryToFind)
+	else if (tryToFind > nbToFind)
 	{
 		std::cout << "Your number is greater than the number to be found " << std::endl;
 		std::cout << "Number of attempts remaining : " << roundLeft << std::endl;

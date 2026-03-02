@@ -17,7 +17,7 @@ int AskPositiveNumberBetween(std::string _message, int _min = 0, int _max = 0)
         std::cout << _message << " : ";
         std::cin >> tempNumber;
         std::cout << std::endl;
-    } while (tempNumber <= _min || tempNumber >= _max);
+    } while (tempNumber < _min || tempNumber > _max);
 
     return tempNumber;
 }
