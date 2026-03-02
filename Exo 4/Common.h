@@ -18,4 +18,7 @@
 #include <string>
 #include <windows.h>
 
+float RandF(float _min, float _max);
+int RandI(int _min, int _max);
+int AskPositiveNumberBetween(std::string _message, int _min, int _max);
 #endif // !COMMON_H
