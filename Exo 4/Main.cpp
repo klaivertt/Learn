@@ -1,20 +1,38 @@
 #include "Common.h"
 #include "Game.hpp"
 
+#define MAX_HEALTH 100
+
+enum SoldierType
+{
+    NORMAL,
+    HEAVY
+};
+
+struct Army
+{
+    int index = 0;
+    int health = 0;
+    SoldierType type;
+};
+
 int main()
 {
-	Game* game = new Game();
+    int taille;
+    std::cin >> taille;
 
-	game->Load();
+    Army *army = new Army[taille];
+   
+    for (int i = 0; i < taille; i++)
+    {
+        army[i].index = i;
+        army[i].health = MAX_HEALTH;
+        army[i].type = (i % 2) == 0 ? SoldierType::HEAVY : SoldierType::NORMAL;  
+    }
+    
+    delete[] army;
 
-	do
-	{
-		game->Update();
-	} while (!game->GetIsFinished());
+    system("pause");
 
-	game->DisplayEndGame();
-
-	system("pause");
-	delete game;
-	return EXIT_SUCCESS;
+    return EXIT_SUCCESS;
 }
