@@ -17,7 +17,6 @@
 #include <math.h>
 #include <string>
 #include <windows.h>
-#include <memory>
 
 float RandF(float _min, float _max);
 int RandI(int _min, int _max);

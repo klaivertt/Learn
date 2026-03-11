@@ -37,12 +37,9 @@ void Game::Load(void)
 
 void Game::Update(void)
 {
-	roundLeft--;
-	countRound++;
+	int tryToFind = AskPositiveNumberBetween("Find the number between " + std::to_string(minRange) + " and " + std::to_string(maxRange), minRange, maxRange);
 
-	int tryToFind = AskPositiveNumberBetween("Find the number between " + std::to_string(minRange) + " and " + std::to_string(maxRange),minRange, maxRange);
-
-	if (tryToFind == nbToFind)
+	if (nbToFind == tryToFind)
 	{
 		std::cout << "You have found the right number : " << tryToFind << std::endl;
 		isFinished = true;
@@ -50,18 +47,18 @@ void Game::Update(void)
 	}
 	else if (tryToFind > nbToFind)
 	{
-		std::cout << "Your number is greater than the number to be found" << std::endl;
+		std::cout << "Your number is greater than the number to be found " << std::endl;
 		std::cout << "Number of attempts remaining : " << roundLeft << std::endl;
 	}
-	else if (tryToFind < nbToFind)
+	else
 	{
 		std::cout << "Your number is smaller than the number to be found" << std::endl;
 		std::cout << "Number of attempts remaining : " << roundLeft << std::endl;
 	}
-
+	roundLeft--;
+	countRound++;
 	std::cout << std::endl;
-
-	if (roundLeft <= 0 && !isFound)
+	if (roundLeft <= 0)
 	{
 		isFinished = true;
 		isFound = false;

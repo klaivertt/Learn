@@ -1,42 +1,58 @@
 #include "Common.h"
 #include "Game.hpp"
 
-#define MAX_HEALTH 100
-
-enum SoldierType
+class PasswodManager
 {
-	NORMAL,
-	HEAVY
-};
+private:
+	int attempt = 5;
+	bool correctPassword = false;
+	std::string inputPassword = "";
+	std::string password = "Pasword123456789";
 
-struct Army
-{
-	int index = 0;
-	int health = 0;
-	SoldierType type = SoldierType::NORMAL;
+public:
+	PasswodManager()
+	{
+		do
+		{
+			std::cout << "saisir le mots de passe";
+			std::getline(std::cin, inputPassword);
+
+			if (inputPassword == password)
+			{
+				std::cout << "Mots de passe correcte" << std::endl;
+				correctPassword = true;
+			}
+			else
+			{
+				std::cout << "Mots de passe incorrecte" << std::endl;
+				attempt--;
+			}
+		} while (attempt > 0 && !correctPassword);
+	}
+	~PasswodManager()
+	{
+	}
+
+	bool Islocked()
+	{
+		return correctPassword;
+	}
 };
 
 int main()
 {
-	int taille;
-	std::cout << "Indique la taille de ton armer : ";
-	std::cin >> taille;
+	PasswodManager *passwodManager = new PasswodManager();
 
-	std::vector<std::unique_ptr<Army>> army;
-
-	for (int i = 0; i < taille; i++)
+	if (!passwodManager->Islocked())
 	{
-		auto temp = std::make_unique<Army>();
-		temp->index = i;
-		temp->health = MAX_HEALTH;
-		temp->type = (i % 2) == 0 ? SoldierType::HEAVY : SoldierType::NORMAL;
-
-		std::cout << "Index : " << temp->index << std::endl;
-		std::cout << "Health : " << temp->health << std::endl;
-		std::cout << "type : " << (temp->type == SoldierType::NORMAL ? "Normal" : "Heavy") << std::endl;
-		army.push_back(std::move(temp));
+		std::cout << "succesfull acces to code" << std::endl;
+	}
+	else
+	{
+		std::cout << "acces denied" << std::endl;
 	}
 
+	delete passwodManager;
 	system("pause");
 
 	return EXIT_SUCCESS;
