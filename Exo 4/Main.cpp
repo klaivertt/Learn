@@ -1,49 +1,49 @@
 #include "Common.h"
 #include "Game.hpp"
 
-class PasswodManager
+class PasswordManager
 {
 private:
 	int attempt = 5;
-	bool correctPassword = false;
-	std::string inputPassword = "";
-	std::string password = "Pasword123456789";
+	bool isUnlocked = false;
+	std::string secret = "Admin123";
 
 public:
-	PasswodManager()
-	{
-		do
-		{
-			std::cout << "saisir le mots de passe";
-			std::getline(std::cin, inputPassword);
+	PasswordManager();
 
-			if (inputPassword == password)
+	void AskForPassword()
+	{
+		std::string input;
+
+		while (attempt > 0 && !isUnlocked)
+		{
+			std::cout << "Tentatives restantes : " << attempt << "\nSaisie : ";
+			std::getline(std::cin, input);
+
+			if (input == secret)
 			{
-				std::cout << "Mots de passe correcte" << std::endl;
-				correctPassword = true;
+				isUnlocked = true;
 			}
 			else
 			{
-				std::cout << "Mots de passe incorrecte" << std::endl;
 				attempt--;
 			}
-		} while (attempt > 0 && !correctPassword);
-	}
-	~PasswodManager()
-	{
+		}
 	}
 
-	bool Islocked()
+	bool GetIsUnlocked() const
 	{
-		return correctPassword;
+		return isUnlocked;
 	}
 };
 
 int main()
 {
-	PasswodManager *passwodManager = new PasswodManager();
+	PasswordManager *passwordManager = new PasswordManager();
 
-	if (!passwodManager->Islocked())
+	passwordManager->AskForPassword();
+
+	if (!passwordManager->GetIsUnlocked())
 	{
 		std::cout << "succesfull acces to code" << std::endl;
 	}
@@ -52,7 +52,7 @@ int main()
 		std::cout << "acces denied" << std::endl;
 	}
 
-	delete passwodManager;
+	delete passwordManager;
 	system("pause");
 
 	return EXIT_SUCCESS;
