@@ -7,11 +7,15 @@ private:
 	int attempt = 5;
 	bool isUnlocked = false;
 	std::string secret = "";
-
+	std::fstream file;
+	std::string path;
 public:
-	PasswordManager() {};
+	PasswordManager(const std::string _path)
+	{
+		path = _path;
+	};
 
-	void AskForPassword()
+	void EnterPassword()
 	{
 		std::string input;
 
@@ -29,14 +33,56 @@ public:
 				attempt--;
 			}
 		}
-	}
+	}	
 
-	void EnterPassword(const std::string _password)
+	void AskForPassword()
 	{
-		secret = _password;
+		if (OpenFiles(path))
+		{
+			std::string line;
+			if (!std::getline(file, line))
+			{
+				file.close();
+				std::cout << "no password" << std::endl;
+				std::cout << "Enter a password :";
+				WriteInFiles(path);				
+			}
+			else
+			{
+				SavePassword(line);
+				file.close(); 
+			}
+
+			EnterPassword();
+		}
 	}
 
-	void LoadPassword(const std::string _password)
+	void WriteInFiles(const std::string _path)
+	{
+		std::ofstream file(_path, std::ios::app);
+		std::string input;
+		std::getline(std::cin, input);
+		SavePassword(input);
+		file << input << std::endl;
+		file.close();
+	}
+
+	bool OpenFiles(const std::string _path)
+	{
+		file = std::fstream(_path, std::ios::in);
+
+		if (!file.is_open())
+		{
+			std::cout << "error, file does Exist" << std::endl;
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+	}
+
+	void SavePassword(const std::string _password)
 	{
 		secret = _password;
 	}
@@ -50,43 +96,23 @@ public:
 int main()
 {
 	// read	a file with the saved pasword if fille not exis create a file
-	std::fstream file("password.txt", std::ios::in | std::ios::out | std::ios::app);
-	if (!file.is_open())
+
+	PasswordManager* passwordManager = new PasswordManager("password.txt");
+
+
+	passwordManager->AskForPassword();
+
+	if (passwordManager->GetIsUnlocked())
 	{
-		std::cout << "error" << std::endl;
+		std::cout << "succesfull acces to code" << std::endl;
 	}
 	else
 	{
-		PasswordManager* passwordManager = new PasswordManager();
-		// read if file is empty
-		std::string line;
-		if (!std::getline(file, line))
-		{
-			std::cout << "no password" << std::endl;
-
-			std::string input;
-			std::getline(std::cin, input);
-			passwordManager->EnterPassword(input);
-		}
-		else
-		{
-			passwordManager->LoadPassword(line);
-		}
-
-		passwordManager->AskForPassword();
-
-		if (!passwordManager->GetIsUnlocked())
-		{
-			std::cout << "succesfull acces to code" << std::endl;
-		}
-		else
-		{
-			std::cout << "acces denied" << std::endl;
-		}
-
-		delete passwordManager;
-		system("pause");
-
-		return EXIT_SUCCESS;
-		}
+		std::cout << "acces denied" << std::endl;
 	}
+
+	delete passwordManager;
+	system("pause");
+
+	return EXIT_SUCCESS;
+}
