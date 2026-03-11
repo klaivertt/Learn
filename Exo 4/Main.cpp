@@ -95,10 +95,7 @@ public:
 
 int main()
 {
-	// read	a file with the saved pasword if fille not exis create a file
-
 	PasswordManager* passwordManager = new PasswordManager("password.txt");
-
 
 	passwordManager->AskForPassword();
 
@@ -113,6 +110,5 @@ int main()
 
 	delete passwordManager;
 	system("pause");
-
 	return EXIT_SUCCESS;
 }
