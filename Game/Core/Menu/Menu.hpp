@@ -31,8 +31,6 @@ private:
 	void LoadButtons(void);
 	void CheckButtonHover(sf::Vector2i _mousePos);
 	void CheckButtonClick(sf::Vector2i _mousePos);
-
-	bool changeScene = false;
 };
 
 #endif // !MENU_H

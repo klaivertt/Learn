@@ -42,9 +42,7 @@ void Game::KeyPressed(sf::Event::KeyEvent _key, sf::RenderWindow& _window)
 		data->debugViewer.ToggleFPS();
 		break;
 	case sf::Keyboard::Escape:
-		data->currentScene = new Menu();
-		delete this;
-		break;
+		ChangeScene(this, new Menu());
 	default:
 		break;
 	}

@@ -43,7 +43,7 @@ void Menu::KeyPressed(sf::Event::KeyEvent _key, sf::RenderWindow& _window)
 	{
 		Logger::Info("Changing to Game Scene.", false);
 		// Change to Game Scene
-		changeScene = true;
+		ChangeScene(this, new Game());
 	}
 }
 
@@ -127,7 +127,8 @@ void Menu::CheckButtonClick(sf::Vector2i _mousePos)
 	{
 		Logger::Info("Start Button Clicked. Changing to Game Scene.", false);
 		// Change to Game Scene
-		changeScene = true;
+
+
 	}
 	if (exitButton.getGlobalBounds().contains(static_cast<sf::Vector2f>(_mousePos)))
 	{

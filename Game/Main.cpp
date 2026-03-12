@@ -15,7 +15,10 @@ int main()
 	{
 		float dt = deltaTime.restart().asSeconds();
 
+		if (data->currentScene != nullptr)
+		{
 		PollEvent(data->window, *data->currentScene);
+		}
 
 		data->currentScene->Update(dt, data->window);
 
