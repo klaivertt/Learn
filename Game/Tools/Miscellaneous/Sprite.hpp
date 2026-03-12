@@ -26,6 +26,7 @@ public:
 	Sprite(std::string _path, Vec2 _origin = { 0.f,0.f });
 	Sprite(void);
 
+	void Move(Vec2 _dir);
 	void SetPosition(Vec2 _position);
 	void SetOrigin(Vec2 _origin);
 	void SetScale(Vec2 _scale);
@@ -57,4 +58,5 @@ public:
 	void SetUseShader(bool _use);
 
 	void Draw(sf::RenderTarget* _render);
+	
 };

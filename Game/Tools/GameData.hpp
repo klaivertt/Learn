@@ -10,7 +10,7 @@ struct Screen
 {
 	std::string name = "";
 	int width = 0;
-	int height =0;
+	int height = 0;
 	bool fullscreen = false;
 	int maxFps = 60;
 	bool vSync = true;

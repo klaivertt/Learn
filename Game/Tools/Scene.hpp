@@ -32,7 +32,7 @@ public:
 
 protected:
 
-	void ChangeScene(Scene* _thisScene, Scene* _newScene)
+	void ChangeScene(Scene* _newScene)
 	{
 		GameData& data = *GameData::GetInstance();
 		data.isSceneChanging = true;

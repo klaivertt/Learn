@@ -5,6 +5,9 @@
 #include "Tools/Scene.hpp"
 #include "Tools/Miscellaneous/Sprite.hpp"
 
+#define BALL_SPEED 600.f
+#define PlAYER_SPEED 700.f
+
 class Animation
 {
 public:
@@ -29,11 +32,23 @@ public:
 	void Draw(sf::RenderWindow& _window) override;
 private:
 	GameData* data = nullptr;
+	Sprite background;
+	Sprite paddle[2];
+	Sprite ball;
+	Vec2 ballVelocity;
+	int playerDir[2] = {0};
+	Text scoreText;
 
-	Sprite test;
+	int score[2] = { 0 };
 
-	void LoadMainFiles(const std::string _files);
-	void LoadCharacters(const std::string _files);
+	void LoadPaddle(void);
+	void LoadBall(void);
+	void UpdateBall(float _dt);
+	void UpdatePlayer(float _dt);
+	void CheckColision();
+	void ResetBall();
+	void SetNewScore();
+	void PlayerInput();
 };
 
 #endif // !GAME_H

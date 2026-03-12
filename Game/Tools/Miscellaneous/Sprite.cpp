@@ -22,6 +22,12 @@ Sprite::Sprite(void)
 	data = GameData::GetInstance();
 }
 
+void Sprite::Move(Vec2 _dir)
+{
+	sprite.move(_dir);
+	position = sprite.getPosition();
+}
+
 void Sprite::SetPosition(Vec2 _position)
 {
 	position = _position;
