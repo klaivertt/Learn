@@ -174,7 +174,6 @@
   <ItemGroup>
     <ClCompile Include="Core\Game\Game.cpp" />
     <ClCompile Include="Core\Menu\Menu.cpp" />
-    <ClCompile Include="Core\PollEvent.cpp" />
     <ClCompile Include="Tools\Animation\Animation.cpp" />
     <ClCompile Include="Tools\AssetsManager.cpp" />
     <ClCompile Include="Common.cpp" />
@@ -193,7 +192,6 @@
   <ItemGroup>
     <ClInclude Include="Core\Game\Game.hpp" />
     <ClInclude Include="Core\Menu\Menu.hpp" />
-    <ClInclude Include="Core\PollEvent.hpp" />
     <ClInclude Include="Tools\Animation\Animation.hpp" />
     <ClInclude Include="Tools\AssetsManager.hpp" />
     <ClInclude Include="Common.hpp" />
