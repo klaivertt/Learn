@@ -6,7 +6,7 @@
 #include "Tools/Miscellaneous/Sprite.hpp"
 
 #define BALL_SPEED 600.f
-#define PlAYER_SPEED 700.f
+#define PLAYER_SPEED 700.f
 
 class Animation
 {

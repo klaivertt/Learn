@@ -127,9 +127,9 @@ void Game::LoadBall(void)
 
 void Game::UpdateBall(float _dt)
 {
-	Vec2 dir = Vec2((BALL_SPEED * _dt) * ballVelocity);
-	dir.Normalize();
-	ball.Move(dir);
+    ballVelocity.Normalize();
+    Vec2 movement = ballVelocity * BALL_SPEED * _dt;
+    ball.Move(movement);
 }
 
 void Game::UpdatePlayer(float _dt)
@@ -137,7 +137,7 @@ void Game::UpdatePlayer(float _dt)
 	for (int i = 0; i < 2; i++)
 	{
 		Vec2 dir = Vec2(0);
-		dir.y = playerDir[i] * PlAYER_SPEED * _dt;
+		dir.y = playerDir[i] * PLAYER_SPEED * _dt;
 		paddle[i].Move(dir);
 		playerDir[i] = 0;
 	}
