@@ -3,13 +3,15 @@
 
 #include "../../Tools/Common.h"
 #include "../../Tools/Scene.h"
-#define PHYSISCS_PRECSION 8
 
-#define NB_OF_RABBITS 10
+class Animation
+{
+public:
+	sf::Texture* texture;
+	Animation() {};
+	~Animation() {};
+};
 
-class Food;
-class Rabbit;
-class DayNightCycle;
 
 // Game Scene
 class Game : public Scene
@@ -26,25 +28,8 @@ public:
 private:
 	GameData* data = nullptr;
 
-	sf::Sprite background;
-
-	// Game Systems
-	bool isGameOver = false;
-
-	std::vector<Rabbit*> rabits;
-	std::vector<Food*> foods;
-
-	DayNightCycle* dayCycle = nullptr;
-	sf::Text dayCount;
-	sf::Text rabbitCount;
-
-	// Camera functions
-	void MoveCamera(float _dt);
-	void ResetRabbitBread(void);
-	void GrawAllRabbit(void);
-	void CheckRabbitColideWithMap(Rabbit& _rabbit);
-	void CheckRabbitColideWithFood(Rabbit& _rabbit, Food& _food);
-	void SpawnFood(void);
+	void LoadMainFiles(const std::string _files);
+	void LoadCharacters(const std::string _files);
 };
 
 #endif // !GAME_H

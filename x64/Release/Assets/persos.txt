@@ -1,0 +1,2 @@
+Zelda/config.txt
+Darin/config.txt

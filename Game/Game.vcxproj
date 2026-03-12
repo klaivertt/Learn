@@ -172,34 +172,31 @@
     <Copy SourceFiles="@(ReleaseDllFiles)" DestinationFolder="$(SolutionDir)x64\Release\" Condition="'$(Configuration)' == 'Release'" />
   </Target>
   <ItemGroup>
-    <ClCompile Include="Core\Game\DayNightCycle.cpp" />
-    <ClCompile Include="Core\Game\Food.cpp" />
     <ClCompile Include="Core\Game\Game.cpp" />
-    <ClCompile Include="Core\Game\Rabbit.cpp" />
     <ClCompile Include="Core\Menu\Menu.cpp" />
     <ClCompile Include="Core\PollEvent.cpp" />
-    <ClCompile Include="Tools\Animation.cpp" />
-    <ClCompile Include="Tools\AssetManager.cpp" />
-    <ClCompile Include="Tools\Common.cpp" />
+    <ClCompile Include="Tools\Animation\Animation.cpp" />
+    <ClCompile Include="Tools\AssetsManager.cpp" />
+    <ClCompile Include="Common.cpp" />
     <ClCompile Include="Core\Init.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Tools\Debug\DebugViewer.cpp" />
     <ClCompile Include="Tools\Debug\Logger.cpp" />
     <ClCompile Include="Tools\Debug\SFMLDebugDraw.cpp" />
     <ClCompile Include="Tools\GameData.cpp" />
-    <ClCompile Include="Tools\jsoncpp.cpp" />
-    <ClCompile Include="Tools\Particle.cpp" />
+    <ClCompile Include="Tools\Parser\jsoncpp.cpp" />
+    <ClCompile Include="Tools\Effect\Particle.cpp" />
+    <ClCompile Include="Tools\Miscellaneous\Sprite.cpp" />
+    <ClCompile Include="Tools\Miscellaneous\Text.cpp" />
+    <ClCompile Include="Tools\Miscellaneous\Vec2.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Core\Game\DayNightCycle.h" />
     <ClInclude Include="Core\Game\Game.h" />
-    <ClInclude Include="Core\Game\Food.h" />
-    <ClInclude Include="Core\Game\Rabbit.h" />
     <ClInclude Include="Core\Menu\Menu.h" />
     <ClInclude Include="Core\PollEvent.h" />
-    <ClInclude Include="Tools\Animation.h" />
-    <ClInclude Include="Tools\AssetManager.h" />
-    <ClInclude Include="Tools\Common.h" />
+    <ClInclude Include="Tools\Animation\Animation.hpp" />
+    <ClInclude Include="Tools\AssetsManager.hpp" />
+    <ClInclude Include="Common.hpp" />
     <ClInclude Include="Dependencies\include\GL\freeglut.h" />
     <ClInclude Include="Dependencies\include\GL\freeglut_ext.h" />
     <ClInclude Include="Dependencies\include\GL\freeglut_std.h" />
@@ -312,9 +309,12 @@
     <ClInclude Include="Tools\Debug\DebugViewer.h" />
     <ClInclude Include="Tools\Debug\Logger.h" />
     <ClInclude Include="Tools\Debug\SFMLDebugDraw.h" />
-    <ClInclude Include="Tools\GameData.h" />
-    <ClInclude Include="Tools\Particle.h" />
-    <ClInclude Include="Tools\Scene.h" />
+    <ClInclude Include="Tools\GameData.hpp" />
+    <ClInclude Include="Tools\Effect\Particle.hpp" />
+    <ClInclude Include="Tools\Scene.hpp" />
+    <ClInclude Include="Tools\Miscellaneous\Sprite.hpp" />
+    <ClInclude Include="Tools\Miscellaneous\Text.hpp" />
+    <ClInclude Include="Tools\Miscellaneous\Vec2.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\x64\Debug\config.ini" />

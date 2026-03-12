@@ -1,0 +1,5 @@
+SPRITES 20 Darin/haut0.png Darin/haut1.png Darin/haut2.png Darin/haut3.png Darin/haut4.png Darin/bas0.png Darin/bas1.png Darin/bas2.png Darin/bas3.png Darin/bas4.png Darin/gauche0.png Darin/gauche1.png Darin/gauche2.png Darin/gauche3.png Darin/gauche4.png Darin/droite0.png Darin/droite1.png Darin/droite2.png Darin/droite3.png Darin/droite4.png 
+ANIM MARCHE_HAUT 0 5 0.5
+ANIM MARCHE_BAS 5 10 0.5
+ANIM MARCHE_GAUCHE 10 15 0.5
+ANIM MARCHE_DROITE 15 20 0.5

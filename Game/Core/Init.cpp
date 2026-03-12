@@ -16,7 +16,7 @@ Screen WindowInitFile(std::string _path, Logger* _log);
 void Init(GameData* _data)
 {
 	_data->logger = new Logger();
-	_data->logger->SetLogLevel(LogLevel::WARNING);
+	_data->logger->SetLogLevel(LogLevel::DEBUG);
 	Screen newScreen = WindowInitFile("config.ini", _data->logger);
 	LoadRenderWindow(_data->window, newScreen, _data->logger);
 
