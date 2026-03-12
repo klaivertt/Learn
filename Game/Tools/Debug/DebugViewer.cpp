@@ -10,13 +10,11 @@ namespace Debug
 		maxFps = new Text(FontType::LIGHT, { 0.f,0.f }, sf::Color::White, 16);
 		avgFps = new Text(FontType::LIGHT, { 0.f,0.f }, sf::Color::White, 16);
 		minFps = new Text(FontType::LIGHT, { 0.f,0.f }, sf::Color::White, 16);
-		memoryUsage = new Text(FontType::LIGHT, { 0.f,0.f }, sf::Color::White, 16);
 
 		fps->SetPosition(15.f, 15.f);
 		maxFps->SetPosition(15.f, 50.f);
 		avgFps->SetPosition(15.f, 80.f);
 		minFps->SetPosition(15.f, 110.f);
-		memoryUsage->SetPosition(15.f, 140.f);
 
 		showFPS = true;
 		showDetails = true;
@@ -47,7 +45,6 @@ namespace Debug
 			maxFps->Draw(_window);
 			avgFps->Draw(_window);
 			minFps->Draw(_window);
-			memoryUsage->Draw(_window);
 		}
 	}
 
@@ -96,9 +93,6 @@ namespace Debug
 			frameCount++;
 			avgFpsValue = static_cast<int>(totalFps / frameCount);
 			avgFps->SetString("Avg Fps : " + std::to_string(avgFpsValue));
-
-			int memory = static_cast<int>(GetMemoryUsage());
-			memoryUsage->SetString("Mem use : " + std::to_string(memory) + "MB");
 		}
 	}
 

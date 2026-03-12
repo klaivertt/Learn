@@ -1,5 +1,0 @@
-SPRITES 32 Zelda/haut0.png Zelda/haut1.png Zelda/haut2.png Zelda/haut3.png Zelda/haut4.png Zelda/haut5.png Zelda/haut6.png Zelda/haut7.png Zelda/bas0.png Zelda/bas1.png Zelda/bas2.png Zelda/bas3.png Zelda/bas4.png Zelda/bas5.png Zelda/bas6.png Zelda/bas7.png Zelda/gauche0.png Zelda/gauche1.png Zelda/gauche2.png Zelda/gauche3.png Zelda/gauche4.png Zelda/gauche5.png Zelda/gauche6.png Zelda/gauche7.png Zelda/droite0.png Zelda/droite1.png Zelda/droite2.png Zelda/droite3.png Zelda/droite4.png Zelda/droite5.png Zelda/droite6.png  Zelda/droite7.png  
-ANIM MARCHE_HAUT 0 8 0.5
-ANIM MARCHE_BAS 8 16 0.5
-ANIM MARCHE_GAUCHE 16 24 0.5
-ANIM MARCHE_DROITE 24 32 0.5

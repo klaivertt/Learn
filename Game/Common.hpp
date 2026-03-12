@@ -23,10 +23,10 @@
 #include "SFML/Audio.hpp"
 #include "SFML/Graphics.hpp"
 #include "SFML/Network.hpp"
-#include "SFML/OpenGL.hpp"
 #include <GL/glew.h>
 #include <GL/wglew.h>
 #include <GL/freeglut.h>
+#include "SFML/OpenGL.hpp"
 
 //Box 2D0
 #include "box2d/box2d.h"

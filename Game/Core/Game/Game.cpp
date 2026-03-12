@@ -1,9 +1,9 @@
-﻿#include "Game.h"
-#include "../../Tools/GameData.h"
-#include "../../Tools/Debug/DebugViewer.h"
-#include "../../Tools/Debug/Logger.h"
-#include "../../Tools/Debug/SFMLDebugDraw.h"
-#include "../../Core/Menu/Menu.h"
+﻿#include "Game.hpp"
+#include "Tools/GameData.hpp"
+#include "Tools/Debug/DebugViewer.hpp"
+#include "Tools/Debug/Logger.hpp"
+#include "Tools/Debug/SFMLDebugDraw.h"
+#include "../Menu/Menu.hpp"
 
 
 Game::Game()
@@ -13,7 +13,7 @@ Game::Game()
 
 Game::~Game()
 {
-	data->logger->Info("Game Scene Unloaded.", false);
+	Logger::Info("Game Scene Unloaded.", false);
 }
 
 void Game::Load()
@@ -23,7 +23,7 @@ void Game::Load()
 
 	LoadMainFiles("Assets/persos.txt");
 
-	data->logger->Success("Game Scene Loaded.", true);
+	Logger::Success("Game Scene Loaded.", true);
 }
 
 void Game::Update(float _dt, sf::RenderWindow& _window)
@@ -46,7 +46,7 @@ void Game::MouseMoved(sf::Event::MouseMoveEvent _mouse, sf::RenderWindow& _windo
 
 void Game::Draw(sf::RenderWindow& _window)
 {	
-	data->debugViewer->Draw(_window);
+	data->debugViewer.Draw(_window);
 }
 
 void Game::LoadMainFiles(const std::string _files)
@@ -56,7 +56,7 @@ void Game::LoadMainFiles(const std::string _files)
 	std::ifstream file(_files);
 	if (!file.is_open())
 	{
-		data->logger->Error("Failed to open file: " + _files, true);
+		Logger::Error("Failed to open file: " + _files, true);
 		return;
 	}
 
@@ -71,7 +71,7 @@ void Game::LoadMainFiles(const std::string _files)
 		{
 			// file path and extention are extracted
 			characterFiles.push_back(line);
-			data->logger->Info("File to load: " + line, true);
+			Logger::Info("File to load: " + line, true);
 		}
 	}
 

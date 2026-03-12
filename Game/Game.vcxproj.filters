@@ -437,7 +437,7 @@
     <ClInclude Include="Common.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Init.h">
+    <ClInclude Include="Core\Init.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Tools\Animation\Animation.hpp">
@@ -458,13 +458,13 @@
     <ClInclude Include="Tools\GameData.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Game\Game.h">
+    <ClInclude Include="Core\Game\Game.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Core\PollEvent.h">
+    <ClInclude Include="Core\PollEvent.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Menu\Menu.h">
+    <ClInclude Include="Core\Menu\Menu.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Tools\Debug\SFMLDebugDraw.h">

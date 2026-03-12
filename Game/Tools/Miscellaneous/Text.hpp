@@ -1,7 +1,7 @@
 #ifndef TEXT_H
 #define TEXT_H
 
-#include "../../GameData.hpp"
+#include "../GameData.hpp"
 
 typedef enum class FontType
 {

@@ -15,8 +15,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "SFMLDebugDraw.h"
-#include "../Common.h"
-#include "../GameData.h"
+#include "Common.hpp"
+#include "Tools/GameData.hpp"
 
 
 

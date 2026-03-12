@@ -1,7 +1,7 @@
 #ifndef PARTICLE_H
 #define PARTICLE_H
 
-#include "Common.h"
+#include "Common.hpp"
 
 #define MAX_FRAMES_FIRE 10
 #define NB_OF_SPARKS 2000

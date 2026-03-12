@@ -1,6 +1,9 @@
 #pragma once
 
 #include <string>
+#include <cmath>
+#include <iomanip>
+#include <sstream>
 
 #include <box2d/box2d.h>
 #include "SFML/System/Vector2.hpp"

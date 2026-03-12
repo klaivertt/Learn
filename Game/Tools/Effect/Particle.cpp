@@ -1,4 +1,4 @@
-#include "Particle.h"
+#include "Particle.hpp"
 
 void Particle::Create(ParticleType _type, sf::Vector2f _position, sf::Vector2f _direction, float _angle, float _speed, float _lifetime)
 {

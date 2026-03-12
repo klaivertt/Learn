@@ -1,7 +1,7 @@
 #ifndef ANIMATION_H
 #define ANIMATION_H
 
-#include "Common.h"
+#include "Common.hpp"
 
 typedef enum class AnimType
 {

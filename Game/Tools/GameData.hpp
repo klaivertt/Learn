@@ -1,21 +1,23 @@
 #ifndef GAME_DATA_H
 #define GAME_DATA_H
 
-#include "Common.h"
+#include "Common.hpp"
+#include "Tools/Debug/DebugViewer.hpp"
+#include "Tools/AssetsManager.hpp"
 
 struct Screen
 {
-	std::string name = {};
+	std::string name = "";
 	int width = 0;
 	int height =0;
 	bool fullscreen = false;
 	int maxFps = 60;
 	bool vSync = true;
-	std::string iconPath = {};
+	std::string iconPath = "";
 	bool isDebugMode = false;
 };
 
-class DebugViewer;
+class Debug::DebugViewer;
 class Scene;
 class AssetManager;
 
@@ -30,12 +32,10 @@ public:
 	static GameData* GetInstance(void);
 public:
 	// Debug System
-	DebugViewer* debugViewer = nullptr;
-
+	Debug::DebugViewer debugViewer;
+	AssetsManager assets;
 	// Common Font
 	sf::Font font;
-
-	AssetManager* assetManager = nullptr;
 
 	Scene* currentScene = nullptr;
 

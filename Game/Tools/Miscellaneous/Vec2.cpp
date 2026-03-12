@@ -1,9 +1,5 @@
 #include "Vec2.hpp"
 
-#include <cmath>
-#include <iomanip>
-#include <sstream>
-
 Vec2::Vec2(float _x, float _y)
 {
 	x = _x;

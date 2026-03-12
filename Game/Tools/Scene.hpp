@@ -1,7 +1,7 @@
 #ifndef SCENE_H
 #define SCENE_H
 
-#include "Common.h"
+#include "Common.hpp"
 
 class Scene
 {

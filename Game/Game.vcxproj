@@ -122,7 +122,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)$(ProjectName)/Dependencies/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)$(ProjectName)/Dependencies/include;$(ProjectDir)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <OpenMPSupport>true</OpenMPSupport>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -142,7 +142,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)$(ProjectName)/Dependencies/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)$(ProjectName)/Dependencies/include;$(ProjectDir)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <OpenMPSupport>true</OpenMPSupport>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -191,9 +191,9 @@
     <ClCompile Include="Tools\Miscellaneous\Vec2.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Core\Game\Game.h" />
-    <ClInclude Include="Core\Menu\Menu.h" />
-    <ClInclude Include="Core\PollEvent.h" />
+    <ClInclude Include="Core\Game\Game.hpp" />
+    <ClInclude Include="Core\Menu\Menu.hpp" />
+    <ClInclude Include="Core\PollEvent.hpp" />
     <ClInclude Include="Tools\Animation\Animation.hpp" />
     <ClInclude Include="Tools\AssetsManager.hpp" />
     <ClInclude Include="Common.hpp" />
@@ -305,7 +305,7 @@
     <ClInclude Include="Dependencies\include\SFML\Window\Window.hpp" />
     <ClInclude Include="Dependencies\include\SFML\Window\WindowHandle.hpp" />
     <ClInclude Include="Dependencies\include\SFML\Window\WindowStyle.hpp" />
-    <ClInclude Include="Core\Init.h" />
+    <ClInclude Include="Core\Init.hpp" />
     <ClInclude Include="Tools\Debug\DebugViewer.h" />
     <ClInclude Include="Tools\Debug\Logger.h" />
     <ClInclude Include="Tools\Debug\SFMLDebugDraw.h" />

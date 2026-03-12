@@ -1,4 +1,5 @@
 #include "Sprite.hpp"
+#include "Tools/Debug/Logger.hpp"
 
 Sprite::Sprite(sf::Texture* _texture, Vec2 _origin)
 {
@@ -12,7 +13,7 @@ Sprite::Sprite(std::string _path, Vec2 _origin)
 {
 	GameData* data = GameData::GetInstance();
 
-	texture = data->assets->GetTexture(_path);
+	texture = data->assets.GetTexture(_path);
 	origin = _origin;
 }
 
@@ -57,7 +58,7 @@ void Sprite::SetTexture(sf::Texture* _texture)
 void Sprite::SetTexture(std::string _path)
 {
 	GameData* data = GameData::GetInstance();
-	texture = data->assets->GetTexture(_path);
+	texture = data->assets.GetTexture(_path);
 	sprite.setTexture(*texture, true);
 	SetOrigin(origin);
 }

@@ -1,3 +1,0 @@
-#Zelda_Folder
-Zelda/config.txt
-Darin/config.txt

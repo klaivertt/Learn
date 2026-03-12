@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../GameData.hpp"
+#include "Tools/GameData.hpp"
 
 // This class is like a sf::Sprite but with more features and easier to use, it will be used for all the sprites in the game
 class Sprite

@@ -17,7 +17,6 @@ namespace Debug
 		Text* maxFps;
 		Text* avgFps;
 		Text* minFps;
-		Text* memoryUsage;
 		sf::RectangleShape fpsBackground;
 
 		// toggles
