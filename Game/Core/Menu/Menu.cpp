@@ -44,8 +44,6 @@ void Menu::KeyPressed(sf::Event::KeyEvent _key, sf::RenderWindow& _window)
 		Logger::Info("Changing to Game Scene.", false);
 		// Change to Game Scene
 		changeScene = true;
-		data->currentScene = new Game();
-		delete this;
 	}
 }
 
@@ -71,9 +69,9 @@ void Menu::Draw(sf::RenderWindow& _window)
 {
 	background.Draw(&_window);
 	titleText.Draw(_window);
+	_window.draw(exitButton);
 	_window.draw(startButton);
 	startText.Draw(_window);
-	_window.draw(exitButton);
 	exitText.Draw(_window);
 
 	data->debugViewer.Draw(_window);
@@ -83,10 +81,10 @@ void Menu::LoadButtons(void)
 {
 	startText.Create(FontType::NORMAL, Vec2(0.5f),sf::Color::White, 22);
 	startText.SetString("START");
-	startText.SetPosition(Vec2(data->screen.width / 2, data->screen.height / 2 - 7.f));
+	startText.SetPosition(Vec2(data->screen.width / 2, (data->screen.height / 2) - 8.f));
 
 	exitText.Create(FontType::NORMAL, Vec2(0.5f),sf::Color::White, 22);
-	startText.SetPosition(Vec2(data->screen.width / 2, data->screen.height / 2 - 93.f));
+	exitText.SetPosition(Vec2(data->screen.width / 2, data->screen.height / 2 + 70.f));
 	exitText.SetString("EXIT");
 
 	sf::Vector2f buttonSize = sf::Vector2f(startText.GetLocalBounds().width + 20.f, startText.GetLocalBounds().height + 20.f);
@@ -99,7 +97,8 @@ void Menu::LoadButtons(void)
 	//center the button
 	startButton.setOrigin(buttonSize.x / 2, buttonSize.y / 2);
 
-	sf::Vector2f startButtonPos = sf::Vector2f(data->screen.width / 2, data->screen.height / 2);
+	sf::Vector2f startButtonPos = Vec2(startText.GetPosition());
+	startButtonPos.y += buttonSize.y / 4;
 	startButton.setPosition(startButtonPos);
 
 
@@ -112,7 +111,8 @@ void Menu::LoadButtons(void)
 	//center the button
 	exitButton.setOrigin(buttonSize.x / 2, buttonSize.y / 2);
 
-	sf::Vector2f exitButtonPos = sf::Vector2f(data->screen.width / 2, data->screen.height / 2 + 100.f);
+	sf::Vector2f exitButtonPos = Vec2(exitText.GetPosition());
+	exitButtonPos.y += buttonSize.y / 4;
 	exitButton.setPosition(exitButtonPos);
 }
 
@@ -128,9 +128,6 @@ void Menu::CheckButtonClick(sf::Vector2i _mousePos)
 		Logger::Info("Start Button Clicked. Changing to Game Scene.", false);
 		// Change to Game Scene
 		changeScene = true;
-		data->currentScene = new Game();
-		delete this;
-		//gameScene->Load();
 	}
 	if (exitButton.getGlobalBounds().contains(static_cast<sf::Vector2f>(_mousePos)))
 	{

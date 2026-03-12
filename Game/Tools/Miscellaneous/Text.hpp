@@ -69,6 +69,7 @@ public:
 
 	sf::FloatRect GetLocalBounds(void);
 	sf::FloatRect GetGlobalBounds(void);
+	sf::Vector2f GetPosition(void);
 }Text;
 
 #endif // !TEXT_H

@@ -160,5 +160,10 @@ sf::FloatRect Text::GetGlobalBounds(void)
 	return text.getGlobalBounds();
 }
 
+sf::Vector2f Text::GetPosition(void)
+{
+	return text.getPosition();
+}
+
 
 #pragma endregion
