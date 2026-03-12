@@ -1,6 +1,7 @@
 ﻿#include "DebugViewer.hpp"
 
 #include "../Miscellaneous/Text.hpp"
+#include "../Debug/Logger.hpp"
 
 namespace Debug
 {
@@ -63,6 +64,8 @@ namespace Debug
 			showFPS = false;
 			showDetails = false;
 		}
+
+		Logger::Debug(Logger::Bool("Logger Active ", showFPS));
 
 		UpdateSizeOfFpsBackground();
 	}

@@ -3,6 +3,7 @@
 #include "Tools/Debug/DebugViewer.hpp"
 #include "../Game/Game.hpp"
 #include "Tools/Debug/Logger.hpp"
+#include "Tools/Miscellaneous/Text.hpp"
 
 Menu::Menu()
 {
@@ -11,32 +12,25 @@ Menu::Menu()
 
 Menu::~Menu()
 {
-	// Cleanup if necessary
-	backgroundTexture.~Texture();
-
 	Logger::Info("Menu Scene Unloaded.", false);
 }
 
 void Menu::Load()
 {
-	_data = GameData::GetInstance();
+	data = GameData::GetInstance();
+
+	titleText.Create(FontType::BOLD, Vec2(0.5f), sf::Color::White, 44);
+	titleText.SetString(data->screen.name);
+	titleText.SetPosition(Vec2(data->screen.width / 2, data->screen.height * 0.2f));
 
 	LoadButtons();
-
 
 	Logger::Success("Menu Scene Loaded.", true);
 }
 
 void Menu::Update(float _dt, sf::RenderWindow& _window)
 {
-	_data->debugViewer.Update(_dt);
-
-	if (changeScene)
-	{
-		Scene* temp = _data->currentScene;
-		_data->currentScene = new Game();
-		temp->~Scene();
-	}
+	data->debugViewer.Update(_dt);
 }
 
 void Menu::KeyPressed(sf::Event::KeyEvent _key, sf::RenderWindow& _window)
@@ -50,7 +44,7 @@ void Menu::KeyPressed(sf::Event::KeyEvent _key, sf::RenderWindow& _window)
 		Logger::Info("Changing to Game Scene.", false);
 		// Change to Game Scene
 		changeScene = true;
-		_data->currentScene = new Game();
+		data->currentScene = new Game();
 		delete this;
 	}
 }
@@ -75,69 +69,56 @@ void Menu::MouseMoved(sf::Event::MouseMoveEvent _mouse, sf::RenderWindow& _windo
 
 void Menu::Draw(sf::RenderWindow& _window)
 {
-	_window.draw(background);
-	_window.draw(titleText);
+	background.Draw(&_window);
+	titleText.Draw(_window);
 	_window.draw(startButton);
-	_window.draw(startText);
+	startText.Draw(_window);
 	_window.draw(exitButton);
-	_window.draw(exitText);
+	exitText.Draw(_window);
 
-	_data->debugViewer.Draw(_window);
+	data->debugViewer.Draw(_window);
 }
 
 void Menu::LoadButtons(void)
 {
-	//startText = CreateText("START", _data->font, 30, sf::Vector2f(_data->screen.width / 2, _data->screen.height / 2 - 7.f), sf::Vector2f(0.5f, 0.5f));
-	//exitText = CreateText("EXIT", _data->font, 30, sf::Vector2f(_data->screen.width / 2, _data->screen.height / 2 + 93.f), sf::Vector2f(0.5f, 0.5f));
+	startText.Create(FontType::NORMAL, Vec2(0.5f),sf::Color::White, 22);
+	startText.SetString("START");
+	startText.SetPosition(Vec2(data->screen.width / 2, data->screen.height / 2 - 7.f));
 
-	//sf::Vector2f buttonSize = sf::Vector2f(startText.getLocalBounds().width + 20.f, startText.getLocalBounds().height + 20.f);
+	exitText.Create(FontType::NORMAL, Vec2(0.5f),sf::Color::White, 22);
+	startText.SetPosition(Vec2(data->screen.width / 2, data->screen.height / 2 - 93.f));
+	exitText.SetString("EXIT");
 
-	//startButton.setSize(buttonSize);
-	//startButton.setFillColor(sf::Color(100, 100, 100));
-	//startButton.setOutlineThickness(2.f);
-	//startButton.setOutlineColor(sf::Color::White);
+	sf::Vector2f buttonSize = sf::Vector2f(startText.GetLocalBounds().width + 20.f, startText.GetLocalBounds().height + 20.f);
 
-	////center the button
-	//startButton.setOrigin(buttonSize.x / 2, buttonSize.y / 2);
+	startButton.setSize(buttonSize);
+	startButton.setFillColor(sf::Color(100, 100, 100));
+	startButton.setOutlineThickness(2.f);
+	startButton.setOutlineColor(sf::Color::White);
 
-	//sf::Vector2f startButtonPos = sf::Vector2f(_data->screen.width / 2, _data->screen.height / 2);
-	//startButton.setPosition(startButtonPos);
+	//center the button
+	startButton.setOrigin(buttonSize.x / 2, buttonSize.y / 2);
+
+	sf::Vector2f startButtonPos = sf::Vector2f(data->screen.width / 2, data->screen.height / 2);
+	startButton.setPosition(startButtonPos);
 
 
-	//buttonSize = sf::Vector2f(exitText.getLocalBounds().width + 20.f, exitText.getLocalBounds().height + 20.f);
-	//exitButton.setSize(buttonSize);
-	//exitButton.setFillColor(sf::Color(100, 100, 100));
-	//exitButton.setOutlineThickness(2.f);
-	//exitButton.setOutlineColor(sf::Color::White);
+	buttonSize = sf::Vector2f(exitText.GetLocalBounds().width + 20.f, exitText.GetLocalBounds().height + 20.f);
+	exitButton.setSize(buttonSize);
+	exitButton.setFillColor(sf::Color(100, 100, 100));
+	exitButton.setOutlineThickness(2.f);
+	exitButton.setOutlineColor(sf::Color::White);
 
-	////center the button
-	//exitButton.setOrigin(buttonSize.x / 2, buttonSize.y / 2);
+	//center the button
+	exitButton.setOrigin(buttonSize.x / 2, buttonSize.y / 2);
 
-	//sf::Vector2f exitButtonPos = sf::Vector2f(_data->screen.width / 2, _data->screen.height / 2 + 100.f);
-	//exitButton.setPosition(exitButtonPos);
-
-	//_data->logger->Rect(startButton.getGlobalBounds(), "Start Button Bounds");
+	sf::Vector2f exitButtonPos = sf::Vector2f(data->screen.width / 2, data->screen.height / 2 + 100.f);
+	exitButton.setPosition(exitButtonPos);
 }
 
 void Menu::CheckButtonHover(sf::Vector2i _mousePos)
 {
-	if (startButton.getGlobalBounds().contains(static_cast<sf::Vector2f>(_mousePos)))
-	{
-		startButton.setFillColor(sf::Color(150, 150, 150));
-	}
-	else
-	{
-		startButton.setFillColor(sf::Color(100, 100, 100));
-	}
-
-	if (exitButton.getGlobalBounds().contains(static_cast<sf::Vector2f>(_mousePos)))
-	{
-		exitButton.setFillColor(sf::Color(150, 150, 150));
-	}
-	else
-	{
-		exitButton.setFillColor(sf::Color(100, 100, 100));
-	}
+	
 }
 
 void Menu::CheckButtonClick(sf::Vector2i _mousePos)
@@ -147,7 +128,7 @@ void Menu::CheckButtonClick(sf::Vector2i _mousePos)
 		Logger::Info("Start Button Clicked. Changing to Game Scene.", false);
 		// Change to Game Scene
 		changeScene = true;
-		_data->currentScene = new Game();
+		data->currentScene = new Game();
 		delete this;
 		//gameScene->Load();
 	}

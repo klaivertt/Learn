@@ -1,10 +1,12 @@
 #include "Init.hpp"
+#include "Tools/GameData.hpp"
 #include "Tools/Debug/DebugViewer.hpp"
 #include "Tools/Debug/Logger.hpp"
-#include "Tools/GameData.hpp"
+#include "Tools/Debug/SFMLDebugDraw.h"
+
+
 #include "Core/Menu/Menu.hpp"
 #include "Core/Game/Game.hpp"
-#include "Tools/Debug/SFMLDebugDraw.h"
 
 // Forward declarations
 void LoadRenderWindow(sf::RenderWindow& _render, Screen& _screen);
@@ -14,6 +16,8 @@ Screen WindowInitFile(const std::string& _path);
 
 void Init(GameData& _data)
 {
+
+	LoadFonts();
 	Logger::SetLogLevel(LogLevel::DEBUG);
 	Screen newScreen = WindowInitFile(static_cast<std::string>("config.ini"));
 	LoadRenderWindow(_data.window, newScreen);
@@ -24,8 +28,9 @@ void Init(GameData& _data)
 
 	srand((unsigned int)(time(NULL)));
 
+	//Load Game
 	_data.currentScene = new Game();
-	//_data->currentScene->Load();
+
 	//Configuration affichage de debug
 	_data.debugDraw.context = (void*)&_data; //Pointeur qui permet aux fonctions de dessin de SFMLDebugDraw d'accéder au gameData parce que besoin de divers infos dedans
 	_data.debugDraw.DrawPointFcn = &DebugDrawPoint;

@@ -3,6 +3,7 @@
 
 #include "Common.hpp"
 #include "Tools/Scene.hpp"
+#include "Tools/Miscellaneous/Sprite.hpp"
 
 class Menu : public Scene
 {
@@ -16,15 +17,14 @@ public:
 	void MouseMoved(sf::Event::MouseMoveEvent _mouse, sf::RenderWindow& _window) override;
 	void Draw(sf::RenderWindow& _window) override;
 private:
-	GameData* _data = nullptr;
+	GameData* data = nullptr;
 
-	sf::Sprite background;
-	sf::Texture backgroundTexture;
+	Sprite background;
 
-	sf::Text titleText;
+	Text titleText;
 
-	sf::Text startText;
-	sf::Text exitText;
+	Text startText;
+	Text exitText;
 	sf::RectangleShape startButton;
 	sf::RectangleShape exitButton;
 

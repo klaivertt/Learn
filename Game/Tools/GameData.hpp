@@ -4,6 +4,7 @@
 #include "Common.hpp"
 #include "Tools/Debug/DebugViewer.hpp"
 #include "Tools/AssetsManager.hpp"
+#include "Tools/Miscellaneous/Text.hpp"
 
 struct Screen
 {

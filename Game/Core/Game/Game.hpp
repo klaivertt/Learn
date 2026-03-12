@@ -3,12 +3,13 @@
 
 #include "Common.hpp"
 #include "Tools/Scene.hpp"
+#include "Tools/Miscellaneous/Sprite.hpp"
 
 class Animation
 {
 public:
-	sf::Texture* texture;
-	Animation() {};
+	sf::Texture* texture = nullptr;
+	Animation(){};
 	~Animation() {};
 };
 
@@ -27,6 +28,8 @@ public:
 	void Draw(sf::RenderWindow& _window) override;
 private:
 	GameData* data = nullptr;
+
+	Sprite test;
 
 	void LoadMainFiles(const std::string _files);
 	void LoadCharacters(const std::string _files);

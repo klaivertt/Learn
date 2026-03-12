@@ -20,6 +20,10 @@ const sf::Font* GetFont(FontType _type)
 
 #pragma region Text Class
 
+Text::Text()
+{
+}
+
 Text::Text(FontType _fontType, sf::Vector2f _origin, sf::Color _color, unsigned int _size)
 {
 	Create(_fontType, _origin, _color, _size);
@@ -145,5 +149,16 @@ void Text::Draw(sf::RenderTarget& _render)
 	}
 	_render.draw(text);
 }
+
+sf::FloatRect Text::GetLocalBounds(void)
+{
+	return text.getLocalBounds();
+}
+
+sf::FloatRect Text::GetGlobalBounds(void)
+{
+	return text.getGlobalBounds();
+}
+
 
 #pragma endregion

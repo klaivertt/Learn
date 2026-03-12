@@ -21,6 +21,8 @@ void Game::Load()
 	// Game Data singleton
 	data = GameData::GetInstance();
 
+	test.SetTexture("Assets/background.png");
+
 	LoadMainFiles("Assets/persos.txt");
 
 	Logger::Success("Game Scene Loaded.", true);
@@ -29,11 +31,23 @@ void Game::Load()
 void Game::Update(float _dt, sf::RenderWindow& _window)
 {
 	
+	data->debugViewer.Update(_dt);
 }
 
 void Game::KeyPressed(sf::Event::KeyEvent _key, sf::RenderWindow& _window)
 {
-	
+	switch (_key.code)
+	{
+	case sf::Keyboard::F1:
+		data->debugViewer.ToggleFPS();
+		break;
+	case sf::Keyboard::Escape:
+		data->currentScene = new Menu();
+		delete this;
+		break;
+	default:
+		break;
+	}
 }
 
 void Game::MousePressed(sf::Event::MouseButtonEvent _mouse, sf::RenderWindow& _window)
@@ -46,6 +60,7 @@ void Game::MouseMoved(sf::Event::MouseMoveEvent _mouse, sf::RenderWindow& _windo
 
 void Game::Draw(sf::RenderWindow& _window)
 {	
+	test.Draw(&_window);
 	data->debugViewer.Draw(_window);
 }
 

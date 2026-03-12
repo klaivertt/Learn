@@ -20,8 +20,10 @@ const sf::Font* GetFont(FontType _type);
 typedef class Text
 {
 public:
+	Text();
 	Text(FontType _fontType, sf::Vector2f _origin, sf::Color _color, unsigned int _size);
 	Text(FontType _fontType, sf::Vector2f _origin, sf::Color _color, unsigned int _size, float _letterSpacing);
+	void Create(FontType _fontType, sf::Vector2f _origin, sf::Color _color, unsigned int _size);
 private:
 	// Text base
 	sf::Text text;
@@ -32,8 +34,6 @@ private:
 	sf::Text shadow;
 	sf::Color shadowColor = sf::Color::Black;
 	bool shadowEnable = false;
-
-	void Create(FontType _fontType, sf::Vector2f _origin, sf::Color _color, unsigned int _size);
 public:
 	void SetString(std::string _string);
 	void SetColor(sf::Color _color);
@@ -66,6 +66,9 @@ public:
 	void SetOrigin(Vec2 _origin);
 
 	void Draw(sf::RenderTarget& _render);
+
+	sf::FloatRect GetLocalBounds(void);
+	sf::FloatRect GetGlobalBounds(void);
 }Text;
 
 #endif // !TEXT_H

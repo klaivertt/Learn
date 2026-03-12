@@ -106,7 +106,7 @@ void DebugDrawSegment(b2Vec2 p1, b2Vec2 p2, b2HexColor color, void* _context)
 }
 void DebugDrawTransform(b2Transform _transform, void* _context)
 {
-	float lineLength = 0.4;
+	float lineLength = 0.4f;
 
 	b2Vec2 xAxis = _transform.p + lineLength * b2Rot_GetXAxis(_transform.q);
 	sf::Vertex redLine[] = 
