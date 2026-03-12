@@ -34,6 +34,33 @@ void Game::Update(float _dt, sf::RenderWindow& _window)
 	data->debugViewer.Update(_dt);
 }
 
+void Game::HandleEvents(sf::RenderWindow& _window)
+{
+	sf::Event event;
+	while (_window.pollEvent(event))
+	{
+		if (event.type == sf::Event::Closed)
+		{
+			_window.close();
+		}
+
+		if (event.type == sf::Event::KeyPressed)
+		{
+			KeyPressed(event.key, _window);
+		}
+
+		if (event.type == sf::Event::MouseButtonPressed)
+		{
+			MousePressed(event.mouseButton, _window);
+		}
+
+		if (event.type == sf::Event::MouseMoved)
+		{
+			MouseMoved(event.mouseMove, _window);
+		}
+	}
+}
+
 void Game::KeyPressed(sf::Event::KeyEvent _key, sf::RenderWindow& _window)
 {
 	switch (_key.code)

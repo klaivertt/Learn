@@ -33,6 +33,33 @@ void Menu::Update(float _dt, sf::RenderWindow& _window)
 	data->debugViewer.Update(_dt);
 }
 
+void Menu::HandleEvents(sf::RenderWindow& _window)
+{
+	sf::Event event;
+	while (_window.pollEvent(event))
+	{
+		if (event.type == sf::Event::Closed)
+		{
+			_window.close();
+		}
+
+		if (event.type == sf::Event::KeyPressed)
+		{
+			KeyPressed(event.key, _window);
+		}
+
+		if (event.type == sf::Event::MouseButtonPressed)
+		{
+			MousePressed(event.mouseButton, _window);
+		}
+
+		if (event.type == sf::Event::MouseMoved)
+		{
+			MouseMoved(event.mouseMove, _window);
+		}
+	}
+}
+
 void Menu::KeyPressed(sf::Event::KeyEvent _key, sf::RenderWindow& _window)
 {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
@@ -127,8 +154,7 @@ void Menu::CheckButtonClick(sf::Vector2i _mousePos)
 	{
 		Logger::Info("Start Button Clicked. Changing to Game Scene.", false);
 		// Change to Game Scene
-
-
+		ChangeScene(this, new Game());
 	}
 	if (exitButton.getGlobalBounds().contains(static_cast<sf::Vector2f>(_mousePos)))
 	{

@@ -22,6 +22,7 @@ public:
 	~Game();
 	void Load() override;
 	void Update(float _dt, sf::RenderWindow& _window) override;
+	void HandleEvents(sf::RenderWindow& _window) override;
 	void KeyPressed(sf::Event::KeyEvent _key, sf::RenderWindow& _window) override;
 	void MousePressed(sf::Event::MouseButtonEvent _mouse, sf::RenderWindow& _window) override;
 	void MouseMoved(sf::Event::MouseMoveEvent _mouse, sf::RenderWindow& _window) override;

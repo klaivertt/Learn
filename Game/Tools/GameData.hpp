@@ -39,6 +39,10 @@ public:
 	sf::Font font;
 
 	Scene* currentScene = nullptr;
+	
+	// Scene transition management
+	bool isSceneChanging = false;
+	Scene* nextScene = nullptr;
 
 	Screen screen;
 
