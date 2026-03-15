@@ -5,8 +5,8 @@
 #include "Tools/Scene.hpp"
 #include "Tools/Miscellaneous/Sprite.hpp"
 
-#define BALL_SPEED 600.f
-#define PLAYER_SPEED 700.f
+#define MAX_TRUNC 7
+#define MAX_TIME 5.f
 
 class Animation
 {
@@ -16,6 +16,29 @@ public:
 	~Animation() {};
 };
 
+enum class LogTyppe
+{
+	LEFT,
+	RIGHT,
+	NORMAL,
+	VAR,
+
+	ALL_TYPE
+};
+
+class TimeBar
+{
+private:
+	Sprite bar;
+	Sprite barBack; 
+	Vec2 size;
+	float time = MAX_TIME;
+public:
+	void Load(void);
+	void Update(float _dt);
+	void Draw(sf::RenderTarget& _target);
+	void AddTime(float _time);
+};
 
 // Game Scene
 class Game : public Scene
@@ -33,22 +56,17 @@ public:
 private:
 	GameData* data = nullptr;
 	Sprite background;
-	Sprite paddle[2];
-	Sprite ball;
-	Vec2 ballVelocity;
-	int playerDir[2] = {0};
-	Text scoreText;
+
+	Sprite trunk[MAX_TRUNC];
+	Sprite stump;
+
+	TimeBar timeBar;
+
+	sf::Texture trunkTexture[static_cast<int>(LogTyppe::ALL_TYPE)];
 
 	int score[2] = { 0 };
 
-	void LoadPaddle(void);
-	void LoadBall(void);
-	void UpdateBall(float _dt);
-	void UpdatePlayer(float _dt);
-	void CheckColision();
-	void ResetBall();
-	void SetNewScore();
-	void PlayerInput();
+	void LoadTrunk(void);
 };
 
 #endif // !GAME_H

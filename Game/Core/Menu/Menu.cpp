@@ -19,6 +19,8 @@ void Menu::Load()
 {
 	data = GameData::GetInstance();
 
+	background.SetTexture(SPRITE_PATH + std::string("Background.png"));
+
 	titleText.Create(FontType::BOLD, Vec2(0.5f), sf::Color::White, 44);
 	titleText.SetString(data->screen.name);
 	titleText.SetPosition(Vec2(data->screen.width / 2, data->screen.height * 0.2f));

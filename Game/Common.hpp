@@ -45,6 +45,8 @@
 #define ZOOM 64
 #define RAD_TO_DEG 180.0f / M_PI
 
+#define SPRITE_PATH "Assets/Sprites/"
+
 #pragma endregion
 
 typedef enum Anchor

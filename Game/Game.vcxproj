@@ -305,7 +305,9 @@
     <ClInclude Include="Dependencies\include\SFML\Window\WindowStyle.hpp" />
     <ClInclude Include="Core\Init.hpp" />
     <ClInclude Include="Tools\Debug\DebugViewer.h" />
+    <ClInclude Include="Tools\Debug\DebugViewer.hpp" />
     <ClInclude Include="Tools\Debug\Logger.h" />
+    <ClInclude Include="Tools\Debug\Logger.hpp" />
     <ClInclude Include="Tools\Debug\SFMLDebugDraw.h" />
     <ClInclude Include="Tools\GameData.hpp" />
     <ClInclude Include="Tools\Effect\Particle.hpp" />

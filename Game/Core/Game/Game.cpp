@@ -21,23 +21,17 @@ void Game::Load()
 	// Game Data singleton
 	data = GameData::GetInstance();
 
-	background.SetTexture("Assets/background.png");
-	LoadPaddle();
-	LoadBall();
-
-	scoreText.Create(FontType::BOLD, Vec2(0.5f), sf::Color::White, 32);
-	scoreText.SetPosition(Vec2(data->screen.width / 2, 30.f));
-	scoreText.SetString("Score J1 : " + std::to_string(score[0]) + " || Score J2 : " + std::to_string(score[1]));
+	background.SetTexture(SPRITE_PATH + std::string("Background.png"));
+	LoadTrunk();
+	timeBar.Load();
 
 	Logger::Success("Game Scene Loaded.", true);
 }
 
 void Game::Update(float _dt, sf::RenderWindow& _window)
 {
-	PlayerInput();
-	UpdateBall(_dt);
-	UpdatePlayer(_dt);
-	CheckColision();
+	timeBar.Update(_dt);
+
 	data->debugViewer.Update(_dt);
 }
 
@@ -95,114 +89,74 @@ void Game::Draw(sf::RenderWindow& _window)
 {
 	background.Draw(&_window);
 
-	for (int i = 0; i < 2; i++)
+	stump.Draw(&_window);
+
+	for (int i = 0; i < MAX_TRUNC; i++)
 	{
-		paddle[i].Draw(&_window);
+		trunk[i].Draw(&_window);
 	}
 
-	ball.Draw(&_window);
-
-	scoreText.Draw(_window);
+	timeBar.Draw(_window);
 
 	data->debugViewer.Draw(_window);
 }
 
-void Game::LoadPaddle(void)
+void Game::LoadTrunk(void)
 {
-	for (int i = 0; i < 2; i++)
+	stump.SetTexture(SPRITE_PATH + std::string("Stump.png"));
+	stump.SetOrigin(Vec2(0.5f, 1.f));
+
+	Vec2 stumpPos = Vec2(data->screen.width / 2, data->screen.height - 40.f);
+	stump.SetPosition(stumpPos);
+
+
+	trunkTexture[static_cast<int>(LogTyppe::RIGHT)] = *data->assets.GetTexture(SPRITE_PATH + std::string("BranchRight.png"));
+	trunkTexture[static_cast<int>(LogTyppe::LEFT)] = *data->assets.GetTexture(SPRITE_PATH + std::string("BranchLeft.png"));
+	trunkTexture[static_cast<int>(LogTyppe::NORMAL)] = *data->assets.GetTexture(SPRITE_PATH + std::string("Trunk1.png"));
+	trunkTexture[static_cast<int>(LogTyppe::VAR)] = *data->assets.GetTexture(SPRITE_PATH + std::string("Trunk2.png"));
+
+	Vec2 stumpSize = stump.GetTexture()->getSize();
+	Vec2 logSize = trunkTexture[static_cast<int>(LogTyppe::NORMAL)].getSize();
+	for (int i = 0; i < MAX_TRUNC; i++)
 	{
-		paddle[i].SetTexture("Assets/Barre.png");
-		paddle[i].SetPosition(Vec2((i == 0 ? 20.f : data->screen.width - 20.f), (data->screen.height / 2)));
-		paddle[i].SetOrigin(Vec2(0.5f));
+		trunk[i].SetTexture(&trunkTexture[static_cast<int>(LogTyppe::NORMAL)]);
+		trunk[i].SetOrigin(Vec2(0.5f, 1.f));
+
+		trunk[i].SetPosition(stumpPos - Vec2(0.f, (stumpSize.y + logSize.y * i)));
 	}
 }
 
-void Game::LoadBall(void)
+void TimeBar::Load(void)
 {
-	ball.SetTexture("Assets/Balle.png");
-	ball.SetPosition(Vec2(data->screen.width / 2, data->screen.height / 2));
-	ball.SetOrigin(Vec2(0.5f));
-	ballVelocity = Vec2((rand() % 2) * 2 - 1, (rand() % 2) * 2 - 1);
+	bar.SetTexture(SPRITE_PATH + std::string("TimeBar.png"));
+	barBack.SetTexture(SPRITE_PATH + std::string("TimeContainer.png"));
+	size = bar.GetTexture()->getSize();
+
+	bar.SetOrigin(Vec2(0.f,0.5f));
+	barBack.SetOrigin(Vec2(0.f, 0.5f));
+
+	GameData* data = GameData::GetInstance();
+
+	Vec2 pos = Vec2((data->screen.width / 2 - size.x / 2), 40.f);
+	bar.SetPosition(pos + Vec2(10.f,0));
+	barBack.SetPosition(pos);
+
 }
 
-void Game::UpdateBall(float _dt)
+void TimeBar::Update(float _dt)
 {
-    ballVelocity.Normalize();
-    Vec2 movement = ballVelocity * BALL_SPEED * _dt;
-    ball.Move(movement);
+
+	time -= _dt;
+	bar.SetTextureRect(sf::IntRect(0,0, size.x * time/MAX_TIME, size.y));
 }
 
-void Game::UpdatePlayer(float _dt)
+void TimeBar::Draw(sf::RenderTarget& _target)
 {
-	for (int i = 0; i < 2; i++)
-	{
-		Vec2 dir = Vec2(0);
-		dir.y = playerDir[i] * PLAYER_SPEED * _dt;
-		paddle[i].Move(dir);
-		playerDir[i] = 0;
-	}
+	barBack.Draw(&_target);
+	bar.Draw(&_target);
 }
 
-void Game::CheckColision()
+void TimeBar::AddTime(float _time)
 {
-	for (int i = 0; i < 2; i++)
-	{
-		if (paddle[i].GetGlobalBounds().intersects(ball.GetGlobalBounds()))
-		{
-			ballVelocity.x *= -1;
-		}
-	}
-
-	if (ball.GetPosition().x <= 5.f)
-	{
-		score[1]++;
-		ResetBall();
-		SetNewScore();
-	}
-	else if (ball.GetPosition().x >= data->screen.width - 5.f)
-	{
-		score[0]++;
-		ResetBall();
-		SetNewScore();
-	}
-
-	if (ball.GetPosition().y <= 5.f)
-	{
-		ballVelocity.y *= -1;
-	}
-	else if (ball.GetPosition().y >= data->screen.height - 5.f)
-	{
-		ballVelocity.y *= -1;
-	}
-}
-
-void Game::ResetBall()
-{
-	ball.SetPosition(Vec2(data->screen.width / 2, data->screen.height / 2)); 
-	ballVelocity = Vec2((rand() % 2) * 2 - 1, (rand() % 2) * 2 - 1);
-}
-
-void Game::SetNewScore()
-{
-	scoreText.SetString("Score J1 : " + std::to_string(score[0]) + " || Score J2 : " + std::to_string(score[1]));
-}
-
-void Game::PlayerInput()
-{
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
-	{
-		playerDir[0] = -1;
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-	{
-		playerDir[0] = 1;
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-	{
-		playerDir[1] = -1;
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-	{
-		playerDir[1] = 1;
-	}
+	time += _time;
 }
