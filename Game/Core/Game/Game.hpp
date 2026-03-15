@@ -4,17 +4,12 @@
 #include "Common.hpp"
 #include "Tools/Scene.hpp"
 #include "Tools/Miscellaneous/Sprite.hpp"
+#include "Tools/Animation/Animation.hpp"
 
 #define MAX_TRUNC 7
 #define MAX_TIME 5.f
+#define TIME_ADD 0.2f
 
-class Animation
-{
-public:
-	sf::Texture* texture = nullptr;
-	Animation(){};
-	~Animation() {};
-};
 
 enum class LogTyppe
 {
@@ -40,6 +35,33 @@ public:
 	void AddTime(float _time);
 };
 
+class Player
+{
+private:
+	enum State
+	{
+		IDLE,
+		CUT,
+	};
+	GameData* data = nullptr;
+	Sprite sprite;
+	Sprite tombStone;
+	State state = IDLE;
+	Animation idle;
+	Animation cut;
+	int score = 0;
+public:
+	bool isDead = false;
+	int dir = 1;
+	void Load();
+	void Update(float _dt);
+	void Draw(sf::RenderTarget& _target);
+	void ChangeDir(int _dir);
+	void Cut();
+	void AddScore(int _score);
+	int GetScore(void);
+};
+
 // Game Scene
 class Game : public Scene
 {
@@ -60,8 +82,10 @@ private:
 	Sprite trunk[MAX_TRUNC];
 	Sprite stump;
 
-	TimeBar timeBar;
+	Text text;
 
+	TimeBar timeBar;
+	Player player;
 	sf::Texture trunkTexture[static_cast<int>(LogTyppe::ALL_TYPE)];
 
 	int score[2] = { 0 };
@@ -69,6 +93,7 @@ private:
 	void LoadTrunk(void);
 	void ReplaceTunk(void);
 	void CutTree(int _dir);
+	void TestColision();
 };
 
 #endif // !GAME_H

@@ -41,6 +41,7 @@ public:
 
 	// Reset the animation to the first frame and initial state
 	void Reset(void);
+	bool isFinished = false;
 private:
 	void UpdateLoopAnim(float _dt);
 	void UpdateLoopOnceAnim(float _dt);
@@ -57,7 +58,6 @@ private:
 
 	AnimDirection direction = AnimDirection::HORIZONTAL;
 	AnimType type = AnimType::LOOP;
-	bool isFinished = false;
 	bool reversed = false;
 }Animation;
 

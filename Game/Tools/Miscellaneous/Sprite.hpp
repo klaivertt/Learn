@@ -11,7 +11,6 @@ private:
 	sf::Shader shader;
 	sf::RenderStates renderStates;
 	bool isUsingShader = false;
-	sf::Sprite sprite;
 	sf::Texture* texture = nullptr;
 
 	Vec2 position = { 0.f,0.f };
@@ -20,6 +19,7 @@ private:
 	// L'origine est un pourcentage de 0.f à 1.f, en fonction de la taille du sprite
 	Vec2 origin = { 0.f,0.f };
 public:
+	sf::Sprite sprite;
 	// L'origin est un pourcentage de 0.f à 1.f
 	Sprite(sf::Texture* _texture, Vec2 _origin = { 0.f,0.f });
 	// L'origin est un pourcentage de 0.f à 1.f
