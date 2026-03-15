@@ -29,7 +29,7 @@ namespace Debug
 		float totalFps = 0.f;
 		int avgFpsValue = 0;
 		int frameCount = 0;
-		float clearTime = (CLEAR_FPS_TIME - 1.f);
+		float clearTime = (CLEAR_FPS_TIME - 0.1f);
 
 	public:
 		DebugViewer();

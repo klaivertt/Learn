@@ -67,6 +67,8 @@ private:
 	int score[2] = { 0 };
 
 	void LoadTrunk(void);
+	void ReplaceTunk(void);
+	void CutTree(int _dir);
 };
 
 #endif // !GAME_H

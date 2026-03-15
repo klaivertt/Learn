@@ -72,6 +72,12 @@ void Game::KeyPressed(sf::Event::KeyEvent _key, sf::RenderWindow& _window)
 	case sf::Keyboard::Escape:
 		ChangeScene(new Menu());
 		break;
+	case sf::Keyboard::D:
+		CutTree(1);
+		break;
+	case sf::Keyboard::Q:
+		CutTree(-1);
+		break;
 	default:
 		break;
 	}
@@ -126,19 +132,66 @@ void Game::LoadTrunk(void)
 	}
 }
 
+void Game::ReplaceTunk(void)
+{
+	sf::Texture* texture;
+
+	for (int i = 0; i < MAX_TRUNC - 1; i++)
+	{
+		texture = trunk[i + 1].GetTexture();
+		trunk[i].SetTexture(texture);
+	}
+
+	unsigned int randTexture = 0;
+	if (texture == &trunkTexture[static_cast<int>(LogTyppe::RIGHT)] || texture == &trunkTexture[static_cast<int>(LogTyppe::LEFT)])
+	{
+		randTexture = rand() % 2;
+	}
+	else
+	{
+		randTexture = rand() % 4;
+	}
+
+	switch (randTexture)
+	{
+	case 0:
+		texture = &trunkTexture[static_cast<int>(LogTyppe::NORMAL)];
+		break;
+	case 1:
+		texture = &trunkTexture[static_cast<int>(LogTyppe::VAR)];
+		break;
+	case 2:
+		texture = &trunkTexture[static_cast<int>(LogTyppe::LEFT)];
+		break;
+	case 3:
+		texture = &trunkTexture[static_cast<int>(LogTyppe::RIGHT)];
+		break;
+	default:
+		break;
+	}
+
+	trunk[MAX_TRUNC - 1].SetTexture(texture);
+
+}
+
+void Game::CutTree(int _dir)
+{
+	ReplaceTunk();
+}
+
 void TimeBar::Load(void)
 {
 	bar.SetTexture(SPRITE_PATH + std::string("TimeBar.png"));
 	barBack.SetTexture(SPRITE_PATH + std::string("TimeContainer.png"));
 	size = bar.GetTexture()->getSize();
 
-	bar.SetOrigin(Vec2(0.f,0.5f));
+	bar.SetOrigin(Vec2(0.f, 0.5f));
 	barBack.SetOrigin(Vec2(0.f, 0.5f));
 
 	GameData* data = GameData::GetInstance();
 
 	Vec2 pos = Vec2((data->screen.width / 2 - size.x / 2), 40.f);
-	bar.SetPosition(pos + Vec2(10.f,0));
+	bar.SetPosition(pos + Vec2(16.f, 0));
 	barBack.SetPosition(pos);
 
 }
@@ -147,7 +200,10 @@ void TimeBar::Update(float _dt)
 {
 
 	time -= _dt;
-	bar.SetTextureRect(sf::IntRect(0,0, size.x * time/MAX_TIME, size.y));
+	if (time > 0.f)
+	{
+		bar.SetTextureRect(sf::IntRect(0, 0, size.x * time / MAX_TIME, size.y));
+	}
 }
 
 void TimeBar::Draw(sf::RenderTarget& _target)

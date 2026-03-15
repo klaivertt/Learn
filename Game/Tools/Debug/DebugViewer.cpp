@@ -23,7 +23,6 @@ namespace Debug
 		fpsBackground.setFillColor(sf::Color(0, 0, 0, 100));
 		UpdateSizeOfFpsBackground();
 
-		ClearData();
 	}
 
 	void DebugViewer::Update(float _dt)
