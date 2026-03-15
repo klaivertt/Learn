@@ -107,7 +107,7 @@ void Game::Draw(sf::RenderWindow& _window)
 
 	stump.Draw(&_window);
 
-	for (int i = 0; i < MAX_TRUNC; i++)
+	for (int i = 0; i < MAX_TRUNKS; i++)
 	{
 		trunk[i].Draw(&_window);
 	}
@@ -127,34 +127,34 @@ void Game::LoadTrunk(void)
 	stump.SetPosition(stumpPos);
 
 
-	trunkTexture[static_cast<int>(LogTyppe::RIGHT)] = *data->assets.GetTexture(SPRITE_PATH + std::string("BranchRight.png"));
-	trunkTexture[static_cast<int>(LogTyppe::LEFT)] = *data->assets.GetTexture(SPRITE_PATH + std::string("BranchLeft.png"));
-	trunkTexture[static_cast<int>(LogTyppe::NORMAL)] = *data->assets.GetTexture(SPRITE_PATH + std::string("Trunk1.png"));
-	trunkTexture[static_cast<int>(LogTyppe::VAR)] = *data->assets.GetTexture(SPRITE_PATH + std::string("Trunk2.png"));
+	trunkTexture[static_cast<int>(LogType::RIGHT)] = *data->assets.GetTexture(SPRITE_PATH + std::string("BranchRight.png"));
+	trunkTexture[static_cast<int>(LogType::LEFT)] = *data->assets.GetTexture(SPRITE_PATH + std::string("BranchLeft.png"));
+	trunkTexture[static_cast<int>(LogType::NORMAL)] = *data->assets.GetTexture(SPRITE_PATH + std::string("Trunk1.png"));
+	trunkTexture[static_cast<int>(LogType::VAR)] = *data->assets.GetTexture(SPRITE_PATH + std::string("Trunk2.png"));
 
 	Vec2 stumpSize = stump.GetTexture()->getSize();
-	Vec2 logSize = trunkTexture[static_cast<int>(LogTyppe::NORMAL)].getSize();
-	for (int i = 0; i < MAX_TRUNC; i++)
+	Vec2 logSize = trunkTexture[static_cast<int>(LogType::NORMAL)].getSize();
+	for (int i = 0; i < MAX_TRUNKS; i++)
 	{
-		trunk[i].SetTexture(&trunkTexture[static_cast<int>(LogTyppe::NORMAL)]);
+		trunk[i].SetTexture(&trunkTexture[static_cast<int>(LogType::NORMAL)]);
 		trunk[i].SetOrigin(Vec2(0.5f, 1.f));
 
 		trunk[i].SetPosition(stumpPos - Vec2(0.f, (stumpSize.y + logSize.y * i)));
 	}
 }
 
-void Game::ReplaceTunk(void)
+void Game::ReplaceTrunk(void)
 {
 	sf::Texture* texture;
 
-	for (int i = 0; i < MAX_TRUNC - 1; i++)
+	for (int i = 0; i < MAX_TRUNKS - 1; i++)
 	{
 		texture = trunk[i + 1].GetTexture();
 		trunk[i].SetTexture(texture);
 	}
 
 	unsigned int randTexture = 0;
-	if (texture == &trunkTexture[static_cast<int>(LogTyppe::RIGHT)] || texture == &trunkTexture[static_cast<int>(LogTyppe::LEFT)])
+	if (texture == &trunkTexture[static_cast<int>(LogType::RIGHT)] || texture == &trunkTexture[static_cast<int>(LogType::LEFT)])
 	{
 		randTexture = rand() % 2;
 	}
@@ -166,22 +166,22 @@ void Game::ReplaceTunk(void)
 	switch (randTexture)
 	{
 	case 0:
-		texture = &trunkTexture[static_cast<int>(LogTyppe::NORMAL)];
+		texture = &trunkTexture[static_cast<int>(LogType::NORMAL)];
 		break;
 	case 1:
-		texture = &trunkTexture[static_cast<int>(LogTyppe::VAR)];
+		texture = &trunkTexture[static_cast<int>(LogType::VAR)];
 		break;
 	case 2:
-		texture = &trunkTexture[static_cast<int>(LogTyppe::LEFT)];
+		texture = &trunkTexture[static_cast<int>(LogType::LEFT)];
 		break;
 	case 3:
-		texture = &trunkTexture[static_cast<int>(LogTyppe::RIGHT)];
+		texture = &trunkTexture[static_cast<int>(LogType::RIGHT)];
 		break;
 	default:
 		break;
 	}
 
-	trunk[MAX_TRUNC - 1].SetTexture(texture);
+	trunk[MAX_TRUNKS - 1].SetTexture(texture);
 
 }
 
@@ -190,24 +190,24 @@ void Game::CutTree(int _dir)
 	if (!player.isDead)
 	{
 		player.ChangeDir(_dir);
-		TestColision();
-		ReplaceTunk();
+		TestCollision();
+		ReplaceTrunk();
 		timeBar.AddTime(TIME_ADD);
 		player.Cut();
-		TestColision();
+		TestCollision();
 		player.AddScore(1);
 		text.SetString(std::to_string(player.GetScore()));
 	}
 }
 
-void Game::TestColision()
+void Game::TestCollision()
 {
-	if (trunk[0].GetTexture() == &trunkTexture[static_cast<int>(LogTyppe::RIGHT)] && player.dir == -1)
+	if (trunk[0].GetTexture() == &trunkTexture[static_cast<int>(LogType::RIGHT)] && player.dir == -1)
 	{
 		player.isDead = true;
 	}
 
-	if (trunk[0].GetTexture() == &trunkTexture[static_cast<int>(LogTyppe::LEFT)] && player.dir == 1)
+	if (trunk[0].GetTexture() == &trunkTexture[static_cast<int>(LogType::LEFT)] && player.dir == 1)
 	{
 		player.isDead = true;
 	}

@@ -6,12 +6,12 @@
 #include "Tools/Miscellaneous/Sprite.hpp"
 #include "Tools/Animation/Animation.hpp"
 
-#define MAX_TRUNC 7
+#define MAX_TRUNKS 7
 #define MAX_TIME 5.f
 #define TIME_ADD 0.2f
 
 
-enum class LogTyppe
+enum class LogType
 {
 	LEFT,
 	RIGHT,
@@ -79,21 +79,21 @@ private:
 	GameData* data = nullptr;
 	Sprite background;
 
-	Sprite trunk[MAX_TRUNC];
+	Sprite trunk[MAX_TRUNKS];
 	Sprite stump;
 
 	Text text;
 
 	TimeBar timeBar;
 	Player player;
-	sf::Texture trunkTexture[static_cast<int>(LogTyppe::ALL_TYPE)];
+	sf::Texture trunkTexture[static_cast<int>(LogType::ALL_TYPE)];
 
 	int score[2] = { 0 };
 
 	void LoadTrunk(void);
-	void ReplaceTunk(void);
+	void ReplaceTrunk(void);
 	void CutTree(int _dir);
-	void TestColision();
+	void TestCollision();
 };
 
 #endif // !GAME_H
