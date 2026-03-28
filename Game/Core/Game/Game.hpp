@@ -5,39 +5,51 @@
 #include "Tools/Scene.hpp"
 #include "Tools/Miscellaneous/Sprite.hpp"
 
-#define MAX_TRUNC 7
-#define MAX_TIME 5.f
+#define GRID_WIDTH 17
+#define GRID_HEIGHT 15
 
-class Animation
-{
-public:
-	sf::Texture* texture = nullptr;
-	Animation(){};
-	~Animation() {};
-};
+#define CELL_SIZE 32
 
-enum class LogTyppe
+#define HEAD_SIZE 28
+#define TAILS_SIZE 10
+
+enum class Direction
 {
+	UP,
+	DOWN,
 	LEFT,
-	RIGHT,
-	NORMAL,
-	VAR,
-
-	ALL_TYPE
+	RIGHT
 };
 
-class TimeBar
+class Snake
 {
 private:
-	Sprite bar;
-	Sprite barBack; 
-	Vec2 size;
-	float time = MAX_TIME;
+	int score;
+	std::vector<sf::RectangleShape> shapes;
 public:
+
 	void Load(void);
 	void Update(float _dt);
-	void Draw(sf::RenderTarget& _target);
-	void AddTime(float _time);
+	void Draw(sf::RenderTarget& _render);
+
+	void ChangeDir(Direction _dir);
+private:
+	void CreateNewRectangle(void);
+	void ClampSizeBetweenHeadAndTails(void);
+};
+
+struct Cell
+{
+	sf::RectangleShape shape;
+	bool isOccupate = false;
+};
+
+class Board
+{
+private:
+
+public:
+private:
 };
 
 // Game Scene
@@ -55,18 +67,6 @@ public:
 	void Draw(sf::RenderWindow& _window) override;
 private:
 	GameData* data = nullptr;
-	Sprite background;
-
-	Sprite trunk[MAX_TRUNC];
-	Sprite stump;
-
-	TimeBar timeBar;
-
-	sf::Texture trunkTexture[static_cast<int>(LogTyppe::ALL_TYPE)];
-
-	int score[2] = { 0 };
-
-	void LoadTrunk(void);
 };
 
 #endif // !GAME_H
