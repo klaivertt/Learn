@@ -28,6 +28,11 @@ struct GameData
 	sf::Sprite sprite;
 	sf::Texture texture;
 	Player player[MAX_PLAYER];
+	bool isGameOver = false;
+	sf::Text gameOverText;
+	sf::Text playerWin;
+	sf::Text restart;
+	sf::Font font;
 };
 
 // Prototypes
@@ -41,8 +46,10 @@ void PlayerCheckCollision(sf::Image& _image, Player& _player);
 void PlayerDrawPixelAtPos(sf::Image& _image, Player& _player);
 void ChangeTexture(sf::Image& _image, sf::Texture& _texture);
 
-void DrawMap(sf::RenderWindow& _window, sf::Sprite& _sprite);
+void ChangePlayerWinText(sf::Text& _text, const int& const _playerId);
 
+void DrawMap(sf::RenderWindow& _window, sf::Sprite& _sprite);
+void DrawGameOver(sf::RenderWindow& _window, sf::Text& _gameOverText, sf::Text& _playerWinText, sf::Text& _restart);
 
 int main()
 {
@@ -67,6 +74,15 @@ int main()
 			{
 				window.close();
 			}
+
+			if (event.type == sf::Event::KeyPressed)
+			{
+				if (event.key.code == sf::Keyboard::Space)
+				{
+					Init(data);
+				}
+			}
+
 		}
 
 		Update(data, dt);
@@ -104,19 +120,67 @@ void Init(GameData& _data)
 	_data.image.create(SCREEN_WIDTH, SCREEN_HEIGHT);
 	_data.texture.create(SCREEN_WIDTH, SCREEN_HEIGHT);
 	_data.sprite.setTexture(_data.texture);
+
+	_data.font.loadFromFile("poppins.ttf");
+
+	_data.gameOverText.setFont(_data.font);
+	_data.gameOverText.setCharacterSize(30);
+
+	sf::Vector2f pos = sf::Vector2f(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
+
+	_data.gameOverText.setPosition(pos);
+	_data.gameOverText.setString("Game Over");
+	_data.gameOverText.setFillColor(sf::Color::White);
+	sf::FloatRect bound = _data.gameOverText.getGlobalBounds();
+	_data.gameOverText.setOrigin(sf::Vector2f(bound.width / 2, bound.height / 2));
+
+
+	_data.playerWin.setFont(_data.font);
+	_data.playerWin.setCharacterSize(20);
+	pos.y += 65.f;
+
+	_data.playerWin.setPosition(pos);
+	_data.playerWin.setString("Player . Win");
+	_data.playerWin.setFillColor(sf::Color::White);
+	bound = _data.playerWin.getGlobalBounds();
+	_data.playerWin.setOrigin(sf::Vector2f(bound.width / 2, bound.height / 2));
+
+	_data.restart.setFont(_data.font);
+	_data.restart.setCharacterSize(20);
+	pos.y += 30.f;
+
+	_data.restart.setPosition(pos);
+	_data.restart.setString("Press 'Space' to restart");
+	_data.restart.setFillColor(sf::Color::White);
+	bound = _data.restart.getGlobalBounds();
+	_data.restart.setOrigin(sf::Vector2f(bound.width / 2, bound.height / 2));
+
+	_data.isGameOver = false;
 }
 
 void Update(GameData& _data, float _dt)
 {
 	for (int i = 0; i < MAX_PLAYER; i++)
 	{
-		Player& actualPlayer = _data.player[i];
-		if (actualPlayer.alive)
+		if (!_data.isGameOver)
 		{
-			PlayerKeyPressed(actualPlayer);
-			PlayerUpdatePos(actualPlayer);
-			PlayerCheckCollision(_data.image, actualPlayer);
-			PlayerDrawPixelAtPos(_data.image, actualPlayer);
+			Player& actualPlayer = _data.player[i];
+			if (actualPlayer.alive)
+			{
+				PlayerKeyPressed(actualPlayer);
+				PlayerUpdatePos(actualPlayer);
+				PlayerCheckCollision(_data.image, actualPlayer);
+				PlayerDrawPixelAtPos(_data.image, actualPlayer);
+			}
+			else
+			{
+				if (!_data.isGameOver && !_data.player[i].alive)
+				{
+					ChangePlayerWinText(_data.playerWin, (i == 0 ? 2 : 1));
+					_data.isGameOver = true;
+					//std::cout << "game over";
+				}
+			}
 		}
 	}
 
@@ -129,6 +193,11 @@ void Display(GameData& _data, sf::RenderWindow& _window)
 
 	DrawMap(_window, _data.sprite);
 
+	if (_data.isGameOver)
+	{
+		DrawGameOver(_window, _data.gameOverText, _data.playerWin, _data.restart);
+	}
+
 	_window.display();
 }
 
@@ -136,19 +205,31 @@ void PlayerKeyPressed(Player& _player)
 {
 	if (sf::Keyboard::isKeyPressed(_player.key[0]))
 	{
-		_player.dir = Dir::UP;
+		if (_player.dir != DOWN)
+		{
+			_player.dir = Dir::UP;
+		}
 	}
 	if (sf::Keyboard::isKeyPressed(_player.key[1]))
 	{
-		_player.dir = Dir::DOWN;
+		if (_player.dir != UP)
+		{
+			_player.dir = Dir::DOWN;
+		}
 	}
 	if (sf::Keyboard::isKeyPressed(_player.key[2]))
 	{
-		_player.dir = Dir::LEFT;
+		if (_player.dir != RIGHT)
+		{
+			_player.dir = Dir::LEFT;
+		}
 	}
 	if (sf::Keyboard::isKeyPressed(_player.key[3]))
 	{
-		_player.dir = Dir::RIGHT;
+		if (_player.dir != LEFT)
+		{
+			_player.dir = Dir::RIGHT;
+		}
 	}
 }
 
@@ -171,7 +252,7 @@ void PlayerUpdatePos(Player& _player)
 	default:
 		break;
 	}
-	std::cout << _player.pos.x << " : " << _player.pos.y << std::endl;
+	//std::cout << _player.pos.x << " : " << _player.pos.y << std::endl;
 	_player.pixelPosed++;
 }
 
@@ -202,7 +283,19 @@ void ChangeTexture(sf::Image& _image, sf::Texture& _texture)
 	_texture.update(_image);
 }
 
+void ChangePlayerWinText(sf::Text& _text, const int& const _playerId)
+{
+	_text.setString("Player " + std::to_string(_playerId) + " Win");
+}
+
 void DrawMap(sf::RenderWindow& _window, sf::Sprite& _sprite)
 {
 	_window.draw(_sprite);
+}
+
+void DrawGameOver(sf::RenderWindow& _window, sf::Text& _gameOverText, sf::Text& _playerWinText, sf::Text& _restart)
+{
+	_window.draw(_gameOverText);
+	_window.draw(_playerWinText);
+	_window.draw(_restart);
 }
