@@ -68,8 +68,9 @@ void Sonuc::SetPosition(sf::Vector2f _pos)
 
 void Sonuc::Update(float _dt)
 {
-	void() _dt;
-	pos = sprite.getPosition()
+	// unused for now
+	(void)_dt; 
+	pos = sprite.getPosition();
 }
 
 void Sonuc::Draw(sf::RenderTarget& _render)
