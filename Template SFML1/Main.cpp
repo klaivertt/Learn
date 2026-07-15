@@ -1,7 +1,5 @@
 #include "Common.h"
 
-#define MAX_PLAYER 2
-
 
 enum Dir
 {
@@ -17,14 +15,30 @@ public:
 	Sonuc();
 	~Sonuc();
 
+	sf::Vector2f GetPosition(void);
+	sf::Vector2f GetSize(void);
+
+	sf::FloatRect GetRect(void);
+
+	void SetPosition(sf::Vector2f _pos);
+	
+	void Update(float _dt);
+	void Draw(sf::RenderTarget& _render);
+
 private:
 	sf::Texture texture;
 	sf::Sprite sprite;
+	sf::Vector2f size;
+	sf::Vector2f pos;
 };
 
 Sonuc::Sonuc()
 {
+	texture.loadFromFile("Seaunaique.png");
+	sprite.setTexture(texture);
 
+	size = sf::Vector2f(texture.getSize());
+	sprite.setOrigin(sf::Vector2f(size.x / 2, size.y));
 }
 
 Sonuc::~Sonuc()
@@ -32,19 +46,55 @@ Sonuc::~Sonuc()
 
 }
 
+sf::Vector2f Sonuc::GetPosition(void)
+{
+	return pos;
+}
 
+sf::Vector2f Sonuc::GetSize(void)
+{
+	return size;
+}
+
+sf::FloatRect Sonuc::GetRect(void)
+{
+	return sf::FloatRect(pos);
+}
+
+void Sonuc::SetPosition(sf::Vector2f _pos)
+{
+	sprite.setPosition(_pos);
+}
+
+void Sonuc::Update(float _dt)
+{
+	void() _dt;
+	pos = sprite.getPosition()
+}
+
+void Sonuc::Draw(sf::RenderTarget& _render)
+{
+	_render.draw(sprite);
+}
+
+
+// Game and Data 
 struct GameData
 {
 	sf::Image image;
-	sf::Sprite sprite;
+	sf::Sprite background;
+	sf::Texture bgTexture;
 	sf::Texture texture;
-	Sonuc player[MAX_PLAYER];
+	Sonuc sonuc;
 };
 
 // Prototypes
 void Init(GameData& _data);
 void Update(GameData& _data, float _dt);
 void Display(GameData& _data, sf::RenderWindow& _window);
+
+void ResolveColision(sf::FloatRect _rect1, sf::FloatRect _rect2);
+
 
 int main()
 {
@@ -90,30 +140,34 @@ int main()
 ///////////////////////////////////////////////////////////////////
 void Init(GameData& _data)
 {
-	
-
 	_data.image.create(SCREEN_WIDTH, SCREEN_HEIGHT);
-	_data.texture.create(SCREEN_WIDTH, SCREEN_HEIGHT);
-	_data.sprite.setTexture(_data.texture);
+	_data.texture.loadFromImage(_data.image);
 
-	sf::Vector2f pos = sf::Vector2f(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
+	_data.bgTexture.loadFromFile("Decor.jpg");
+	_data.background.setTexture(_data.bgTexture);
+	
+	_data.sonuc = Sonuc();
 
 }
 
 void Update(GameData& _data, float _dt)
 {
-	for (int i = 0; i < MAX_PLAYER; i++)
-	{
-		
-	}
-
-	ChangeTexture(_data.image, _data.texture);
+	ResolveColision(_data.sonuc, sf::FloatRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT));
 }
 
 void Display(GameData& _data, sf::RenderWindow& _window)
 {
 	_window.clear(sf::Color::Black);
 
+	_window.draw(_data.background);
+
+	_data.sonuc.Draw(_window);
 	
 	_window.display();
 }
+
+void ResolveColision(sf::FloatRect _rect1, sf::FloatRect _rect2)
+{
+
+}
+
