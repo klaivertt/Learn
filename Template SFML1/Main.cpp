@@ -11,11 +11,26 @@ enum Dir
 	RIGHT
 };
 
-struct Sonuc
+class Sonuc
 {
+public:
+	Sonuc();
+	~Sonuc();
+
+private:
 	sf::Texture texture;
 	sf::Sprite sprite;
 };
+
+Sonuc::Sonuc()
+{
+
+}
+
+Sonuc::~Sonuc()
+{
+
+}
 
 
 struct GameData
@@ -30,13 +45,6 @@ struct GameData
 void Init(GameData& _data);
 void Update(GameData& _data, float _dt);
 void Display(GameData& _data, sf::RenderWindow& _window);
-
-void ChangeTexture(sf::Image& _image, sf::Texture& _texture);
-
-void ChangePlayerWinText(sf::Text& _text, const int& const _playerId);
-
-void DrawMap(sf::RenderWindow& _window, sf::Sprite& _sprite);
-void DrawGameOver(sf::RenderWindow& _window, sf::Text& _gameOverText, sf::Text& _playerWinText, sf::Text& _restart);
 
 int main()
 {
