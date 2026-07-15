@@ -21,7 +21,8 @@ public:
 	sf::FloatRect GetRect(void);
 
 	void SetPosition(sf::Vector2f _pos);
-	
+	void Move(sf::Vector2f _pos);
+
 	void Update(float _dt);
 	void Draw(sf::RenderTarget& _render);
 
@@ -58,19 +59,28 @@ sf::Vector2f Sonuc::GetSize(void)
 
 sf::FloatRect Sonuc::GetRect(void)
 {
-	return sf::FloatRect(pos);
+	return sf::FloatRect(pos.x - size.x / 2, pos.y - size.y, size.x, size.y);
 }
 
 void Sonuc::SetPosition(sf::Vector2f _pos)
 {
-	sprite.setPosition(_pos);
+	pos = _pos;
+	sprite.setPosition(pos);
+}
+
+void Sonuc::Move(sf::Vector2f _pos)
+{
+	pos += _pos;
+	sprite.setPosition(pos);
 }
 
 void Sonuc::Update(float _dt)
 {
 	// unused for now
-	(void)_dt; 
+	(void)_dt;
+
 	pos = sprite.getPosition();
+
 }
 
 void Sonuc::Draw(sf::RenderTarget& _render)
@@ -87,6 +97,7 @@ struct GameData
 	sf::Texture bgTexture;
 	sf::Texture texture;
 	Sonuc sonuc;
+	sf::FloatRect* collision;
 };
 
 // Prototypes
@@ -94,7 +105,7 @@ void Init(GameData& _data);
 void Update(GameData& _data, float _dt);
 void Display(GameData& _data, sf::RenderWindow& _window);
 
-void ResolveColision(sf::FloatRect _rect1, sf::FloatRect _rect2);
+sf::Vector2f ResolveColision(sf::FloatRect _rect1, sf::FloatRect _rect2);
 
 
 int main()
@@ -146,14 +157,23 @@ void Init(GameData& _data)
 
 	_data.bgTexture.loadFromFile("Decor.jpg");
 	_data.background.setTexture(_data.bgTexture);
-	
-	_data.sonuc = Sonuc();
 
+	_data.sonuc = Sonuc();
+	_data.sonuc.SetPosition(sf::Vector2f(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2));
+	_data.collision = new sf::FloatRect[4];
+
+	_data.collision[0] = sf::FloatRect(0, 0, SCREEN_WIDTH, 10);
+	_data.collision[1] = sf::FloatRect(SCREEN_WIDTH - 10, 0, 10, SCREEN_HEIGHT);
+	_data.collision[2] = sf::FloatRect(0, SCREEN_HEIGHT - 10, SCREEN_WIDTH, 10);
+	_data.collision[3] = sf::FloatRect(0, 0, 10, SCREEN_HEIGHT);
 }
 
 void Update(GameData& _data, float _dt)
 {
-	ResolveColision(_data.sonuc, sf::FloatRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT));
+	for (size_t i = 0; i < 4; i++)
+	{
+	_data.sonuc.Move(ResolveColision(_data.sonuc.GetRect(), _data.collision[i]));
+	}
 }
 
 void Display(GameData& _data, sf::RenderWindow& _window)
@@ -163,12 +183,42 @@ void Display(GameData& _data, sf::RenderWindow& _window)
 	_window.draw(_data.background);
 
 	_data.sonuc.Draw(_window);
-	
+
 	_window.display();
 }
 
-void ResolveColision(sf::FloatRect _rect1, sf::FloatRect _rect2)
+sf::Vector2f ResolveColision(sf::FloatRect _rect1, sf::FloatRect _rect2)
 {
+	sf::Vector2f correction = sf::Vector2f(0, 0);
 
+	if (_rect1.left + _rect1.width >= _rect2.left &&
+		_rect1.left <= _rect2.left + _rect2.width &&
+		_rect1.top + _rect1.height >= _rect2.top &&
+		_rect1.top <= _rect2.top + _rect2.height
+		)
+	{
+
+		float overlapLeft = (_rect1.left + _rect1.width) - _rect2.left;
+		float overlapRight = (_rect2.left + _rect2.width) - _rect1.left;
+		float overlapTop = (_rect1.top + _rect1.height) - _rect2.top;
+		float overlapBottom = (_rect2.top + _rect2.height) - _rect1.top;
+
+		float minX = std::min(overlapLeft, overlapRight);
+		float minY = std::min(overlapTop, overlapBottom);
+
+
+
+		if (overlapLeft < overlapRight)
+			correction += sf::Vector2f(-overlapLeft, 0.f);
+		else
+			correction += sf::Vector2f(overlapRight, 0.f);
+
+		if (overlapTop < overlapBottom)
+			correction += sf::Vector2f(0.f, -overlapTop);
+		else
+			correction += sf::Vector2f(0.f, overlapBottom);
+
+	}
+	return correction;
 }
 
