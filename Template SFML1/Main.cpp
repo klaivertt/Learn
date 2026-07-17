@@ -105,6 +105,8 @@ void Init(GameData& _data);
 void Update(GameData& _data, float _dt);
 void Display(GameData& _data, sf::RenderWindow& _window);
 
+void CheckMapCollision(GameData& _data);
+
 sf::Vector2f ResolveColision(sf::FloatRect _rect1, sf::FloatRect _rect2);
 
 
@@ -170,10 +172,10 @@ void Init(GameData& _data)
 
 void Update(GameData& _data, float _dt)
 {
-	for (size_t i = 0; i < 4; i++)
-	{
-	_data.sonuc.Move(ResolveColision(_data.sonuc.GetRect(), _data.collision[i]));
-	}
+	
+
+
+
 }
 
 void Display(GameData& _data, sf::RenderWindow& _window)
@@ -185,6 +187,14 @@ void Display(GameData& _data, sf::RenderWindow& _window)
 	_data.sonuc.Draw(_window);
 
 	_window.display();
+}
+
+void CheckMapCollision(GameData& _data)
+{
+	for (size_t i = 0; i < 4; i++)
+	{
+		_data.sonuc.Move(ResolveColision(_data.sonuc.GetRect(), _data.collision[i]));
+	}
 }
 
 sf::Vector2f ResolveColision(sf::FloatRect _rect1, sf::FloatRect _rect2)
