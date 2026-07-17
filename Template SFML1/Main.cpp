@@ -1,12 +1,15 @@
 #include "Common.h"
 
 
-enum Dir
+enum class Dir
 {
 	UP,
 	DOWN,
 	LEFT,
-	RIGHT
+	RIGHT,
+
+	MAX_DIR,
+	NONE
 };
 
 class Sonuc
@@ -26,11 +29,17 @@ public:
 	void Update(float _dt);
 	void Draw(sf::RenderTarget& _render);
 
+	void SetDir(Dir _dir);
+
 private:
 	sf::Texture texture;
 	sf::Sprite sprite;
 	sf::Vector2f size;
 	sf::Vector2f pos;
+	Dir dir = Dir::NONE;
+	float speed = 200.f;
+
+	void UpdatePos(float _dt);
 };
 
 Sonuc::Sonuc()
@@ -76,16 +85,48 @@ void Sonuc::Move(sf::Vector2f _pos)
 
 void Sonuc::Update(float _dt)
 {
-	// unused for now
-	(void)_dt;
+	//// unused for now
+	//(void)_dt;
 
-	pos = sprite.getPosition();
+	UpdatePos(_dt);
+	sprite.setPosition(pos);
 
 }
 
 void Sonuc::Draw(sf::RenderTarget& _render)
 {
 	_render.draw(sprite);
+}
+
+void Sonuc::SetDir(Dir _dir = Dir::NONE)
+{
+	dir = _dir;
+	//std::cout << int(_dir) << std::endl;
+}
+
+void Sonuc::UpdatePos(float _dt)
+{
+	sf::Vector2f move = sf::Vector2f(0, 0);
+	switch (dir)
+	{
+	case Dir::UP:
+		move.y = -speed * _dt;
+		break;
+	case Dir::DOWN:
+		move.y = speed * _dt;
+		break;
+	case Dir::LEFT:
+		move.x = -speed * _dt;
+		break;
+	case Dir::RIGHT:
+		move.x = speed * _dt;
+		break;
+	default:
+		break;
+	}
+
+	pos += move;
+	std::cout << "x :" << pos.x << " y :" << pos.y << std::endl;
 }
 
 
@@ -97,7 +138,7 @@ struct GameData
 	sf::Texture bgTexture;
 	sf::Texture texture;
 	Sonuc sonuc;
-	sf::FloatRect* collision;
+	sf::FloatRect* collision = nullptr;
 };
 
 // Prototypes
@@ -106,6 +147,7 @@ void Update(GameData& _data, float _dt);
 void Display(GameData& _data, sf::RenderWindow& _window);
 
 void CheckMapCollision(GameData& _data);
+void CheckPlayerInput(GameData& _data);
 
 sf::Vector2f ResolveColision(sf::FloatRect _rect1, sf::FloatRect _rect2);
 
@@ -172,10 +214,12 @@ void Init(GameData& _data)
 
 void Update(GameData& _data, float _dt)
 {
-	
+	CheckMapCollision(_data);
+	CheckPlayerInput(_data);
 
+	_data.sonuc.Update(_dt);
 
-
+	CheckMapCollision(_data);
 }
 
 void Display(GameData& _data, sf::RenderWindow& _window)
@@ -195,6 +239,28 @@ void CheckMapCollision(GameData& _data)
 	{
 		_data.sonuc.Move(ResolveColision(_data.sonuc.GetRect(), _data.collision[i]));
 	}
+}
+
+void CheckPlayerInput(GameData& _data)
+{
+	Dir tempDir = Dir::NONE;
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
+	{
+		tempDir = Dir::UP;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
+	{
+		tempDir = Dir::LEFT;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+	{
+		tempDir = Dir::DOWN;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+	{
+		tempDir = Dir::RIGHT;
+	}
+	_data.sonuc.SetDir(tempDir);
 }
 
 sf::Vector2f ResolveColision(sf::FloatRect _rect1, sf::FloatRect _rect2)
@@ -217,16 +283,26 @@ sf::Vector2f ResolveColision(sf::FloatRect _rect1, sf::FloatRect _rect2)
 		float minY = std::min(overlapTop, overlapBottom);
 
 
-
-		if (overlapLeft < overlapRight)
-			correction += sf::Vector2f(-overlapLeft, 0.f);
+		if (minX < minY)
+			if (overlapLeft < overlapRight)
+			{
+				correction += sf::Vector2f(-overlapLeft, 0.f);
+			}
+			else
+			{
+				correction += sf::Vector2f(overlapRight, 0.f);
+			}
 		else
-			correction += sf::Vector2f(overlapRight, 0.f);
-
-		if (overlapTop < overlapBottom)
-			correction += sf::Vector2f(0.f, -overlapTop);
-		else
-			correction += sf::Vector2f(0.f, overlapBottom);
+		{
+			if (overlapTop < overlapBottom)
+			{
+				correction += sf::Vector2f(0.f, -overlapTop);
+			}
+			else
+			{
+				correction += sf::Vector2f(0.f, overlapBottom);
+			}
+		}
 
 	}
 	return correction;
