@@ -126,7 +126,7 @@ void Sonuc::UpdatePos(float _dt)
 	}
 
 	pos += move;
-	std::cout << "x :" << pos.x << " y :" << pos.y << std::endl;
+	//std::cout << "x :" << pos.x << " y :" << pos.y << std::endl;
 }
 
 
@@ -135,6 +135,7 @@ struct GameData
 {
 	sf::Image image;
 	sf::Sprite background;
+	sf::Sprite line;
 	sf::Texture bgTexture;
 	sf::Texture texture;
 	Sonuc sonuc;
@@ -196,13 +197,13 @@ int main()
 ///////////////////////////////////////////////////////////////////
 void Init(GameData& _data)
 {
-	_data.image.create(SCREEN_WIDTH, SCREEN_HEIGHT);
+	_data.image.create(SCREEN_WIDTH, SCREEN_HEIGHT, sf::Color::Transparent);
 	_data.texture.loadFromImage(_data.image);
+	_data.line.setTexture(_data.texture);
 
 	_data.bgTexture.loadFromFile("Decor.jpg");
 	_data.background.setTexture(_data.bgTexture);
 
-	_data.sonuc = Sonuc();
 	_data.sonuc.SetPosition(sf::Vector2f(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2));
 	_data.collision = new sf::FloatRect[4];
 
@@ -220,6 +221,14 @@ void Update(GameData& _data, float _dt)
 	_data.sonuc.Update(_dt);
 
 	CheckMapCollision(_data);
+
+	sf::Vector2f pos = _data.sonuc.GetPosition();
+	if (_data.image.getPixel(pos.x, pos.y) == sf::Color::Transparent)
+	{
+		_data.image.setPixel(pos.x, pos.y, sf::Color::Green);
+		_data.texture.loadFromImage(_data.image);
+	}
+
 }
 
 void Display(GameData& _data, sf::RenderWindow& _window)
@@ -229,6 +238,7 @@ void Display(GameData& _data, sf::RenderWindow& _window)
 	_window.draw(_data.background);
 
 	_data.sonuc.Draw(_window);
+	_window.draw(_data.line);
 
 	_window.display();
 }
