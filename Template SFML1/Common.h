@@ -13,8 +13,8 @@
 #include <GL/freeglut.h>
 #include "SFML/OpenGL.hpp"
 
-#define SCREEN_WIDTH 1280
-#define SCREEN_HEIGHT 800
+#define SCREEN_WIDTH 1024
+#define SCREEN_HEIGHT 768
 
 sf::Sprite LoadSprite(const std::string _path , bool);
 void BlitSprite(sf::Sprite _sprite, sf::Vector2f _pos, float _angle, sf::RenderWindow& _window);
