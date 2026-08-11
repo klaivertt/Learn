@@ -4,15 +4,28 @@
 #include <iostream>
 
 
-bool feast(std::string _beast, std::string _dish) {
-	return (_beast[0] == _dish[0]) && (_beast[_beast.length() - 1] == _dish[_dish.length() - 1]);
-}
+#include <vector>
+#include <string>
 
+std::string smash(const std::vector<std::string>& _words)
+{
+	std::string sentences = "";
+	for (int i = 0; i < _words.size(); i++)
+	{
+		if (i != 0)
+		{
+			sentences += " ";
+		}
+
+		sentences += _words[i];
+	}
+	return sentences;
+}
 void main(void)
 {
 	int nb = 0;
 
-	std::cout << "root numb: " << feast("great blue heron", "garlic naan") << std::endl;
+	std::cout << "root numb: " << smash({ "hello", "amazing", "world" }) << std::endl;
 
 	system("pause");
 }
