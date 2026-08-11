@@ -3,41 +3,42 @@
 
 #include <iostream>
 
-int string_to_number(const std::string& s)
+
+std::string number_to_string(int _num)
 {
-	bool isNeg = false;
-	size_t start = 0;
+	std::string str = "";
 
-	if (s[0] == '-')
+	if (_num == 0)
 	{
-		isNeg = true;
-	}
-	int n = 0;
-	if (isNeg)
-	{
-		start = 1;
-	}
-	for (size_t i = start; i < s.length(); i++)
-	{
-		
-		int tempNb = s[i] - '0';
-		std::cout << tempNb << std::endl;
-		n = n * 10 + tempNb;
+		return "0";
 	}
 
-	if (isNeg)
+	if (_num < 0)
 	{
-		n *= -1;
+		str += '-';
+	}
+	int num = std::abs(_num);
+	std::string temp = "";
+	while (num != 0)
+	{
+		int n = num % 10;
+		num /= 10;
+		temp += n + '0';
 	}
 
-	return n;
+	for (int i = temp.length(); i > 0 ; --i)
+	{
+		str += temp[i - 1];
+	}
+
+	return str;
 }
 
 void main(void)
 {
-	std::string nb = "493193";
+	int nb = 0;
 
-	std::cout << "root numb: " << string_to_number(nb) << std::endl;
+	std::cout << "root numb: " << number_to_string(nb) << std::endl;
 
 	system("pause");
 }
