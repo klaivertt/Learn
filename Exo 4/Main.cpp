@@ -4,41 +4,15 @@
 #include <iostream>
 
 
-std::string number_to_string(int _num)
-{
-	std::string str = "";
-
-	if (_num == 0)
-	{
-		return "0";
-	}
-
-	if (_num < 0)
-	{
-		str += '-';
-	}
-	int num = std::abs(_num);
-	std::string temp = "";
-	while (num != 0)
-	{
-		int n = num % 10;
-		num /= 10;
-		temp += n + '0';
-	}
-
-	for (int i = temp.length(); i > 0 ; --i)
-	{
-		str += temp[i - 1];
-	}
-
-	return str;
+bool feast(std::string _beast, std::string _dish) {
+	return (_beast[0] == _dish[0]) && (_beast[_beast.length() - 1] == _dish[_dish.length() - 1]);
 }
 
 void main(void)
 {
 	int nb = 0;
 
-	std::cout << "root numb: " << number_to_string(nb) << std::endl;
+	std::cout << "root numb: " << feast("great blue heron", "garlic naan") << std::endl;
 
 	system("pause");
 }
