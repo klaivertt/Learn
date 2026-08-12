@@ -1,38 +1,34 @@
 #include <iostream>
 
-bool isTriangle(int _a, int _b, int _c)
-{
-    if (_a <= 0 || _b <= 0 || _c <= 0)
+std::string DNAtoRNA(std::string dna) {
+    for (int i = 0; i < dna.length(); i++)
     {
-        return false;
+        if (dna[i] == 'T')
+        {
+            dna[i] = 'U';
+        }
     }
 
-	int length[3] = { _a, _b, _c };
+    return dna;
+}
 
+#include <utility>
+#include <vector>
 
-	for (int i = 0; i < 3; i++)
-	{
-		for (int j = 0; j < 3; j++)
-		{
-			if (length[i] < length[j])
-			{
-				std::swap(length[j],length[i]);
-			}
-		}
-	}
+unsigned int number(const std::vector<std::pair<int, int>>& busStops) {
+    int passenger = 0;
+    for (int i = 0; i < busStops.size(); i++)
+    {
+        passenger += busStops[i].first - busStops[i].second;
+    }
 
-	std::cout << length[0] << " + " << length[1] << " = " << length[3] << std::endl;
-	if ((length[0] + length[1]) >= length[3])
-	{
-		return true;
-	}
-	return false;
+    return passenger >= 0 ? passenger : 0;
 }
 
 void main(void)
 {
 
-	std::cout << "root numb: " << isTriangle(1,1,2) << std::endl;
+	std::cout << "root numb: " << DNAtoRNA("GCAT") << std::endl;
 
 	system("pause");
 }
