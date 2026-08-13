@@ -136,6 +136,21 @@ bool sp_eng(const std::string& _sentence)
 	return _sentence.find(word) != std::string::npos; 
 }
 
+int basicOp(char _op, int _val1, int _val2)
+{
+	switch (_op)
+	{
+	case '+':
+		return _val1 + _val2;
+	case '-':
+		return _val1 - _val2;
+	case '*':
+		return _val1 * _val2;
+	case '/':
+		return _val2 != 0 ? _val1 / _val2 : 0;
+	}
+}
+
 void main(void)
 {
 
