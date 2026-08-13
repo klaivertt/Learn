@@ -126,6 +126,16 @@ int solution(std::string roman)
 	return count;
 }
 
+#include <algorithm>
+bool sp_eng(const std::string& _sentence)
+{
+	std::string word = "english";
+	// to start of string to the end of this string // here to rewrite become the start, and convert to lower case
+	std::transform(_sentence.begin(), _sentence.end(), _sentence.begin(), [](unsigned char c) { return std::tolower(c); });
+
+	return _sentence.find(word) != std::string::npos; 
+}
+
 void main(void)
 {
 
