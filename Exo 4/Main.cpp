@@ -314,15 +314,30 @@ uint64_t descendingOrder(uint64_t a)
 
 	for (size_t i = 0; i < digit.size(); i++)
 	{
-		sorted += digit[i] * 10 * (digit.size() - i);
+		sorted = sorted * 10 + digit[i];
 	}
 	return sorted;
+}
+#include <cmath>
+int square_digits(int num)
+{
+	std::string str = std::to_string(num);
+
+	std::string v = 0;
+	for (size_t i = 0; i < str.length(); i++)
+	{
+		int n = str[i] - '0';
+		v += std::to_string(n * n);
+	}
+
+	return std::stoi(v);
 }
 
 void main(void)
 {
 
 	//std::cout << "root numb: " << add("99", "1") << std::endl;
-	create_spiral(1);
+	//create_spiral(1);
+	std::cout << square_digits(3212);
 	system("pause");
 }
