@@ -333,6 +333,22 @@ int square_digits(int num)
 	return std::stoi(v);
 }
 
+std::string get_middle(std::string input)
+{
+	std::string str = "";
+	if (input.size() % 2 == 0)
+	{
+		str += input[input.size() / 2 - 1];
+		str += input[input.size() / 2];
+	}
+	else
+	{
+		str += input[input.size() / 2];
+	}
+
+	return str;
+}
+
 void main(void)
 {
 
@@ -340,4 +356,4 @@ void main(void)
 	//create_spiral(1);
 	std::cout << square_digits(3212);
 	system("pause");
-}
+	}
