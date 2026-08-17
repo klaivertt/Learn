@@ -349,11 +349,46 @@ std::string get_middle(std::string input)
 	return str;
 }
 
+
+std::vector<std::string> towerBuilder(unsigned nFloors) {
+	std::vector<std::string> str;
+
+	for (size_t i = 0; i < nFloors; i++)
+	{
+		std::string floor = "";
+
+		for (size_t j = 1; j < nFloors * 2; j++)
+		{
+			if ((nFloors - i) <= j && j <= (nFloors + i))
+			{
+				floor += '*';
+			}
+			else
+			{
+				floor += ' ';
+			}
+		}
+
+		str.push_back(floor);
+	}
+
+	return str;
+}
+
 void main(void)
 {
 
 	//std::cout << "root numb: " << add("99", "1") << std::endl;
 	//create_spiral(1);
-	std::cout << square_digits(3212);
-	system("pause");
+	//std::cout << square_digits(3212);
+
+	std::vector<std::string> str = towerBuilder(6);
+
+	for (auto element : str)
+	{
+		std::cout << element << std::endl;
 	}
+
+
+	system("pause");
+}
