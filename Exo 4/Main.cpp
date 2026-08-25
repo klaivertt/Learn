@@ -437,6 +437,29 @@ bool isValidWalk(std::vector<char> walk)
 	{
 		return false;
 	}
+
+	int position = 0;
+
+	for (size_t i = 0; i < walk.size(); i++)
+	{
+		switch(walk[i])
+		{
+			case 'n':
+				position += 1;
+				break;
+			case 's': 
+				position -= 1;
+				break;
+			case'w': 
+				position -= 100;
+				break;
+			case 'e':
+				position += 100;
+				break;
+		}
+	}
+
+	return position == 0 ? true : false;
 }
 
 void main(void)
