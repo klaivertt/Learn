@@ -349,7 +349,6 @@ std::string get_middle(std::string input)
 	return str;
 }
 
-
 std::vector<std::string> towerBuilder(unsigned nFloors) {
 	std::vector<std::string> str;
 
@@ -373,6 +372,11 @@ std::vector<std::string> towerBuilder(unsigned nFloors) {
 	}
 
 	return str;
+}
+
+int maxSequence(const std::vector<int>& arr)
+{
+	int currentSum = 0;
 }
 
 void main(void)
