@@ -431,6 +431,14 @@ int points(const std::array<std::string, 10>& games)
 	return point;
 }
 
+bool isValidWalk(std::vector<char> walk)
+{
+	if (walk.size() < 10 || 10 < walk.size())
+	{
+		return false;
+	}
+}
+
 void main(void)
 {
 
