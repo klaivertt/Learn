@@ -15,292 +15,293 @@ std::string DNAtoRNA(std::string dna) {
 #include <utility>
 #include <vector>
 
-unsigned int number(const std::vector<std::pair<int, int>>& busStops) {
-	int passenger = 0;
-	for (int i = 0; i < busStops.size(); i++)
-	{
-		passenger += busStops[i].first - busStops[i].second;
-	}
-
-	return passenger >= 0 ? passenger : 0;
-}
-
-static std::string longest(const std::string& s1, const std::string& s2)
-{
-	std::string str = "";
-	str = s1 + s2;
-	for (int i = 0; i < str.size(); i++)
-	{
-		for (int j = 0; j < str.size(); j++)
-		{
-			if (str[i] == str[j])
-			{
-				str.erase(i);
-			}
-			else if (str[i] < str[j])
-			{
-				std::swap(str[j], str[i]);
-			}
-		}
-	}
-	return str;
-}
-
-std::string sliceString(std::string str)
-{
-	if (str.size() < 2)
-	{
-		return "";
-	}
-
-	str.erase(str.front(), 1);
-	str.erase(str.back(), 1);
-}
-
-bool XO(const std::string& str)
-{
-	int xCount = 0;
-	int oCount = 0;
-
-	for (int i = 0; i < str.size(); i++)
-	{
-		if (str[i] == 'x' || str[i] == 'X')
-		{
-			xCount++;
-		}
-		if (str[i] == 'o' || str[i] == 'O')
-		{
-			oCount++;
-		}
-	}
-
-	if (xCount == oCount)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
-
-#include <regex>
-
-int GetValue(char& _c)
-{
-	switch (_c)
-	{
-	case 'I':
-		return 1;
-	case 'V':
-		return 5;
-	case 'X':
-		return 10;
-	case 'L':
-		return 50;
-	case 'C':
-		return 100;
-	case 'D':
-		return 500;
-	case 'M':
-		return 1000;
-	}
-}
-
-
-int solution(std::string roman)
-{
-	int count = 0;
-
-	for (int i = 0; i < roman.size(); i++)
-	{
-		if (GetValue(roman[i]) >= GetValue(roman[i + 1]))
-		{
-			count += GetValue(roman[i]);
-		}
-		else
-		{
-			count -= GetValue(roman[i]);
-		}
-	}
-
-	return count;
-}
-
-bool sp_eng(const std::string& _sentence)
-{
-	std::string word = "english";
-	// to start of string to the end of this string // here to rewrite become the start, and convert to lower case
-	std::transform(_sentence.begin(), _sentence.end(), _sentence.begin(), [](unsigned char c) { return std::tolower(c); });
-
-	return _sentence.find(word) != std::string::npos; 
-}
-
-int basicOp(char _op, int _val1, int _val2)
-{
-	switch (_op)
-	{
-	case '+':
-		return _val1 + _val2;
-	case '-':
-		return _val1 - _val2;
-	case '*':
-		return _val1 * _val2;
-	case '/':
-		return _val2 != 0 ? _val1 / _val2 : 0;
-	}
-}
-
-std::vector<int> move_zeroes(const std::vector<int>& input)
-{
-	// your code here
-		std::vector<int> temp = input;
-		for (int i = 0; i < temp.size(); i++)
-		{
-			if (temp[i] == 0)
-			{
-				temp.erase(temp.begin() + i);
-				temp.push_back(0);
-				i--;
-			}
-		}
-		return temp;
-}
-
-
-#include <string>
-std::string add(const std::string& a, const std::string& b)
-{
-	std::string lower = "";
-	std::string higher = "";
-	if (a.size() > b.size())
-	{
-		lower = b;
-		higher = a;
-	}
-	else
-	{
-		higher = b;
-		lower = a;
-	}
-
-	std::string str = "";
-	int carry = 0;
-	for (int i = lower.size(); i > 0; i--)
-	{
-		int result = (lower[i - 1] - '0') + (higher[(higher.size() - lower.size()) + i - 1] - '0') + carry;
-		if (result > 9)
-		{
-			result %= 10;
-			carry = 1;
-		}
-		else
-		{
-			carry = 0;
-		}
-
-		str.insert(str.begin(), (result + '0'));
-	}
-
-	for (int i = higher.size() - lower.size(); i > 0; i--)
-	{
-		int result = (higher[i - 1] - '0') + carry;
-		if (result > 9)
-		{
-			result %= 10;
-			carry = 1;
-		}
-		else
-		{
-			carry = 0;
-		}
-		str.insert(str.begin(), (result + '0'));
-	}
-
-	if (carry == 1)
-	{
-		str.insert(str.begin(), (carry + '0'));
-	}
-
-	return str;
-}
-long zeros(long n)
-{
-	long numZero = 0;
-	int i = 0;
-	do
-	{
-		numZero += n % int(pow(5, i));
-		i++;
-	} while (pow(5, i) <= n);
-
-	return numZero;
-}
-
-#include <vector>
-
-std::vector<std::vector<int>> create_spiral(int n)
-{
-	if (n < 1)
-	{
-		return {};
-	}
-
-	std::vector<std::vector<int>> grid(n, std::vector<int>(n, 0));
-
-	int minX = 0;
-	int maxX = n - 1;
-	int minY = 0;
-	int maxY = n - 1;
-
-	int x = 0;
-	int y = 0;
-	int v = 1;
-
-	while (minX <= maxX && minY <= maxY)
-	{
-		for (x = minX; x <= maxX; x++)
-		{
-			grid[minY][x] = v++;
-		}
-
-		minY++;
-
-		for (y = minY; y <= maxY; y++)
-		{
-			grid[y][maxX] = v++;
-		}
-
-		maxX--;
-
-		if (minY <= maxY)
-		{
-			for (x = maxX; x >= minX; x--)
-			{
-				grid[maxY][x] = v++;
-			}
-
-			maxY--;
-		}
-
-		if (minX <= maxX)
-		{
-			for (y = maxY; y >= minY; y--)
-			{
-				grid[y][minX] = v++;
-			}
-
-			minX++;
-		}
-	}
-
-	return grid;
-}
+//unsigned int number(const std::vector<std::pair<int, int>>& busStops) {
+//	int passenger = 0;
+//	for (int i = 0; i < busStops.size(); i++)
+//	{
+//		passenger += busStops[i].first - busStops[i].second;
+//	}
+//
+//	return passenger >= 0 ? passenger : 0;
+//}
+//
+//static std::string longest(const std::string& s1, const std::string& s2)
+//{
+//	std::string str = "";
+//	str = s1 + s2;
+//	for (int i = 0; i < str.size(); i++)
+//	{
+//		for (int j = 0; j < str.size(); j++)
+//		{
+//			if (str[i] == str[j])
+//			{
+//				str.erase(i);
+//			}
+//			else if (str[i] < str[j])
+//			{
+//				std::swap(str[j], str[i]);
+//			}
+//		}
+//	}
+//	return str;
+//}
+//
+//std::string sliceString(std::string str)
+//{
+//	if (str.size() < 2)
+//	{
+//		return "";
+//	}
+//
+//	str.erase(str.front(), 1);
+//	str.erase(str.back(), 1);
+//}
+//
+//bool XO(const std::string& str)
+//{
+//	int xCount = 0;
+//	int oCount = 0;
+//
+//	for (int i = 0; i < str.size(); i++)
+//	{
+//		if (str[i] == 'x' || str[i] == 'X')
+//		{
+//			xCount++;
+//		}
+//		if (str[i] == 'o' || str[i] == 'O')
+//		{
+//			oCount++;
+//		}
+//	}
+//
+//	if (xCount == oCount)
+//	{
+//		return true;
+//	}
+//	else
+//	{
+//		return false;
+//	}
+//}
+//
+//#include <regex>
+//
+//int GetValue(char& _c)
+//{
+//	switch (_c)
+//	{
+//	case 'I':
+//		return 1;
+//	case 'V':
+//		return 5;
+//	case 'X':
+//		return 10;
+//	case 'L':
+//		return 50;
+//	case 'C':
+//		return 100;
+//	case 'D':
+//		return 500;
+//	case 'M':
+//		return 1000;
+//	}
+//}
+//
+//
+//int solution(std::string roman)
+//{
+//	int count = 0;
+//
+//	for (int i = 0; i < roman.size(); i++)
+//	{
+//		if (GetValue(roman[i]) >= GetValue(roman[i + 1]))
+//		{
+//			count += GetValue(roman[i]);
+//		}
+//		else
+//		{
+//			count -= GetValue(roman[i]);
+//		}
+//	}
+//
+//	return count;
+//}
+//
+//bool sp_eng(const std::string& _sentence)
+//{
+//	std::string word = "english";
+//	// to start of string to the end of this string // here to rewrite become the start, and convert to lower case
+//	std::transform(_sentence.begin(), _sentence.end(), _sentence.begin(), [](unsigned char c) { return std::tolower(c); });
+//
+//	return _sentence.find(word) != std::string::npos; 
+//}
+//
+//int basicOp(char _op, int _val1, int _val2)
+//{
+//	switch (_op)
+//	{
+//	case '+':
+//		return _val1 + _val2;
+//	case '-':
+//		return _val1 - _val2;
+//	case '*':
+//		return _val1 * _val2;
+//	case '/':
+//		return _val2 != 0 ? _val1 / _val2 : 0;
+//	}
+//}
+//
+//std::vector<int> move_zeroes(const std::vector<int>& input)
+//{
+//	// your code here
+//		std::vector<int> temp = input;
+//		for (int i = 0; i < temp.size(); i++)
+//		{
+//			if (temp[i] == 0)
+//			{
+//				temp.erase(temp.begin() + i);
+//				temp.push_back(0);
+//				i--;
+//			}
+//		}
+//		return temp;
+//}
+//
+//
+//#include <string>
+//std::string add(const std::string& a, const std::string& b)
+//{
+//	std::string lower = "";
+//	std::string higher = "";
+//	if (a.size() > b.size())
+//	{
+//		lower = b;
+//		higher = a;
+//	}
+//	else
+//	{
+//		higher = b;
+//		lower = a;
+//	}
+//
+//	std::string str = "";
+//	int carry = 0;
+//	for (int i = lower.size(); i > 0; i--)
+//	{
+//		int result = (lower[i - 1] - '0') + (higher[(higher.size() - lower.size()) + i - 1] - '0') + carry;
+//		if (result > 9)
+//		{
+//			result %= 10;
+//			carry = 1;
+//		}
+//		else
+//		{
+//			carry = 0;
+//		}
+//
+//		str.insert(str.begin(), (result + '0'));
+//	}
+//
+//	for (int i = higher.size() - lower.size(); i > 0; i--)
+//	{
+//		int result = (higher[i - 1] - '0') + carry;
+//		if (result > 9)
+//		{
+//			result %= 10;
+//			carry = 1;
+//		}
+//		else
+//		{
+//			carry = 0;
+//		}
+//		str.insert(str.begin(), (result + '0'));
+//	}
+//
+//	if (carry == 1)
+//	{
+//		str.insert(str.begin(), (carry + '0'));
+//	}
+//
+//	return str;
+//}
+//long zeros(long n)
+//{
+//	long numZero = 0;
+//	int i = 0;
+//	do
+//	{
+//		numZero += n % int(pow(5, i));
+//		i++;
+//	} while (pow(5, i) <= n);
+//
+//	return numZero;
+//}
+//
+//#include <vector>
+//
+//std::vector<std::vector<int>> create_spiral(int n)
+//{
+//	if (n < 1)
+//	{
+//		return {};
+//	}
+//
+//	std::vector<std::vector<int>> grid(n, std::vector<int>(n, 0));
+//
+//	int minX = 0;
+//	int maxX = n - 1;
+//	int minY = 0;
+//	int maxY = n - 1;
+//
+//	int x = 0;
+//	int y = 0;
+//	int v = 1;
+//
+//	while (minX <= maxX && minY <= maxY)
+//	{
+//		for (x = minX; x <= maxX; x++)
+//		{
+//			grid[minY][x] = v++;
+//		}
+//
+//		minY++;
+//
+//		for (y = minY; y <= maxY; y++)
+//		{
+//			grid[y][maxX] = v++;
+//		}
+//
+//		maxX--;
+//
+//		if (minY <= maxY)
+//		{
+//			for (x = maxX; x >= minX; x--)
+//			{
+//				grid[maxY][x] = v++;
+//			}
+//
+//			maxY--;
+//		}
+//
+//		if (minX <= maxX)
+//		{
+//			for (y = maxY; y >= minY; y--)
+//			{
+//				grid[y][minX] = v++;
+//			}
+//
+//			minX++;
+//		}
+//	}
+//
+//	return grid;
+//}
 
 
 #include <iostream>
 #include <algorithm>
 #include <vector>
+#include <string>
 uint64_t descendingOrder(uint64_t a)
 {
 	uint64_t sorted = 0;
@@ -462,6 +463,33 @@ bool isValidWalk(std::vector<char> walk)
 	return position == 0 ? true : false;
 }
 
+std::string seriesSum(int n)
+{
+	// Happy Coding ^_^
+	float num = 0.00;
+	int div = 1;
+	for (size_t i = 0; i < n; i++)
+	{
+		num += 1.f / div;
+		div += 3;
+	}
+	char buf[20];
+	sprintf_s(buf, "%.2f", num);
+	return std::string(buf);
+}
+
+std::vector<int> digitize(unsigned long n)
+{
+	std::vector<int> reversedDigit;
+	while (n != 0)
+	{
+		reversedDigit.push_back(n % 10);
+		n /= 10;
+	}
+
+	return reversedDigit;
+}
+
 void main(void)
 {
 
@@ -469,13 +497,13 @@ void main(void)
 	//create_spiral(1);
 	//std::cout << square_digits(3212);
 
-	std::vector<std::string> str = towerBuilder(6);
+	//std::vector<std::string> str = towerBuilder(6);
 
-	for (auto element : str)
-	{
-		std::cout << element << std::endl;
-	}
-
+	//for (auto element : str)
+	//{
+	//	std::cout << element << std::endl;
+	//}
+	seriesSum(9);
 
 	system("pause");
 }
