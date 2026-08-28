@@ -504,6 +504,30 @@ bool betterThanAverage(std::vector<int> classPoints, int yourPoints)
 	return avr < yourPoints ? true : false;
 }
 
+long long rowSumOddNumbers(unsigned n) 
+{
+	long long total = 0;
+	for (unsigned i = 0; i < n; i++)
+	{
+		total += n * (n + 1) / 2 + i * 2;
+	}
+
+	return total;
+}
+
+
+std::vector<std::string> number(const std::vector<std::string>& lines)
+{	
+	std::vector<std::string> str;
+	int count = 0;
+	for (auto element : lines)
+	{
+		count++;
+		str.push_back(std::to_string(count) + ": " + element);
+	}
+	return str;
+}
+
 void main(void)
 {
 
