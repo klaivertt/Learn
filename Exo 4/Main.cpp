@@ -528,6 +528,22 @@ std::vector<std::string> number(const std::vector<std::string>& lines)
 	return str;
 }
 
+std::string removeExclamationMarks(std::string str) {
+	//your code here
+
+	for (size_t i = 0; i < str.size(); i++)
+	{
+		if (str[i] == '!')
+		{
+			str.erase(i, 1);
+			i--;
+		}
+	}
+
+	return str;
+
+}
+
 void main(void)
 {
 
