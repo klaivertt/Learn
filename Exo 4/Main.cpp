@@ -481,11 +481,11 @@ std::string seriesSum(int n)
 std::vector<int> digitize(unsigned long n)
 {
 	std::vector<int> reversedDigit;
-	while (n != 0)
-	{
+
+	do {
 		reversedDigit.push_back(n % 10);
 		n /= 10;
-	}
+	} while (n > 0);
 
 	return reversedDigit;
 }
