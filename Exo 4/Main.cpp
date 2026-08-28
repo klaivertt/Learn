@@ -490,6 +490,20 @@ std::vector<int> digitize(unsigned long n)
 	return reversedDigit;
 }
 
+bool betterThanAverage(std::vector<int> classPoints, int yourPoints) 
+{
+	int avr = 0;
+	int total = 0;
+	for (size_t i = 0; i < classPoints.size(); i++)
+	{
+		total += classPoints[i];
+	}
+
+	avr = total / classPoints.size();
+
+	return avr < yourPoints ? true : false;
+}
+
 void main(void)
 {
 
