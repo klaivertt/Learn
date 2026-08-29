@@ -569,6 +569,19 @@ int find_short(std::string str)
 	return min == 0? length : min > length ? length : min;
 }
 
+std::string countSheep(int number) {
+	// your code here
+	
+	std::string str = "";
+
+	for (int i = 0; i < number; i++)
+	{
+		str += std::to_string(i + 1) + " sheep...";
+	}
+
+	return str;
+}
+
 void main(void)
 {
 
