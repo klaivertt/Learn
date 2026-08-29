@@ -402,7 +402,7 @@ int maxSequence(const std::vector<int>& arr)
 			max = currentSum;
 		}
 	}
-	
+
 	return max < 0 ? 0 : max;
 }
 
@@ -411,11 +411,11 @@ int maxSequence(const std::vector<int>& arr)
 int points(const std::array<std::string, 10>& games)
 {
 	int point = 0;
-	
+
 	for (size_t i = 0; i < games.size(); i++)
 	{
 		std::string score = games[i];
-		
+
 		if (score[0] > score[2])
 		{
 			point += 3;
@@ -443,20 +443,20 @@ bool isValidWalk(std::vector<char> walk)
 
 	for (size_t i = 0; i < walk.size(); i++)
 	{
-		switch(walk[i])
+		switch (walk[i])
 		{
-			case 'n':
-				position += 1;
-				break;
-			case 's': 
-				position -= 1;
-				break;
-			case'w': 
-				position -= 100;
-				break;
-			case 'e':
-				position += 100;
-				break;
+		case 'n':
+			position += 1;
+			break;
+		case 's':
+			position -= 1;
+			break;
+		case'w':
+			position -= 100;
+			break;
+		case 'e':
+			position += 100;
+			break;
 		}
 	}
 
@@ -490,7 +490,7 @@ std::vector<int> digitize(unsigned long n)
 	return reversedDigit;
 }
 
-bool betterThanAverage(std::vector<int> classPoints, int yourPoints) 
+bool betterThanAverage(std::vector<int> classPoints, int yourPoints)
 {
 	int avr = 0;
 	int total = 0;
@@ -504,7 +504,7 @@ bool betterThanAverage(std::vector<int> classPoints, int yourPoints)
 	return avr < yourPoints ? true : false;
 }
 
-long long rowSumOddNumbers(unsigned n) 
+long long rowSumOddNumbers(unsigned n)
 {
 	long long total = 0;
 	for (unsigned i = 0; i < n; i++)
@@ -517,7 +517,7 @@ long long rowSumOddNumbers(unsigned n)
 
 
 std::vector<std::string> number(const std::vector<std::string>& lines)
-{	
+{
 	std::vector<std::string> str;
 	int count = 0;
 	for (auto element : lines)
@@ -547,7 +547,7 @@ std::string removeExclamationMarks(std::string str) {
 int find_short(std::string str)
 {
 	int length = 0;
-	
+
 	int min = 0;
 
 	for (auto c : str)
@@ -566,12 +566,12 @@ int find_short(std::string str)
 			length++;
 		}
 	}
-	return min == 0? length : min > length ? length : min;
+	return min == 0 ? length : min > length ? length : min;
 }
 
 std::string countSheep(int number) {
 	// your code here
-	
+
 	std::string str = "";
 
 	for (int i = 0; i < number; i++)
@@ -585,7 +585,7 @@ std::string countSheep(int number) {
 #include <map>
 #include <string>
 
-std::map<char, unsigned> count(const std::string& string) 
+std::map<char, unsigned> count(const std::string& string)
 {
 	std::map<char, unsigned> map;
 
@@ -593,14 +593,14 @@ std::map<char, unsigned> count(const std::string& string)
 	{
 		if (map.find(c) != map.end())
 		{
-			map[c]+=1;
+			map[c] += 1;
 		}
 		else
 		{
-			map[c]+=1;
+			map[c] += 1;
 		}
 	}
-	
+
 	return map;
 }
 
@@ -626,6 +626,19 @@ bool isPrime(int num)
 	}
 
 	return true;
+}
+
+bool is_square(int n)
+{
+	// TODO
+	if (n < 0)
+	{
+		return false;
+	}
+
+	int d = int(std::round(sqrt(n)));
+
+	return n == (d * d);
 }
 
 void main(void)
