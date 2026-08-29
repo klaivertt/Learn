@@ -582,6 +582,52 @@ std::string countSheep(int number) {
 	return str;
 }
 
+#include <map>
+#include <string>
+
+std::map<char, unsigned> count(const std::string& string) 
+{
+	std::map<char, unsigned> map;
+
+	for (auto c : string)
+	{
+		if (map.find(c) != map.end())
+		{
+			map[c]+=1;
+		}
+		else
+		{
+			map[c]+=1;
+		}
+	}
+	
+	return map;
+}
+
+#include <math.h>
+
+bool isPrime(int num)
+{
+	// your code here..
+	if (num <= 1)
+	{
+		return false;
+	}
+
+
+	int i = 2;
+	while (i <= sqrt(num))
+	{
+		if (num % i == 0)
+		{
+			return false;
+		}
+		i++;
+	}
+
+	return true;
+}
+
 void main(void)
 {
 
