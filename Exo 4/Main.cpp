@@ -544,6 +544,31 @@ std::string removeExclamationMarks(std::string str) {
 
 }
 
+int find_short(std::string str)
+{
+	int length = 0;
+	
+	int min = 0;
+
+	for (auto c : str)
+	{
+		if (c == ' ')
+		{
+			if (min == 0 || length < min)
+			{
+				min = length;
+			}
+
+			length = 0;
+		}
+		else
+		{
+			length++;
+		}
+	}
+	return min == 0? length : min > length ? length : min;
+}
+
 void main(void)
 {
 
@@ -557,7 +582,9 @@ void main(void)
 	//{
 	//	std::cout << element << std::endl;
 	//}
-	seriesSum(9);
+	// 
+	find_short("bitcoin take over the world maybe who knows perhaps");
+	//seriesSum(9);
 
 	system("pause");
 }
