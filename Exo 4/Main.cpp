@@ -656,6 +656,44 @@ int rental_car_cost(int d)
 	return price;
 }
 
+
+std::string highestScoringWord(const std::string& str)
+{
+	int maxScore = 0;
+	int currentScore = 0;
+
+	std::string bigestWrd = "";
+	std::string currentWrd = "";
+
+	for (auto c : str)
+	{
+		if (c == ' ')
+		{
+			if (maxScore < currentScore)
+			{
+				maxScore = currentScore;
+				bigestWrd = currentWrd;
+			}
+			currentScore = 0;
+			currentWrd = "";
+		}
+		else
+		{
+			currentWrd += c;
+			currentScore += c - 96;
+		}
+	}
+
+	if (maxScore < currentScore)
+	{
+		maxScore = currentScore;
+		bigestWrd = currentWrd;
+	}
+
+	return bigestWrd;
+}
+
+
 void main(void)
 {
 
