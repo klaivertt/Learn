@@ -614,7 +614,6 @@ bool isPrime(int num)
 		return false;
 	}
 
-
 	int i = 2;
 	while (i <= sqrt(num))
 	{
@@ -639,6 +638,22 @@ bool is_square(int n)
 	int d = int(std::round(sqrt(n)));
 
 	return n == (d * d);
+}
+
+int rental_car_cost(int d) 
+{
+	int price = d * 40;
+
+	if (7 <= d)
+	{
+		price -= 20;
+	}
+	else if(3 <= d)
+	{
+		price -= 50;
+	}
+
+	return price;
 }
 
 void main(void)
