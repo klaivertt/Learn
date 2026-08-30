@@ -693,6 +693,28 @@ std::string highestScoringWord(const std::string& str)
 	return bigestWrd;
 }
 
+class ASum
+{
+public:
+	static long long findNb(long long m)
+	{
+		long long i = 1;
+		long long v = 0;
+		while (v < m)
+		{
+			v += i * i * i;
+			if (v == m)
+			{
+				return i;
+			}
+			i++;
+		}
+
+		return -1;
+	}
+};
+
+
 
 void main(void)
 {
