@@ -640,7 +640,7 @@ bool is_square(int n)
 	return n == (d * d);
 }
 
-int rental_car_cost(int d) 
+int rental_car_cost(int d)
 {
 	int price = d * 40;
 
@@ -648,7 +648,7 @@ int rental_car_cost(int d)
 	{
 		price -= 20;
 	}
-	else if(3 <= d)
+	else if (3 <= d)
 	{
 		price -= 50;
 	}
@@ -715,6 +715,103 @@ public:
 };
 
 
+bool isLetter(char _c)
+{
+	switch (_c)
+	{
+	case'a':
+	case'b':
+	case'c':
+	case'd':
+	case'e':
+	case'f':
+	case'g':
+	case'h':
+	case'i':
+	case'j':
+	case'k':
+	case'l':
+	case'm':
+	case'n':
+	case'o':
+	case'p':
+	case'q':
+	case'r':
+	case's':
+	case't':
+	case'u':
+	case'v':
+	case'x':
+	case'w':
+	case'y':
+	case'z':
+		return true;
+	default:
+		return false;
+	}
+}
+
+bool isLetter(char c)
+{
+	return c >= 'a' && c <= 'z';
+}
+
+std::string alphabet_position(const std::string& text)
+{
+	std::string toDigit = "";
+
+	for (size_t i = 0; i < text.size(); i++)
+	{
+		char c = std::tolower(text[i]);
+		if (isLetter(c))
+		{
+			toDigit += std::to_string(int(c - 96)) + ' ';
+		}
+	}
+
+	if (!toDigit.empty())
+	{
+		toDigit.pop_back();
+	}
+
+	return toDigit;
+}
+
+class LongestConsec
+{
+public:
+	static std::string longestConsec(const std::vector<std::string>& strarr, int k)
+	{
+		if (strarr.size() == 0 || strarr.size() < k || k <= 0)
+		{
+			return "";
+		}
+
+		std::string longest = "";
+		std::string current = "";
+
+		for (size_t i = 0; i < strarr.size(); i++)
+		{
+			current = "";
+			current += strarr[i];
+			for (size_t j = 1; j < k; j++)
+			{
+				if (i + j > strarr.size() - 1)
+				{
+					break;
+				}
+				current += strarr[j + i];
+			}
+
+			if (longest.size() < current.size())
+			{
+				longest = current;
+			}
+		}
+
+		return longest;
+	}
+};
 
 void main(void)
 {
