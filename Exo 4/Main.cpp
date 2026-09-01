@@ -813,6 +813,85 @@ public:
 	}
 };
 
+std::string update_light(std::string _current)
+{
+	if (_current == "green")
+	{
+		return "yellow";
+	}
+	if (_current == "yellow")
+	{
+		return "red";
+	}
+	if (_current == "red")
+	{
+		return "green";
+	}
+}
+
+#include <vector>
+
+std::vector<int> between(int start, int end)
+{
+	std::vector<int> res;
+	int i = start;
+	while (i <= end)
+	{
+		res.push_back(i);
+		i++;
+	}
+
+	return res;
+}
+
+class Kata
+{
+public:
+	std::vector<int> sortArray(std::vector<int> array)
+	{
+		std::vector<int> odds;
+
+		for (int value : array)
+		{
+			if (value % 2 != 0)
+			{
+				odds.push_back(value);
+			}
+		}
+
+		std::sort(odds.begin(), odds.end());
+
+		size_t j = 0;
+
+		for (size_t i = 0; i < array.size(); i++)
+		{
+			if (array[i] % 2 != 0)
+			{
+				array[i] = odds[j];
+				j++;
+			}
+		}
+
+		return array;
+	}
+};
+
+std::pair<std::size_t, std::size_t> two_sum(const std::vector<int>& numbers, int target) 
+{
+	for (size_t i = 0; i < numbers.size(); i++)
+	{
+		for (size_t j = i + 1; j < numbers.size(); j++)
+		{
+			if (numbers[i] + numbers[j] == target)
+			{
+				return { i, j };
+			}
+		}
+	}
+
+	return { 0, 0 };
+}
+
 void main(void)
 {
 
