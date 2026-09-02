@@ -876,7 +876,7 @@ public:
 	}
 };
 
-std::pair<std::size_t, std::size_t> two_sum(const std::vector<int>& numbers, int target) 
+std::pair<std::size_t, std::size_t> two_sum(const std::vector<int>& numbers, int target)
 {
 	for (size_t i = 0; i < numbers.size(); i++)
 	{
@@ -890,6 +890,46 @@ std::pair<std::size_t, std::size_t> two_sum(const std::vector<int>& numbers, int
 	}
 
 	return { 0, 0 };
+}
+
+std::string reverse_words(std::string str)
+{
+	std::string reversed = "";
+
+	std::string word = "";
+	for (size_t i = 0; i < str.size(); i++)
+	{
+
+		if (str[i] == ' ')
+		{
+			for (int j = word.size() - 1; j >= 0; j--)
+			{
+				reversed += word[j];
+			}
+			reversed += str[i];
+			word = "";
+		}
+		else
+		{
+			word += str[i];
+		}
+	}
+
+	if (!word.empty())
+	{
+		for (int i = word.size() - 1; i >= 0; i--)
+		{
+			reversed += word[i];
+		}
+	}
+
+	return reversed;
+}
+#include <cmath>
+
+int cockroach_speed(double s)
+{
+	return static_cast<int>(std::round(s * (30.0 / 1.08)));
 }
 
 void main(void)
