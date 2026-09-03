@@ -86,46 +86,47 @@ std::string DNAtoRNA(std::string dna) {
 //
 //#include <regex>
 //
-//int GetValue(char& _c)
-//{
-//	switch (_c)
-//	{
-//	case 'I':
-//		return 1;
-//	case 'V':
-//		return 5;
-//	case 'X':
-//		return 10;
-//	case 'L':
-//		return 50;
-//	case 'C':
-//		return 100;
-//	case 'D':
-//		return 500;
-//	case 'M':
-//		return 1000;
-//	}
-//}
-//
-//
-//int solution(std::string roman)
-//{
-//	int count = 0;
-//
-//	for (int i = 0; i < roman.size(); i++)
-//	{
-//		if (GetValue(roman[i]) >= GetValue(roman[i + 1]))
-//		{
-//			count += GetValue(roman[i]);
-//		}
-//		else
-//		{
-//			count -= GetValue(roman[i]);
-//		}
-//	}
-//
-//	return count;
-//}
+int GetValue(char& _c)
+{
+	switch (_c)
+	{
+	case 'I':
+		return 1;
+	case 'V':
+		return 5;
+	case 'X':
+		return 10;
+	case 'L':
+		return 50;
+	case 'C':
+		return 100;
+	case 'D':
+		return 500;
+	case 'M':
+		return 1000;
+	}
+}
+
+
+int solution(std::string roman)
+{
+	int n = 0;
+
+	for (int i = 0; i < roman.size(); i++)
+	{
+		if ((i + 1 <= roman.size() - 1) && GetValue(roman[i]) < GetValue(roman[i + 1]))
+		{
+			n -= GetValue(roman[i]);
+		}
+		else
+		{
+
+			n += GetValue(roman[i]);
+		}
+	}
+
+	return n;
+}
 //
 //bool sp_eng(const std::string& _sentence)
 //{
@@ -930,6 +931,34 @@ std::string reverse_words(std::string str)
 int cockroach_speed(double s)
 {
 	return static_cast<int>(std::round(s * (30.0 / 1.08)));
+}
+
+std::string sum_str(const std::string& a, const std::string& b)
+{
+	int n = 0;
+
+	int nA = 0;
+	int nB = 0;
+
+	for (size_t i = 0; i < a.size(); i++)
+	{
+		if (a[i] != '_')
+		{
+			nA = nA * 10 + a[i] - '0';
+		}
+	}
+	
+	for (size_t i = 0; i < b.size(); i++)
+	{
+		if (a[i] != '_')
+		{
+			nB = nB * 10 + b[i] - '0';
+		}
+	}
+
+	n = (a[0] == '-' ? -nA : nA) + (b[0] == '-' ? -nB : nB);
+	
+	return std::to_string(n);
 }
 
 void main(void)
