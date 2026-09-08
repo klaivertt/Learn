@@ -960,23 +960,108 @@ std::string sum_str(const std::string& a, const std::string& b)
 	
 	return std::to_string(n);
 }
+//
+//void main(void)
+//{
+//
+//	//std::cout << "root numb: " << add("99", "1") << std::endl;
+//	//create_spiral(1);
+//	//std::cout << square_digits(3212);
+//
+//	//std::vector<std::string> str = towerBuilder(6);
+//
+//	//for (auto element : str)
+//	//{
+//	//	std::cout << element << std::endl;
+//	//}
+//	// 
+//	find_short("bitcoin take over the world maybe who knows perhaps");
+//	//seriesSum(9);
+//
+//	system("pause");
+//}
 
-void main(void)
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+/**
+ * Auto-generated code below aims at helping you parse
+ * the standard input according to the problem statement.
+ * ---
+ * Hint: You can use the debug stream to print initialTX and initialTY, if Thor seems not follow your orders.
+ **/
+
+int main()
 {
+	int light_x; // the X position of the light of power
+	int light_y; // the Y position of the light of power
+	int initial_tx; // Thor's starting X position
+	int initial_ty; // Thor's starting Y position
+	cin >> light_x >> light_y >> initial_tx >> initial_ty; cin.ignore();
 
-	//std::cout << "root numb: " << add("99", "1") << std::endl;
-	//create_spiral(1);
-	//std::cout << square_digits(3212);
+	int posX = initial_tx;
+	int posY = initial_ty;
 
-	//std::vector<std::string> str = towerBuilder(6);
+	bool finded = false;
+	// game loop
+	while (!finded)
+	{
+		int remaining_turns; // The remaining amount of turns Thor can move. Do not remove this line.
+		cin >> remaining_turns; cin.ignore();
 
-	//for (auto element : str)
-	//{
-	//	std::cout << element << std::endl;
-	//}
-	// 
-	find_short("bitcoin take over the world maybe who knows perhaps");
-	//seriesSum(9);
+		int dirX = 0;
+		if (light_x < posX)
+		{
+			if (0 <= posX - 1)
+			{
+				dirX = -1;
+			}
+		}
 
-	system("pause");
+		if (light_x > posX)
+		{
+			if (posX + 1 < 40)
+			{
+				dirX = 1;
+			}
+		}
+		posX += dirX;
+
+		int dirY = 0;
+		if (light_y < posY)
+		{
+			if (0 <= posY - 1)
+			{
+				dirY = -1;
+			}
+		}
+
+		if (light_y > posY)
+		{
+			if (posY + 1 < 18)
+			{
+				dirY = 1;
+			}
+		}
+		posY += dirY;
+
+		string dir = "";
+
+		if (dirY != 0)
+		{
+			dir += (dirY < 0) ? 'N' : 'S';
+		}
+
+		if (dirX != 0)
+		{
+			dir += (dirX < 0) ? 'W' : 'E';
+		}
+
+		// A single line providing the move to be made: N NE E SE S SW W or NW
+		cout << dir << endl;
+	}
 }
