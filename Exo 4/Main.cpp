@@ -980,88 +980,163 @@ std::string sum_str(const std::string& a, const std::string& b)
 //
 //	system("pause");
 //}
-
-#include <iostream>
-#include <string>
-#include <vector>
-#include <algorithm>
-
-using namespace std;
-
-/**
- * Auto-generated code below aims at helping you parse
- * the standard input according to the problem statement.
- * ---
- * Hint: You can use the debug stream to print initialTX and initialTY, if Thor seems not follow your orders.
- **/
+//
+//#include <iostream>
+//#include <string>
+//#include <vector>
+//#include <algorithm>
+//
+//using namespace std;
+//
+///**
+// * Auto-generated code below aims at helping you parse
+// * the standard input according to the problem statement.
+// * ---
+// * Hint: You can use the debug stream to print initialTX and initialTY, if Thor seems not follow your orders.
+// **/
+//
+//int main()
+//{
+//	int light_x; // the X position of the light of power
+//	int light_y; // the Y position of the light of power
+//	int initial_tx; // Thor's starting X position
+//	int initial_ty; // Thor's starting Y position
+//	cin >> light_x >> light_y >> initial_tx >> initial_ty; cin.ignore();
+//
+//	int posX = initial_tx;
+//	int posY = initial_ty;
+//
+//	bool finded = false;
+//	// game loop
+//	while (!finded)
+//	{
+//		int remaining_turns; // The remaining amount of turns Thor can move. Do not remove this line.
+//		cin >> remaining_turns; cin.ignore();
+//
+//		int dirX = 0;
+//		if (light_x < posX)
+//		{
+//			if (0 <= posX - 1)
+//			{
+//				dirX = -1;
+//			}
+//		}
+//
+//		if (light_x > posX)
+//		{
+//			if (posX + 1 < 40)
+//			{
+//				dirX = 1;
+//			}
+//		}
+//		posX += dirX;
+//
+//		int dirY = 0;
+//		if (light_y < posY)
+//		{
+//			if (0 <= posY - 1)
+//			{
+//				dirY = -1;
+//			}
+//		}
+//
+//		if (light_y > posY)
+//		{
+//			if (posY + 1 < 18)
+//			{
+//				dirY = 1;
+//			}
+//		}
+//		posY += dirY;
+//
+//		string dir = "";
+//
+//		if (dirY != 0)
+//		{
+//			dir += (dirY < 0) ? 'N' : 'S';
+//		}
+//
+//		if (dirX != 0)
+//		{
+//			dir += (dirX < 0) ? 'W' : 'E';
+//		}
+//
+//		// A single line providing the move to be made: N NE E SE S SW W or NW
+//		cout << dir << endl;
+//	}
+//}
 
 int main()
 {
-	int light_x; // the X position of the light of power
-	int light_y; // the Y position of the light of power
-	int initial_tx; // Thor's starting X position
-	int initial_ty; // Thor's starting Y position
-	cin >> light_x >> light_y >> initial_tx >> initial_ty; cin.ignore();
+	int w; // width of the building.
+	int h; // height of the building.
+	cin >> w >> h; cin.ignore();
+	int n; // maximum number of turns before game over.
+	cin >> n; cin.ignore();
+	int x0;
+	int y0;
+	cin >> x0 >> y0; cin.ignore();
 
-	int posX = initial_tx;
-	int posY = initial_ty;
-
-	bool finded = false;
 	// game loop
-	while (!finded)
+	int posX = x0;
+	int posY = y0;
+
+	int xMin = 0;
+	int xMax = w - 1;
+
+	int yMin = 0;
+	int yMax = h - 1;
+
+
+	while (1)
 	{
-		int remaining_turns; // The remaining amount of turns Thor can move. Do not remove this line.
-		cin >> remaining_turns; cin.ignore();
+		string bomb_dir; // the direction of the bombs from batman's current location (U, UR, R, DR, D, DL, L or UL)
+		cin >> bomb_dir; cin.ignore();
 
-		int dirX = 0;
-		if (light_x < posX)
+		// Write an action using cout. DON'T FORGET THE "<< endl"
+		// To debug: cerr << "Debug messages..." << endl;
+
+		if (bomb_dir == "U")
 		{
-			if (0 <= posX - 1)
-			{
-				dirX = -1;
-			}
+			yMax = posY - 1;
+		}
+		else if (bomb_dir == "UR")
+		{
+			yMax = posY - 1;
+			xMin = posX + 1;
+		}
+		else if (bomb_dir == "R")
+		{
+			xMin = posX + 1;
+		}
+		else if (bomb_dir == "DR")
+		{
+			yMin = posY + 1;
+			xMin = posX + 1;
+		}
+		else if (bomb_dir == "D")
+		{
+			yMin = posY + 1;
+		}
+		else if (bomb_dir == "DL")
+		{
+			yMin = posY + 1;
+			xMax = posX - 1;
+		}
+		else if (bomb_dir == "L")
+		{
+			xMax = posX - 1;
+		}
+		else if (bomb_dir == "UL")
+		{
+			xMax = posX - 1;
+			yMax = posY - 1;
 		}
 
-		if (light_x > posX)
-		{
-			if (posX + 1 < 40)
-			{
-				dirX = 1;
-			}
-		}
-		posX += dirX;
+		posX = (xMin + xMax) / 2;
+		posY = (yMin + yMax) / 2;
 
-		int dirY = 0;
-		if (light_y < posY)
-		{
-			if (0 <= posY - 1)
-			{
-				dirY = -1;
-			}
-		}
-
-		if (light_y > posY)
-		{
-			if (posY + 1 < 18)
-			{
-				dirY = 1;
-			}
-		}
-		posY += dirY;
-
-		string dir = "";
-
-		if (dirY != 0)
-		{
-			dir += (dirY < 0) ? 'N' : 'S';
-		}
-
-		if (dirX != 0)
-		{
-			dir += (dirX < 0) ? 'W' : 'E';
-		}
-
-		// A single line providing the move to be made: N NE E SE S SW W or NW
-		cout << dir << endl;
+		// the location of the next window Batman should jump to.
+		cout << to_string(posX) + " " + to_string(posY) << endl;
 	}
 }
