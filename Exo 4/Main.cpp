@@ -1066,77 +1066,249 @@ std::string sum_str(const std::string& a, const std::string& b)
 //	}
 //}
 
+//int main()
+//{
+//	int w; // width of the building.
+//	int h; // height of the building.
+//	cin >> w >> h; cin.ignore();
+//	int n; // maximum number of turns before game over.
+//	cin >> n; cin.ignore();
+//	int x0;
+//	int y0;
+//	cin >> x0 >> y0; cin.ignore();
+//
+//	// game loop
+//	int posX = x0;
+//	int posY = y0;
+//
+//	int xMin = 0;
+//	int xMax = w - 1;
+//
+//	int yMin = 0;
+//	int yMax = h - 1;
+//
+//
+//	while (1)
+//	{
+//		string bomb_dir; // the direction of the bombs from batman's current location (U, UR, R, DR, D, DL, L or UL)
+//		cin >> bomb_dir; cin.ignore();
+//
+//		// Write an action using cout. DON'T FORGET THE "<< endl"
+//		// To debug: cerr << "Debug messages..." << endl;
+//
+//		if (bomb_dir == "U")
+//		{
+//			yMax = posY - 1;
+//		}
+//		else if (bomb_dir == "UR")
+//		{
+//			yMax = posY - 1;
+//			xMin = posX + 1;
+//		}
+//		else if (bomb_dir == "R")
+//		{
+//			xMin = posX + 1;
+//		}
+//		else if (bomb_dir == "DR")
+//		{
+//			yMin = posY + 1;
+//			xMin = posX + 1;
+//		}
+//		else if (bomb_dir == "D")
+//		{
+//			yMin = posY + 1;
+//		}
+//		else if (bomb_dir == "DL")
+//		{
+//			yMin = posY + 1;
+//			xMax = posX - 1;
+//		}
+//		else if (bomb_dir == "L")
+//		{
+//			xMax = posX - 1;
+//		}
+//		else if (bomb_dir == "UL")
+//		{
+//			xMax = posX - 1;
+//			yMax = posY - 1;
+//		}
+//
+//		posX = (xMin + xMax) / 2;
+//		posY = (yMin + yMax) / 2;
+//
+//		// the location of the next window Batman should jump to.
+//		cout << to_string(posX) + " " + to_string(posY) << endl;
+//	}
+//}
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <map>
+#include <sstream>
+
+using namespace std;
+
+/**
+ * Connect towns with your train tracks and disrupt the opponent's.
+ **/
+
+struct Vec2
+{
+	int x = 0;
+	int y = 0;
+	Vec2(int x = 0, int y = 0) : x(x), y(y)
+	{}
+};
+
+enum Type
+{
+	PLAINS,
+	RIVER,
+	MONTAIN,
+	POI
+};
+
+struct Tiles
+{
+	int regionId;
+	Type type;
+	bool inked;
+	int tracksOwner = -1;
+	int instability = 0;
+
+	Tiles(int _id = 0, Type _t = PLAINS) : regionId(_id), type(_t), inked(false)
+	{}
+};
+
+struct Town
+{
+	int id;
+	vector<int> desiredConnections;
+	Vec2 pos;
+	Town(int _id = 0, Vec2 _v = {}, vector<int> _d = {}) : id(_id), pos(_v), desiredConnections(move(_d))
+	{}
+};
+
+
 int main()
 {
-	int w; // width of the building.
-	int h; // height of the building.
-	cin >> w >> h; cin.ignore();
-	int n; // maximum number of turns before game over.
-	cin >> n; cin.ignore();
-	int x0;
-	int y0;
-	cin >> x0 >> y0; cin.ignore();
+	int my_id; // 0 or 1
+	cin >> my_id; cin.ignore();
+
+	Vec2 mSize; // map size
+	cin >> mSize.x; cin.ignore();
+	cin >> mSize.y; cin.ignore();
+
+	Tiles** map = new Tiles * [mSize.y];
+
+	for (int i = 0; i < mSize.y; i++)
+	{
+		map[i] = new Tiles[mSize.x];
+	}
+
+	for (int i = 0; i < mSize.y; i++)
+	{
+		for (int j = 0; j < mSize.x; j++)
+		{
+			int region_id;
+			int type; // 0 (PLAINS), 1 (RIVER), 2 (MOUNTAIN), 3 (POI)
+			cin >> region_id >> type; cin.ignore();
+
+			map[i][j] = Tiles(region_id, Type(type));
+
+		}
+	}
+
+	int town_count;
+	vector<Town> towns;
+
+	cin >> town_count; cin.ignore();
+	for (int i = 0; i < town_count; i++)
+	{
+		int town_id;
+		int town_x;
+		int town_y;
+		string desired_connections; // comma-separated town ids e.g. 0,1,2,3
+		cin >> town_id >> town_x >> town_y >> desired_connections; cin.ignore();
+
+		vector<int> desired;
+
+		stringstream ss(desired_connections);
+		string token;
+		while (getline(ss, token, ','))
+		{
+			desired.push_back(stoi(token));
+		}
+
+		towns.push_back(Town(town_id, Vec2(town_x, town_y), desired));
+	}
+
+
 
 	// game loop
-	int posX = x0;
-	int posY = y0;
-
-	int xMin = 0;
-	int xMax = w - 1;
-
-	int yMin = 0;
-	int yMax = h - 1;
-
-
-	while (1)
+	while (true)
 	{
-		string bomb_dir; // the direction of the bombs from batman's current location (U, UR, R, DR, D, DL, L or UL)
-		cin >> bomb_dir; cin.ignore();
+		int my_score;
+		cin >> my_score; cin.ignore();
+		int foe_score;
+		cin >> foe_score; cin.ignore();
+		for (int i = 0; i < mSize.y; i++) {
+			for (int j = 0; j < mSize.x; j++) {
+				int tracks_owner;
+				int instability; // region inked (destroyed) when this >= 3.
+				bool inked; // true if region is destroyed.
+				string part_of_active_connections; // if this cell is part of one or more railway connections, this will be town ids (separated by -) in a list separated by commas. e.g. 0-1,1-2,1-3. "x" otherwise.
+				cin >> tracks_owner >> instability >> inked >> part_of_active_connections; cin.ignore();
+
+				Tiles& tile = map[i][j];
+
+				tile.inked = inked;
+				tile.instability = instability;
+				tile.tracksOwner = tracks_owner;
+			}
+		}
+
+		int minDist = 0;
+		Town A, B;
+		for (int i = 0; i < towns.size(); i++)
+		{
+			for (int j = 0; j < towns.size(); j++)
+			{
+				if (i != j)
+				{
+					Vec2 townA = towns[i].pos;
+					Vec2 townB = towns[j].pos;
+
+					int dist = (townB.x - townA.x) + (townB.y - townA.y);
+					if (minDist == 0)
+					{
+						minDist = dist;
+					}
+					else if (dist < minDist)
+					{
+						minDist = dist;
+						A = towns[i];
+						B = towns[j];
+					}
+				}
+			}
+		}
 
 		// Write an action using cout. DON'T FORGET THE "<< endl"
 		// To debug: cerr << "Debug messages..." << endl;
 
-		if (bomb_dir == "U")
-		{
-			yMax = posY - 1;
-		}
-		else if (bomb_dir == "UR")
-		{
-			yMax = posY - 1;
-			xMin = posX + 1;
-		}
-		else if (bomb_dir == "R")
-		{
-			xMin = posX + 1;
-		}
-		else if (bomb_dir == "DR")
-		{
-			yMin = posY + 1;
-			xMin = posX + 1;
-		}
-		else if (bomb_dir == "D")
-		{
-			yMin = posY + 1;
-		}
-		else if (bomb_dir == "DL")
-		{
-			yMin = posY + 1;
-			xMax = posX - 1;
-		}
-		else if (bomb_dir == "L")
-		{
-			xMax = posX - 1;
-		}
-		else if (bomb_dir == "UL")
-		{
-			xMax = posX - 1;
-			yMax = posY - 1;
-		}
 
-		posX = (xMin + xMax) / 2;
-		posY = (yMin + yMax) / 2;
-
-		// the location of the next window Batman should jump to.
-		cout << to_string(posX) + " " + to_string(posY) << endl;
+		// AUTOPLACE x1 y1 x2 y2 | PLACE_TRACKS x y | DISRUPT regionId | MESSAGE text
+		cout << "AUTOPLACE " << A.pos.x << " " << A.pos.y
+			<< " " << B.pos.x << " " << B.pos.y << endl;
 	}
+
+
+	// delete part
+	for (int i = 0; i < mSize.y; i++)
+	{
+		delete[] map[i];
+	}
+	delete[] map;
 }
