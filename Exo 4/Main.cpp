@@ -1140,6 +1140,7 @@ std::string sum_str(const std::string& a, const std::string& b)
 //		cout << to_string(posX) + " " + to_string(posY) << endl;
 //	}
 //}
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -1269,7 +1270,7 @@ int main()
 			}
 		}
 
-		int minDist = 0;
+		int minDist = -1;
 		Town A, B;
 		for (int i = 0; i < towns.size(); i++)
 		{
@@ -1280,12 +1281,8 @@ int main()
 					Vec2 townA = towns[i].pos;
 					Vec2 townB = towns[j].pos;
 
-					int dist = (townB.x - townA.x) + (townB.y - townA.y);
-					if (minDist == 0)
-					{
-						minDist = dist;
-					}
-					else if (dist < minDist)
+					int dist = abs(townB.x - townA.x) + abs(townB.y - townA.y);
+					if (minDist == -1 || dist < minDist)
 					{
 						minDist = dist;
 						A = towns[i];
