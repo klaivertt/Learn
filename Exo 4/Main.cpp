@@ -1141,12 +1141,15 @@ std::string sum_str(const std::string& a, const std::string& b)
 //	}
 //}
 
+
 #include <iostream>
 #include <string>
 #include <vector>
 #include <algorithm>
 #include <map>
 #include <sstream>
+#include <unordered_map>
+#include <set>
 
 using namespace std;
 
@@ -1245,6 +1248,19 @@ int main()
 		towns.push_back(Town(town_id, Vec2(town_x, town_y), desired));
 	}
 
+	unordered_map<int, Town*> townById;
+	for (auto& town : towns)
+	{
+		townById[town.id] = &town;
+	}
+
+	set<int> townRegions;
+	for (auto& t : towns) {
+		townRegions.insert(map[t.pos.y][t.pos.x].regionId);
+	}
+
+	int foe_id = 1 - my_id;
+	int disruptTarget = -1; // -1 = pas de cible en cours
 
 
 	// game loop
@@ -1264,9 +1280,21 @@ int main()
 
 				Tiles& tile = map[i][j];
 
+				if (disruptTarget != -1 && tile.regionId == disruptTarget && tile.inked)
+				{
+					disruptTarget = -1;
+				}
+
+				if (disruptTarget == -1 && tile.tracksOwner == foe_id && !tile.inked
+					&& townRegions.find(tile.regionId) == townRegions.end())
+				{
+					disruptTarget = tile.regionId;
+				}
+
 				tile.inked = inked;
 				tile.instability = instability;
 				tile.tracksOwner = tracks_owner;
+
 			}
 		}
 
@@ -1292,13 +1320,30 @@ int main()
 			}
 		}
 
-		// Write an action using cout. DON'T FORGET THE "<< endl"
-		// To debug: cerr << "Debug messages..." << endl;
+		string actions = "";
 
+		if (disruptTarget != -1) {
+			actions += "DISRUPT " + to_string(disruptTarget) + ";";
+		}
 
-		// AUTOPLACE x1 y1 x2 y2 | PLACE_TRACKS x y | DISRUPT regionId | MESSAGE text
-		cout << "AUTOPLACE " << A.pos.x << " " << A.pos.y
-			<< " " << B.pos.x << " " << B.pos.y << endl;
+		for (auto& t : towns) {
+			for (int destId : t.desiredConnections) {
+				Town* dest = townById[destId];
+				actions += "AUTOPLACE " + to_string(t.pos.x) + " " + to_string(t.pos.y)
+					+ " " + to_string(dest->pos.x) + " " + to_string(dest->pos.y) + ";";
+			}
+		}
+
+		if (actions.empty()) {
+			actions = "WAIT";
+		}
+
+		cout << actions << endl;
+
+		if (actions.empty()) {
+			actions = "WAIT";
+		}
+		cout << actions << endl;
 	}
 
 

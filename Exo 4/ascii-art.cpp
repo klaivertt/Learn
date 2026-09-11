@@ -31,13 +31,21 @@ int main()
     cin >> h; cin.ignore();
     string t;
     getline(cin, t);
-    for (int i = 0; i < h; i++) {
-        string row;
-        getline(cin, row);
+
+    vector<string> font(h);
+    for (int i = 0; i < h; i++)
+    {
+        getline(cin, font[i]);
     }
 
-    // Write an answer using cout. DON'T FORGET THE "<< endl"
-    // To debug: cerr << "Debug messages..." << endl;
-
-    cout << "answer" << endl;
+    for (int i = 0; i < h; i++)
+    {
+        string line = "";
+        for (char c : t) 
+        {
+            int idx = charIndex(c);
+            line += font[i].substr(idx * l, l);
+        }
+        cout << line << endl;
+    }
 }
