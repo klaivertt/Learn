@@ -1354,3 +1354,12 @@ int main()
 	}
 	delete[] map;
 }
+
+#include <string>
+
+
+std::string greet(const std::string& _n)
+{
+	//your code here
+	return "Hello, " + _n + " how are you doing today ? .";
+}
